@@ -1,0 +1,29 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>{% block title %}{% endblock %}</title>
+        {#    <link rel="stylesheet" href="{% static 'styles/style.css' %}">#}
+    </head>
+    <body>
+        <header>
+            <div id="header" align="right">
+                <h1 class="logo">Портал сотрудника</h1>
+            </div>
+        <div align="right">
+            {% if request.user.is_authenticated  %}
+                <a href="/accounts/edit">Редактировать профиль</a>
+                <a href="/accounts/logout">Выйти</a>
+            {% else %}
+                <a href="/accounts/register">Зарегистрироваться</a>
+                <a href="/accounts/login">Войти</a>
+            {% endif %}
+        </div>
+        </header>
+        <div id="content">
+
+            {% block content %}
+            {% endblock %}
+        </div>
+    </body>
+</html>
