@@ -8,6 +8,7 @@ from .forms import *
 from .forms import RegistrationForm
 from services import slackBot
 from services.views import TGBotView
+from .models import Account
 
 
 def user_login(request):
@@ -75,3 +76,9 @@ def edit(request):
         return render(request,
                       'accounts/edit.html',
                       {'user_form': user_form})
+
+@login_required
+def get_all_employees(request):
+    employee = Account.objects.filter(is_superuser=False)
+
+    return render(request, 'accounts/all_employees.html', {'employees': employee})
