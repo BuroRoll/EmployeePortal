@@ -1,14 +1,7 @@
 from django import forms
 from .models import Account
 
-from django.forms.widgets import FileInput
-from django.utils.html import conditional_escape
 from django.utils.safestring import mark_safe
-from string import Template
-from django.utils.safestring import mark_safe
-from django.utils.safestring import mark_safe
-from django.utils.html import escape, conditional_escape
-from django.forms.widgets import ClearableFileInput, Input, CheckboxInput
 
 
 class RegistrationForm(forms.ModelForm):
@@ -59,7 +52,6 @@ class ImagePreviewWidget(forms.widgets.FileInput):
 class UserChangeForm(forms.ModelForm):
     photo = forms.ImageField(label=('Фото'), required=False, error_messages={'invalid': ("Image files only")},
                              widget=ImagePreviewWidget)
-    # phone = forms.
 
     class Meta:
         model = Account
