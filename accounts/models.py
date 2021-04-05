@@ -53,7 +53,7 @@ class Account(AbstractBaseUser, PermissionsMixin):
     info = models.TextField(blank=True)
     phone = models.CharField(max_length=50)
     vacation_days = models.TextField(blank=True)
-    photo = models.ImageField(upload_to='users/%Y/%m/%d', blank=True)
+    photo = models.ImageField(upload_to='users/%Y/%m/%d', blank=True, default='users/default_profile_pic.png')
     slack_login = models.CharField(max_length=40, blank=True)
     telegram_login = models.CharField(max_length=40, blank=True)
     position = models.ForeignKey(Position, on_delete=models.CASCADE, null=True)
