@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Все сотрудники{% endblock %}
+{% block content %}
+    {% if request.user.is_authenticated %}
+        <table border="1" width="100%" cellpadding="5">
+            <tr>
+                <th>ФИО</th>
+                <th>Должность</th>
+            </tr>
+            {% for employee in employees %}
+                <tr>
+                    <td>{{ employee.name }}</td>
+                    <td>{{ employee.position }}</td>
+                </tr>
+            {% endfor %}
+
+        </table>
+    {% endif %}
+
+{% endblock %}

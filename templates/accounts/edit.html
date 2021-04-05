@@ -1,14 +1,64 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}Edit your account{% endblock %}
 
 {% block content %}
-    <h1>Edit your account</h1>
-    <p>You can edit your account using the following form:</p>
-    <form action="." method="post" enctype="multipart/form-data">
-        {{ user_form.as_p }}
-        {{ profile_form.as_p }}
-        {% csrf_token %}
-        <p><input type="submit" value="Save changes"></p>
-    </form>
+    <h1>Редактирование профиля</h1>
+    <script src={% static 'js/phoneinput.js' %}></script>
+
+    <div>
+        <form action="." method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div>
+                <label>Email </label>
+                {{ user_form.email }}
+            </div>
+            <div>
+                <label>ФИО </label>
+                {{ user_form.name }}
+            </div>
+            <div>
+                <label>Телефон </label>
+                <input type="tel" data-tel-input placeholder="Phone" maxlength="18"
+                       name="{{ user_form.phone.name }}"
+                       id="{{ user_form.name.id_for_label }}"
+                       {% if user_form.phone.value != None %}value="{{ user_form.phone.value|stringformat:'s' }}"{% endif %}
+                       maxlength="{{ user_form.name.field.max_length }}"
+                       {% if user_form.name.field.required %}required{% endif %}>
+            </div>
+            <div>
+                <label>Фото </label>
+                {{ user_form.photo }}
+            </div>
+            <div>
+                <label>Информация </label>
+                {{ user_form.info }}
+            </div>
+            <div>
+                <label>Slack Login </label>
+                {{ user_form.slack_login }}
+            </div>
+            <div>
+                <label>Telegram Login </label>
+                {{ user_form.telegram_login }}
+            </div>
+            <button type="submit">Сохранить</button>
+        </form>
+    </div>
+
 {% endblock %}
+
+{#{% extends "base.html" %}#}
+{##}
+{#{% block title %}Edit your account{% endblock %}#}
+{##}
+{#{% block content %}#}
+{#    <h1>Edit your account</h1>#}
+{#    <p>You can edit your account using the following form:</p>#}
+{#    <form action="." method="post" enctype="multipart/form-data">#}
+{#        {{ user_form.as_p }}#}
+{#        {% csrf_token %}#}
+{#        <p><input type="submit" value="Save changes"></p>#}
+{#    </form>#}
+{#{% endblock %}#}

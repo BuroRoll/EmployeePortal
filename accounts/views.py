@@ -6,6 +6,9 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.shortcuts import render, redirect
 from .forms import *
 from .forms import RegistrationForm
+from services import slackBot
+from services.views import TGBotView
+from .models import Account
 
 
 def user_login(request):
@@ -47,11 +50,13 @@ def change_password(request):
 def register(request):
     if request.method == 'POST':
         user_form = RegistrationForm(request.POST, request.FILES)
-        print(user_form)
         if user_form.is_valid():
             new_user = user_form.save(commit=False)
             new_user.set_password(user_form.cleaned_data['password'])
             new_user.save()
+            if user_form.cleaned_data['is_new_employee']:
+                slackBot.post_message_to_slack(user_form)
+                TGBotView.send_to_all(user_form)
             login(request, new_user)
             return redirect('/accounts')
     else:
@@ -71,3 +76,9 @@ def edit(request):
         return render(request,
                       'accounts/edit.html',
                       {'user_form': user_form})
+
+@login_required
+def get_all_employees(request):
+    employee = Account.objects.filter(is_superuser=False)
+
+    return render(request, 'accounts/all_employees.html', {'employees': employee})
