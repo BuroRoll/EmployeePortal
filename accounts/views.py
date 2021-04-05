@@ -9,6 +9,7 @@ from .forms import RegistrationForm
 from services import slackBot
 from services.views import TGBotView
 from .models import Account
+from django.http import HttpResponseRedirect
 
 
 def user_login(request):
@@ -20,7 +21,7 @@ def user_login(request):
             if user is not None:
                 if user.is_active:
                     login(request, user)
-                    return redirect('/accounts')
+                    return redirect('/')
     else:
         form = LoginForm()
     return render(request, 'accounts/login.html', {'form': form})
@@ -39,7 +40,7 @@ def change_password(request):
             user = form.save()
             update_session_auth_hash(request, user)  # Important!
             messages.success(request, 'Your password was successfully updated!')
-            return redirect('change_password')
+            return redirect('/')
         else:
             messages.error(request, 'Please correct the error below.')
     else:
@@ -58,7 +59,7 @@ def register(request):
                 slackBot.post_message_to_slack(user_form)
                 TGBotView.send_to_all(user_form)
             login(request, new_user)
-            return redirect('/accounts')
+            return redirect('/')
     else:
         user_form = RegistrationForm()
     return render(request, 'accounts/register.html', {'user_form': user_form})
@@ -70,12 +71,13 @@ def edit(request):
         user_form = UserChangeForm(instance=request.user, data=request.POST, files=request.FILES)
         if user_form.is_valid():
             user_form.save()
-        return redirect('/accounts')
+        return redirect('/')
     else:
         user_form = UserChangeForm(instance=request.user)
         return render(request,
                       'accounts/edit.html',
                       {'user_form': user_form})
+
 
 @login_required
 def get_all_employees(request):
