@@ -9,19 +9,23 @@ from .forms import RegistrationForm
 from services import slackBot
 from services.views import TGBotView
 from .models import Account
-from django.http import HttpResponseRedirect
+from services.models import Conversation
 
 
 def user_login(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)
+        print(form)
         if form.is_valid():
+            form.errors['Неверный логин или пароль'] = form.error_class(['Ошибка'])
             cd = form.cleaned_data
             user = authenticate(email=cd['email'], password=cd['password'])
             if user is not None:
                 if user.is_active:
                     login(request, user)
+                    print('logined')
                     return redirect('/')
+
     else:
         form = LoginForm()
     return render(request, 'accounts/login.html', {'form': form})
@@ -29,7 +33,7 @@ def user_login(request):
 
 @login_required
 def dashboard(request):
-    return render(request, 'accounts/account.html', {'section': 'dashboard'})
+    return render(request, 'accounts/account1.html', {'section': 'dashboard'})
 
 
 @login_required
@@ -55,14 +59,24 @@ def register(request):
             new_user = user_form.save(commit=False)
             new_user.set_password(user_form.cleaned_data['password'])
             new_user.save()
+            login(request, new_user)
+            selected_conversations = request.POST.getlist('select')
+            print(request.POST)
             if user_form.cleaned_data['is_new_employee']:
                 slackBot.post_message_to_slack(user_form)
                 TGBotView.send_to_all(user_form)
-            login(request, new_user)
+            for conversations_for_accesses in Conversation.objects.filter(conversation_for_accesses=True):
+                if conversations_for_accesses.messenger.messenger_name == 'Telegram':
+                    TGBotView.send_to_access(user_form.cleaned_data['name'], user_form.cleaned_data['telegram_login'],
+                                             selected_conversations, conversations_for_accesses)
+                if conversations_for_accesses.messenger.messenger_name == 'Slack':
+                    slackBot.send_msg_to_access(user_form.cleaned_data['name'], user_form.cleaned_data['slack_login'],
+                                                selected_conversations, conversations_for_accesses)
             return redirect('/')
     else:
         user_form = RegistrationForm()
-    return render(request, 'accounts/register.html', {'user_form': user_form})
+        conversations = Conversation.objects.all()
+    return render(request, 'accounts/register.html', {'user_form': user_form, 'conv': conversations})
 
 
 @login_required
@@ -82,5 +96,4 @@ def edit(request):
 @login_required
 def get_all_employees(request):
     employee = Account.objects.filter(is_superuser=False)
-
     return render(request, 'accounts/all_employees.html', {'employees': employee})

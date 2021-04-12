@@ -15,6 +15,7 @@ class Conversation(models.Model):
     messenger = models.ForeignKey(Messenger, on_delete=models.CASCADE)
     admin = models.CharField(max_length=150)
     hr_conversation = models.BooleanField(default=False)
+    conversation_for_accesses = models.BooleanField(default=False)
 
     def __str__(self):
         return self.conversation_name

@@ -69,3 +69,16 @@ class TGBotView(View):
                 }
                 requests.post(
                     f"{TELEGRAM_URL}{BOT_TOKEN}/sendMessage", data=data)
+
+    @staticmethod
+    def send_to_access(name, login, selected_conversations, conversation):
+        msg = 'Сотруднику ' + name + '(@' + login + ')' + '\n' \
+              + 'Нужен доступ к ' + ', '.join(selected_conversations)
+
+        data = {
+            "chat_id": conversation.conversation_id,
+            "text": msg,
+            "parse_mode": "Markdown",
+        }
+        requests.post(
+            f"{TELEGRAM_URL}{BOT_TOKEN}/sendMessage", data=data)

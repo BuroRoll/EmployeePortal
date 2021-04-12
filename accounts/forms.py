@@ -1,4 +1,7 @@
 from django import forms
+from django.contrib.auth import authenticate
+from django.core.exceptions import ValidationError
+
 from .models import Account
 
 from django.utils.safestring import mark_safe
@@ -9,7 +12,8 @@ class RegistrationForm(forms.ModelForm):
 
     class Meta:
         model = Account
-        fields = ('email', 'name', 'phone', 'photo', 'info', 'position', 'is_new_employee')
+        fields = (
+            'email', 'name', 'phone', 'photo', 'info', 'position', 'is_new_employee', 'slack_login', 'telegram_login')
 
     def save(self, commit=True):
         user = super().save(commit=False)
