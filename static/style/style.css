@@ -22,6 +22,10 @@ ul {
     padding-left: 0px;
 }
 
+.no-display {
+    display: none;
+}
+
 .header-container {
     max-width: 1640px;
     margin: auto;
@@ -354,4 +358,171 @@ ul {
 .sys-save {
     text-transform: none;
     margin-top: 65px;
+}
+
+.download-block {
+    width: 850px;
+    height: 226px;
+    margin-top: 130px;
+    text-align: center;
+}
+
+.h-download {
+    text-align: center;
+}
+
+.download-button {
+    margin-top: 30px;
+    padding: 10px;
+    border: none;
+    width: 560px;
+    height: 55px;
+    outline: none;
+    background: #F2F2F2;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.candidate-block {
+    width: 705px;
+    height: 564px;
+    height: auto;
+}
+
+
+.candidate-form {
+    padding-left: 171px;
+    padding-right: 170px;
+    text-align: center;
+}
+
+.h-candidate {
+    margin-top: 60px;
+}
+
+.candidate-submit {
+    width: 155px;
+    height: 39px;
+    border: none;
+    background: #7241FF;
+    border-radius: 16px;
+    color: white;
+    margin-top: 50px;
+    margin-bottom: 60px;
+    cursor: pointer;
+}
+
+.right-container {
+    text-align: center;
+    margin: auto;
+    margin-top: 70px;
+}
+
+.h-list {
+    font-size: 28px;
+    text-align: center;
+}
+
+.candidate-list {
+    width: 850px;
+    height: 50px;
+    background: #FFFFFF;
+    border: 1px solid #AFAFAF;
+    box-sizing: border-box;
+    border-radius: 4px;
+    padding-left: 50px;
+    font-size: 20px;
+    margin-bottom: 1px;
+    //background: url("/img/mini-share.png");
+    //background-repeat: no-repeat; /*Убираем повтор изображения*/
+}
+
+.candidate-table {
+    width: 850px;
+    border-collapse: collapse;
+}
+
+.candidate-list-block {
+    width: 850px;
+    height: 50px;
+    border-bottom: 1px solid #F4F4F4;
+    background: #FFFFFF;
+    border-radius: 8px;
+}
+.page-panel {
+    width: 850px;
+    height: 52px;
+    border-top: 3px solid #F4F4F4;
+    background: #FFFFFF;
+    border-radius: 8px;
+    display: flex;
+}
+.pages {
+    display: flex;
+}
+
+.prev-img {
+    width: 16px;
+    height: 16px;
+    transform: scale(-1, 1);
+}
+
+.next-img {
+    width: 16px;
+    height: 16px;
+}
+
+.prev {
+    display: flex;
+    align-items: center;
+    padding-left: 50px;
+    width: 130px;
+    justify-content: space-between;
+    cursor: pointer;
+}
+
+.pages {
+    width: 140px;
+    justify-content: space-between;
+    padding-left: 40px;
+}
+
+.next {
+    display: flex;
+    align-items: center;
+    padding-left: 50px;
+    width: 130px;
+    justify-content: space-between;
+    cursor: pointer;
+}
+
+.page {
+    cursor: pointer;
+}
+
+.current {
+    font-weight: bold;
+}
+
+.page-nav {
+    display: flex;
+    width: 500px;
+    //justify-content: space-between;
+    padding-left: 50px;
+}
+
+.nav-back {
+    background: white;
+    //border-top: 20px solid #F4F4F4;
+    border-radius: 8px;
+}
+
+.nav-margin {
+    padding-right: 20px;
+}
+
+nav-li {
+    padding: 5px;
+    margin-right: 20px;
+    cursor: pointer;
 }

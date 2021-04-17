@@ -17,6 +17,12 @@
             <div>
                 <label>ФИО </label>
                 {{ user_form.name }}
+                <input
+                       name="{{ user_form.name.name }}"
+                       id="{{ user_form.name.id_for_label }}"
+                       {% if user_form.name.value != None %}value="{{ user_form.name.value|stringformat:'s' }}"{% endif %}
+                       maxlength="{{ user_form.name.field.max_length }}"
+                       {% if user_form.name.field.required %}required{% endif %}>
             </div>
             <div>
                 <label>Телефон </label>

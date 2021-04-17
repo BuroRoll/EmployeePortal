@@ -22,6 +22,9 @@
     <h1 class="reg-h">Вход в личный кабинет</h1>
     <form method="post" enctype="multipart/form-data" name="reg" class="form-reg">
         {% csrf_token %}
+        {% for error in form.errors %}
+            <h1>ERROR</h1>
+        {% endfor %}
         <div>
             <label class="log-label" for="login">Ваш логин</label><br>
             <input class="reg-input" type="text" placeholder="Логин"

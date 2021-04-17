@@ -10,12 +10,12 @@ from services import slackBot
 from services.views import TGBotView
 from .models import Account
 from services.models import Conversation
+from .models import Position
 
 
 def user_login(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)
-        print(form)
         if form.is_valid():
             form.errors['Неверный логин или пароль'] = form.error_class(['Ошибка'])
             cd = form.cleaned_data
@@ -28,12 +28,24 @@ def user_login(request):
 
     else:
         form = LoginForm()
-    return render(request, 'accounts/login.html', {'form': form})
+    return render(request, 'accounts/login1.html', {'form': form})
 
 
 @login_required
 def dashboard(request):
-    return render(request, 'accounts/account1.html', {'section': 'dashboard'})
+    if request.method == 'POST':
+        user_form = UserChangeForm(instance=request.user, data=request.POST, files=request.FILES)
+        if user_form.is_valid():
+            print(user_form)
+            user_form.save()
+        return redirect('/')
+    else:
+        user_form = UserChangeForm(instance=request.user)
+        positions = Position.objects.all()
+        return render(request,
+                      'accounts/account1.html',
+                      {'user_form': user_form, 'positions': positions})
+    # return render(request, 'accounts/account1.html', {'section': 'dashboard'})
 
 
 @login_required
@@ -76,7 +88,7 @@ def register(request):
     else:
         user_form = RegistrationForm()
         conversations = Conversation.objects.all()
-    return render(request, 'accounts/register.html', {'user_form': user_form, 'conv': conversations})
+    return render(request, 'accounts/register1.html', {'user_form': user_form, 'conversations': conversations})
 
 
 @login_required
@@ -84,6 +96,7 @@ def edit(request):
     if request.method == 'POST':
         user_form = UserChangeForm(instance=request.user, data=request.POST, files=request.FILES)
         if user_form.is_valid():
+            print(user_form)
             user_form.save()
         return redirect('/')
     else:

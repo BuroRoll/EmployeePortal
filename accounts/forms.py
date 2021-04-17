@@ -46,20 +46,20 @@ class UserRegisterForm(forms.ModelForm):
         return user
 
 
-class ImagePreviewWidget(forms.widgets.FileInput):
-    def render(self, name, value, attrs=None, **kwargs):
-        input_html = super().render(name, value, attrs=None, **kwargs)
-        img_html = mark_safe(f'<img height="300px" src="{value.url}"/><br>')
-        return f'{img_html}{input_html}'
+# class ImagePreviewWidget(forms.widgets.FileInput):
+#     def render(self, name, value, attrs=None, **kwargs):
+#         input_html = super().render(name, value, attrs=None, **kwargs)
+#         img_html = mark_safe(f'<img height="300px" src="{value.url}"/><br>')
+#         return f'{img_html}{input_html}'
 
 
 class UserChangeForm(forms.ModelForm):
-    photo = forms.ImageField(label=('Фото'), required=False, error_messages={'invalid': ("Image files only")},
-                             widget=ImagePreviewWidget)
+    # photo = forms.ImageField(label=('Фото'), required=False, error_messages={'invalid': ("Image files only")},
+    #                          widget=ImagePreviewWidget)
 
     class Meta:
         model = Account
-        fields = ('email', 'name', 'phone', 'photo', 'info', 'slack_login', 'telegram_login')
+        fields = ('name', 'photo', 'phone', 'slack_login', 'telegram_login', 'position', 'info')
 
 
 class LoginForm(forms.Form):
