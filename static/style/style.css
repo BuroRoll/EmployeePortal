@@ -2,9 +2,11 @@ body {
     margin: 0;
     font-family: 'Roboto', sans-serif;
 }
+
 input {
     outline: none;
 }
+
 a {
     text-decoration: none;
     color: black;
@@ -33,6 +35,7 @@ ul {
     align-items: center;
     display: flex;
 }
+
 .logo {
     height: 60px;
     width: 211px;
@@ -130,6 +133,7 @@ ul {
 }
 
 .check {
+
     display: flex;
     margin-top: 20px;
     justify-content: space-between;
@@ -154,6 +158,7 @@ ul {
     margin-left: 79px;
 
 }
+
 .delta-header {
     display: flex;
 
@@ -185,7 +190,7 @@ ul {
 
 .left-menu-text {
     font-style: normal;
-    font-weight:600;
+    font-weight: 600;
     font-size: 18px;
     line-height: 21px;
     margin-left: 16px;
@@ -248,10 +253,10 @@ ul {
     padding-right: 15px;
 
     -webkit-touch-callout: none; /* iOS Safari */
-    -webkit-user-select: none;   /* Chrome/Safari/Opera */
-    -khtml-user-select: none;    /* Konqueror */
-    -moz-user-select: none;      /* Firefox */
-    -ms-user-select: none;       /* Internet Explorer/Edge */
+    -webkit-user-select: none; /* Chrome/Safari/Opera */
+    -khtml-user-select: none; /* Konqueror */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
     user-select: none;
 }
 
@@ -423,7 +428,7 @@ ul {
     text-align: center;
 }
 
-.candidate-list {
+.candidate-list, .dataTables_filter {
     width: 850px;
     height: 50px;
     background: #FFFFFF;
@@ -433,8 +438,8 @@ ul {
     padding-left: 50px;
     font-size: 20px;
     margin-bottom: 1px;
-    //background: url("/img/mini-share.png");
-    //background-repeat: no-repeat; /*Убираем повтор изображения*/
+/ / background: url("/img/mini-share.png");
+/ / background-repeat: no-repeat; /*Убираем повтор изображения*/
 }
 
 .candidate-table {
@@ -449,6 +454,7 @@ ul {
     background: #FFFFFF;
     border-radius: 8px;
 }
+
 .page-panel {
     width: 850px;
     height: 52px;
@@ -457,6 +463,7 @@ ul {
     border-radius: 8px;
     display: flex;
 }
+
 .pages {
     display: flex;
 }
@@ -507,13 +514,13 @@ ul {
 .page-nav {
     display: flex;
     width: 500px;
-    //justify-content: space-between;
+/ / justify-content: space-between;
     padding-left: 50px;
 }
 
 .nav-back {
     background: white;
-    //border-top: 20px solid #F4F4F4;
+/ / border-top: 20 px solid #F4F4F4;
     border-radius: 8px;
 }
 

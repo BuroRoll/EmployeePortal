@@ -22,6 +22,30 @@
  *          }
  *       );
  */
+function tableSearch() {
+    let phrase = document.getElementById('search');
+    let table = document.getElementById('paged');
+    var table2 = document.getElementsByTagName('table')[0];
+    // console.log(table.rows.length)
+    // console.log(table2)
+    let regPhrase = new RegExp(phrase.value, 'i');
+    let flag = false;
+    for (let i = 1; i < table.rows.length; i++) {
+        flag = false;
+        for (let j = table.rows[i].cells.length - 1; j >= 0; j--) {
+            flag = regPhrase.test(table.rows[i].cells[j].innerHTML);
+            if (flag) break;
+        }
+        if (flag) {
+            table.rows[i].style.display = "";
+        } else {
+            table.rows[i].style.display = "none";
+        }
+
+    }
+}
+
+
 var pagedTable = (function (GLOB) {
     "use strict";
     /**
@@ -82,6 +106,7 @@ var pagedTable = (function (GLOB) {
             offset,
             // ссылки на строки таблицы:
             trRefs;
+
         /**
          * "Снять" копию HTMLCollection в виде массива (конвертировать)
          * т.к. [].slice.call(HTMLCollection) в IE не пашет, то приходится изгаляться.
@@ -96,6 +121,7 @@ var pagedTable = (function (GLOB) {
             }
             return copied;
         }
+
         /**
          * Отобразить подмножество со ссылками
          * @param {Number} curPage - номер текущей страницы
@@ -103,30 +129,30 @@ var pagedTable = (function (GLOB) {
         function renderLinks(curPage) {
             // Определяем какому подмножеству принадлежит текущая страница:
             var curSetKey = Math.floor(curPage / pConfig.linkPerPage),
-                template  = pConfig.template,
+                template = pConfig.template,
                 pagerHTML = "<" + pConfig.linkTag + " id=\"0\">" + (pConfig.toStart || "&lt;&lt;") + "</" + pConfig.linkTag + ">",
-                setKey    = 0,
+                setKey = 0,
                 i;
             // Если мы имеем дело с первой страицей кнопку "Предыдущий" не показываем:
             if (curSetKey > 0) {
                 pagerHTML += "<" + pConfig.linkTag + " id=\"" + (linksSet[curSetKey][0] - 1) + "\">" + (pConfig.toPrev || "&lt;") + "</" + pConfig.linkTag + ">";
             }
-            for (i = 0; i < linksSet[curSetKey].length; i += 1) {
-                setKey = linksSet[curSetKey][i];
-                pagerHTML += "<" + pConfig.linkTag + " id=\"" + setKey + "\"" + (setKey === curPage ? " class=\"current\"" : "") + ">" + (setKey + 1) + "</" + pConfig.linkTag + ">";
+            if (linksSet[curSetKey] !== undefined) {
+                for (i = 0; i < linksSet[curSetKey].length; i += 1) {
+                    setKey = linksSet[curSetKey][i];
+                    pagerHTML += "<" + pConfig.linkTag + " id=\"" + setKey + "\"" + (setKey === curPage ? " class=\"current\"" : "") + ">" + (setKey + 1) + "</" + pConfig.linkTag + ">";
+                }
             }
-            // Если мы имеем дело с последней страицей кнопку "Следующий" не показываем:
             if (curSetKey < linksSet.length - 1) {
                 pagerHTML += "<" + pConfig.linkTag + " id=\"" + (linksSet[curSetKey + 1][0]) + "\">" + (pConfig.toNext || "&gt;") + "</" + pConfig.linkTag + ">";
             }
+
             // Ссылка "в конец":
             pagerHTML += "<" + pConfig.linkTag + " id=\"" + (linksCnt - 1) + "\">" + (pConfig.toEnd || "&gt;&gt;") + "</" + pConfig.linkTag + ">";
             // Обрабатываем шаблон и подменяем весь html-за один раз:
-            linksContainer.innerHTML = template.replace(/%n/g, pagerHTML).
-            replace(/%p/g, String(curPage+1)).
-            replace(/%r/g, String(trRefs.length)).
-            replace(/%c/g, linksCnt);
+            linksContainer.innerHTML = template.replace(/%n/g, pagerHTML).replace(/%p/g, String(curPage + 1)).replace(/%r/g, String(trRefs.length)).replace(/%c/g, linksCnt);
         }
+
         /**
          * Отобразить таблицу в заданном состоянии.
          * @param {Number} start - номер начальной строки
@@ -145,6 +171,7 @@ var pagedTable = (function (GLOB) {
             }
             renderLinks(currentPage);
         }
+
         /**
          * Инициализация подмножестве ссылок
          * @param {Number} all - Общее кол-во ссылок
@@ -172,6 +199,7 @@ var pagedTable = (function (GLOB) {
             }
             return linksSet;
         }
+
         /**
          * Позволяет рекурсивно "слить" свойства двух объектов. Одноименные
          * свойства config перезатрут свойства defaults
@@ -195,6 +223,7 @@ var pagedTable = (function (GLOB) {
             }
             return merged;
         }
+
         // Делегируем обработчик "кликов"
         linksContainer.onclick = function (e) {
             var event = e || GLOB.event,
@@ -211,9 +240,9 @@ var pagedTable = (function (GLOB) {
             }
         };
         // Сливаем конфиги
-        pConfig  = mergeObjects(pConfig, pagerConfig);
-        offset   = pConfig.linkPerPage;
-        trRefs   = copyRows(tBody.children);
+        pConfig = mergeObjects(pConfig, pagerConfig);
+        offset = pConfig.linkPerPage;
+        trRefs = copyRows(tBody.children);
         linksCnt = Math.ceil(trRefs.length / entryPerPage);
         // Строим массив подмножеств сылок для постранички
         linksSet = setupPager(linksCnt, offset);

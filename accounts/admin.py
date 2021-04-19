@@ -10,7 +10,7 @@ class AccountAdmin(BaseUserAdmin):
     form = UserChangeForm
     add_form = UserRegisterForm
 
-    list_display = ('email', 'name')
+    list_display = ('email', 'name', 'position')
 
     fieldsets = (
         (None, {'fields': ('email', 'is_staff', 'is_superuser', 'password')}),
@@ -28,3 +28,6 @@ class AccountAdmin(BaseUserAdmin):
 admin.site.register(Account, AccountAdmin)
 admin.site.register(Position)
 admin.site.unregister(Group)
+
+
+

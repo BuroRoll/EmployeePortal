@@ -22,7 +22,7 @@
             <h1>Личный кабинет</h1>
             <div class="delta-header">
                 <img class="profile-header" src=/media/{{ request.user.photo }} alt="Аватарка">
-                <h2 class="nickname-header">{{ request.user.name }}</h2>
+                <h2 class="nickname-header">{{ request.user.email }}</h2>
                 <a href="/logout" style="height: 28px"><img src={% static 'img/out.png' %} alt="Выход" width="28px"
                                                             height="28px"></a>
             </div>
@@ -44,7 +44,7 @@
                 <li class="left-menu-element"><img class="left-menu-img" src={% static 'img/set.png' %} alt=""><span
                         class="left-menu-text">Доступы к системам</span></li>
             </a>
-            <a href="/">
+            <a href="/get_all_employees">
                 <li class="left-menu-element"><img class="left-menu-img" src={% static 'img/sotrud.png' %} alt=""><span
                         class="left-menu-text">Список сотрудников</span></li>
             </a>

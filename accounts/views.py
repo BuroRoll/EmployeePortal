@@ -1,15 +1,17 @@
-from django.contrib.auth import authenticate, login
-from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.contrib.auth import login
 from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
+from django.core.serializers import serialize
 from django.shortcuts import render, redirect
+
+from services import slackBot
+from services.models import Conversation
+from services.views import TGBotView
 from .forms import *
 from .forms import RegistrationForm
-from services import slackBot
-from services.views import TGBotView
 from .models import Account
-from services.models import Conversation
 from .models import Position
 
 
@@ -73,21 +75,23 @@ def register(request):
             new_user.save()
             login(request, new_user)
             selected_conversations = request.POST.getlist('select')
-            print(request.POST)
             if user_form.cleaned_data['is_new_employee']:
                 slackBot.post_message_to_slack(user_form)
                 TGBotView.send_to_all(user_form)
-            for conversations_for_accesses in Conversation.objects.filter(conversation_for_accesses=True):
-                if conversations_for_accesses.messenger.messenger_name == 'Telegram':
-                    TGBotView.send_to_access(user_form.cleaned_data['name'], user_form.cleaned_data['telegram_login'],
-                                             selected_conversations, conversations_for_accesses)
-                if conversations_for_accesses.messenger.messenger_name == 'Slack':
-                    slackBot.send_msg_to_access(user_form.cleaned_data['name'], user_form.cleaned_data['slack_login'],
-                                                selected_conversations, conversations_for_accesses)
+            if len(selected_conversations) > 0:
+                for conversations_for_accesses in Conversation.objects.filter(conversation_for_accesses=True):
+                    if conversations_for_accesses.messenger.messenger_name == 'Telegram':
+                        TGBotView.send_to_access(user_form.cleaned_data['name'],
+                                                 user_form.cleaned_data['telegram_login'],
+                                                 selected_conversations, conversations_for_accesses)
+                    if conversations_for_accesses.messenger.messenger_name == 'Slack':
+                        slackBot.send_msg_to_access(user_form.cleaned_data['name'],
+                                                    user_form.cleaned_data['slack_login'],
+                                                    selected_conversations, conversations_for_accesses)
             return redirect('/')
-    else:
-        user_form = RegistrationForm()
-        conversations = Conversation.objects.all()
+    # else:
+    user_form = RegistrationForm()
+    conversations = Conversation.objects.all()
     return render(request, 'accounts/register1.html', {'user_form': user_form, 'conversations': conversations})
 
 
@@ -109,4 +113,28 @@ def edit(request):
 @login_required
 def get_all_employees(request):
     employee = Account.objects.filter(is_superuser=False)
-    return render(request, 'accounts/all_employees.html', {'employees': employee})
+    positions = Position.objects.all()
+    employee = serialize('json', employee, fields=['name', 'position'])
+    positions = serialize('json', positions, fields=['position_name'])
+    return render(request, 'accounts/table-test.html', {'employees': employee, 'positions': positions})
+
+
+
+# let employees = JSON.parse('{{ employees | safe }}');
+#     let positions = JSON.parse('{{ positions | safe }}');
+#
+#     for (let i = 0; i < employees.length; i++) {
+#         let fio = employees[i].fields.name.split(' ');
+#         let tr = document.createElement('tr');
+#         tr.classList.add('candidate-list-block');
+#         let td1 = tr.appendChild(document.createElement('td'));
+#         td1.innerHTML = fio[0]
+#         let td2 = tr.appendChild(document.createElement('td'))
+#         td2.innerHTML = fio[1]
+#         let td3 = tr.appendChild(document.createElement('td'))
+#         td3.innerHTML = fio[2]
+#         let td4 = tr.appendChild(document.createElement('td'))
+#         td4.innerHTML = positions[employees[i].fields.position - 1].fields.position_name
+#
+#         document.getElementById('paged').appendChild(tr);
+#     }
