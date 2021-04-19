@@ -77,10 +77,6 @@ WSGI_APPLICATION = 'EmployeePortal.wsgi.application'
 
 DATABASES = {
     # 'default': {
-    #     'ENGINE': 'django.db.backends.sqlite3',
-    #     'NAME': BASE_DIR / 'db.sqlite3',
-    # }
-    # 'default': {
     #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
     #     'NAME': 'danil',
     #     'USER': 'django',
@@ -90,10 +86,10 @@ DATABASES = {
     # }
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'employee_bd',
+        'NAME': 'employee_project',
         'USER': 'buroroll',
-        'PASSWORD': '300301',
-        'HOST': '176.57.215.54',
+        'PASSWORD': '220120',
+        'HOST': '188.225.42.201',
         'PORT': '5432',
     }
 }

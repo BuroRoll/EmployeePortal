@@ -1,10 +1,11 @@
 from django.contrib import messages
-from django.contrib.auth import login
+from django.contrib.auth import login, authenticate
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
 from django.core.serializers import serialize
 from django.shortcuts import render, redirect
+
 
 from services import slackBot
 from services.models import Conversation
@@ -21,7 +22,7 @@ def user_login(request):
         if form.is_valid():
             form.errors['Неверный логин или пароль'] = form.error_class(['Ошибка'])
             cd = form.cleaned_data
-            user = authenticate(email=cd['email'], password=cd['password'])
+            user = authenticate(login=cd['login'], password=cd['password'])
             if user is not None:
                 if user.is_active:
                     login(request, user)
@@ -42,11 +43,13 @@ def dashboard(request):
             user_form.save()
         return redirect('/')
     else:
-        user_form = UserChangeForm(instance=request.user)
-        positions = Position.objects.all()
+        if Account.objects.filter(login=request.user)[0].position == 'HR' or Account.objects.filter(login=request.user)[0].position == 'hr':
+            user_form = HrChangeForm(instance=request.user)
+        else:
+            user_form = UserChangeForm(instance=request.user)
         return render(request,
                       'accounts/account1.html',
-                      {'user_form': user_form, 'positions': positions})
+                      {'user_form': user_form})
     # return render(request, 'accounts/account1.html', {'section': 'dashboard'})
 
 

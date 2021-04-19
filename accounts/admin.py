@@ -10,18 +10,18 @@ class AccountAdmin(BaseUserAdmin):
     form = UserChangeForm
     add_form = UserRegisterForm
 
-    list_display = ('email', 'name', 'position')
+    list_display = ('login', 'name', 'position')
 
     fieldsets = (
-        (None, {'fields': ('email', 'is_staff', 'is_superuser', 'password')}),
+        (None, {'fields': ('login', 'is_staff', 'is_superuser', 'password')}),
         ('Personal info', {'fields': ('name', 'phone', 'photo', 'position')}),
     )
     add_fieldsets = (
-        (None, {'fields': ('email', 'is_staff', 'is_superuser', 'password1', 'password2')}),
+        (None, {'fields': ('login', 'is_staff', 'is_superuser', 'password1', 'password2')}),
         ('Personal info', {'fields': ('name', 'phone')}),
     )
 
-    ordering = ('email',)
+    ordering = ('login',)
     filter_horizontal = ()
 
 

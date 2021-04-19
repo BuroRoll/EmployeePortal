@@ -1,19 +1,20 @@
 from django import forms
-from django.contrib.auth import authenticate
-from django.core.exceptions import ValidationError
+from django.db.models import Q
 
-from .models import Account
-
-from django.utils.safestring import mark_safe
+from .models import Account, Position
 
 
 class RegistrationForm(forms.ModelForm):
     password = forms.CharField(label='Password', widget=forms.PasswordInput)
 
+    def __init__(self, *args, **kwargs):
+        super(RegistrationForm, self).__init__(*args, **kwargs)
+        self.fields['position'].empty_label = None
+
     class Meta:
         model = Account
         fields = (
-            'email', 'name', 'phone', 'photo', 'info', 'position', 'is_new_employee', 'slack_login', 'telegram_login')
+            'login', 'name', 'phone', 'photo', 'info', 'position', 'is_new_employee', 'slack_login', 'telegram_login')
 
     def save(self, commit=True):
         user = super().save(commit=False)
@@ -29,7 +30,7 @@ class UserRegisterForm(forms.ModelForm):
 
     class Meta:
         model = Account
-        fields = ('email', 'name', 'phone', 'photo', 'is_staff', 'is_superuser')
+        fields = ('login', 'name', 'phone', 'photo', 'is_staff', 'is_superuser')
 
     def clean_password2(self):
         password1 = self.cleaned_data.get("password1")
@@ -56,6 +57,20 @@ class UserRegisterForm(forms.ModelForm):
 class UserChangeForm(forms.ModelForm):
     # photo = forms.ImageField(label=('Фото'), required=False, error_messages={'invalid': ("Image files only")},
     #                          widget=ImagePreviewWidget)
+    def __init__(self, *args, **kwargs):
+        super(UserChangeForm, self).__init__(*args, **kwargs)
+        self.fields['position'].empty_label = None
+        self.fields['position'].queryset = Position.objects.filter(~Q(position_name='HR'))
+
+    class Meta:
+        model = Account
+        fields = ('name', 'photo', 'phone', 'slack_login', 'telegram_login', 'position', 'info')
+
+
+class HrChangeForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(HrChangeForm, self).__init__(*args, **kwargs)
+        self.fields['position'].empty_label = None
 
     class Meta:
         model = Account
@@ -63,5 +78,5 @@ class UserChangeForm(forms.ModelForm):
 
 
 class LoginForm(forms.Form):
-    email = forms.CharField()
+    login = forms.CharField()
     password = forms.CharField(widget=forms.PasswordInput)

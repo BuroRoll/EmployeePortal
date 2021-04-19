@@ -22,7 +22,7 @@
             <h1>Личный кабинет</h1>
             <div class="delta-header">
                 <img class="profile-header" src=/media/{{ request.user.photo }} alt="Аватарка">
-                <h2 class="nickname-header">{{ request.user.email }}</h2>
+                <h2 class="nickname-header">{{ request.user.login }}</h2>
                 <a href="/logout" style="height: 28px"><img src={% static 'img/out.png' %} alt="Выход" width="28px"
                                                             height="28px"></a>
             </div>
@@ -142,6 +142,5 @@
     </div>
 
 </div>
-
 </body>
 </html>
