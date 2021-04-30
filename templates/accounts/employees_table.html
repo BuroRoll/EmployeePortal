@@ -26,6 +26,13 @@
     th {
         width: 212px;
     }
+
+    input {
+        font-size: 18px;
+        padding-left: 20px;
+        width: 850px;
+        height: 50px;
+    }
 </style>
 <body class="grey">
 <header>
@@ -82,12 +89,12 @@
             </thead>
             <tbody id="tbody">
             </tbody>
-
+            <!-- Расскоментируем если вернемся к той таблице
             <tfoot>
             <tr class="nav-back">
                 <td colspan="4"></td>
             </tr>
-            </tfoot>
+            </tfoot> -->
         </table>
 
         <div class="page-panel" style="display: none;">
@@ -167,7 +174,14 @@
 {#</script>#}
 <script>$(document).ready(function () {
     $('#paged').DataTable();
-});</script>
+});
+</script>
+<script defer>
+    let prev = document.querySelector('#paged_previous');
+    prev.innerHTML = 'Предыдущий';
+    let next = document.querySelector('#paged_next');
+    next.innerHTML = 'Следующий';
+</script>
 </body>
 </html>
 </body>
