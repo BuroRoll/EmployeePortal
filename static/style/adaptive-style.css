@@ -1,0 +1,255 @@
+@media (max-width: 1680px) {
+    .header-container {
+        max-width: 1440px;
+    }
+    .content-container {
+        max-width: 1440px;
+    }
+}
+
+
+@media (max-width: 1550px) {
+    .header-container {
+        max-width: 1240px;
+    }
+
+    .content-container {
+        max-width: 1240px;
+    }
+
+    .left-menu-text {
+        font-size: 13.5px;
+    }
+
+    .red-block {
+        width: 855px;
+        height: auto;
+        margin-top: 54px;
+    }
+
+    .delta-right {
+        margin-left: 80.5px;
+    }
+
+    .text-opisanie {
+        font-size: 12.5px;
+    }
+
+    .opisanie {
+        font-size: 13.5px;
+    }
+
+    .red-img {
+        width: 114.75px;
+        height: 114.75px;
+        margin-bottom: 48.75px;
+    }
+
+    .red-download {
+        width: auto;
+        height: 26.25px;
+        cursor: pointer;
+        color: white;
+        background: #7241FF;
+        border-radius: 16px;
+        padding: 7.5px;
+        text-transform: uppercase;
+        font-size: 11.25px;
+        padding-left: 11.25px;
+        padding-right: 11.25px;
+        margin-bottom: 20px;
+    }
+
+    .left-content-red {
+        width: 150px;
+        margin-left: 45px;
+        text-align: center;
+    }
+
+    .photo {
+        width: 21px;
+        margin-right: 7.5px;
+    }
+
+    .left-menu-element {
+        margin-bottom: 37.5px;
+    }
+
+    .right-content-red {
+        margin-left: 52.5px;
+    }
+
+    .text-opisanie {
+        width: 187.5px;
+    }
+
+    .candidate-block {
+        width: 530.25px;
+        height: 348px;
+    }
+
+    .candidate-form {
+        padding-left: 127.5px;
+        padding-right: 127.5px;
+    }
+
+    .candidate-submit {
+        width: 116.25px;
+        height: 29.25px;
+        border: none;
+        background: #7241FF;
+        border-radius: 16px;
+        color: white;
+        margin-top: 37.5px;
+        margin-bottom: 45px;
+        cursor: pointer;
+        font-size: 11px;
+    }
+
+}
+
+@media (max-height: 800px) {
+    .reg-h {
+        font-size: 18px;
+    }
+
+    .reg-block {
+        width: 420px;
+        margin-top: 90px;
+    }
+
+    .danger-block-login {
+        padding: 15px;
+        font-size: 9px;
+        height: 25px;
+    }
+
+    .form-reg {
+        width: 309px;
+        margin-top: 30px;
+    }
+
+    .reg-input {
+        width: 290px;
+    }
+
+    .log-label {
+        font-size: 13px;
+    }
+
+    .reg-input {
+        height: 33px;
+        font-size: 13px;
+    }
+
+    .top-margin {
+        margin-top: 22px;
+    }
+
+    .padding-bottom {
+        padding-bottom: 41.25px;
+    }
+
+    .sub-log {
+        width: 170px;
+        height: 37px;
+        background: #6C63FF;
+        border-radius: 8px;
+        font-size: 13px;
+        border: none;
+        margin-top: 26px;
+        color: white;
+        text-align: center;
+        cursor: pointer;
+        transition: 0.2s;
+        margin-bottom: 26px;
+    }
+
+    .pred_sub {
+        font-size: 10px;
+    }
+
+    .log-block {
+        width: 420px;
+        margin-top: 90px;
+    }
+
+    .reg-checkbox {
+        font-size: 13px;
+    }
+
+    .logo {
+        height: 45px;
+        width: auto;
+    }
+
+    .header-container {
+        height: 100px;
+    }
+
+    .sel-input {
+        width: 100%;
+    }
+
+    h1 {
+        font-size: 1.5em;
+    }
+
+    h2 {
+        font-size: 1.125em;
+    }
+
+    .profile-header {
+        width: 52.5px;
+        height: 52.5px;
+    }
+    .left-menu-img {
+        height: 21px;
+    }
+
+    .red-sel-input {
+        width: 210px;
+    }
+
+    .new-input {
+        width: 253px;
+    }
+    .download-block {
+        width: 637.5px;
+        height: 169.5px;
+    }
+
+    .download-button {
+        margin-top: 22.5px;
+        padding: 7.5px;
+        border: none;
+        width: 420px;
+        height: 41.25px;
+        outline: none;
+        background: #F2F2F2;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+
+    .sys-block {
+        width: 420px;
+        height: 274.5px;
+        margin-top: 97.5px;
+        margin-left: 52.5px;
+    }
+
+    .sys-img {
+        width: 45px;
+        height: 45px;
+    }
+
+    .sys-imgs {
+        width: 262.5px;
+        margin-top: 22.5px;
+    }
+
+    .h-sys {
+        margin-top: 45px;
+        margin-bottom: 45px;
+    }
+}

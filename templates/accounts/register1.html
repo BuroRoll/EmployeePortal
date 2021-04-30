@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>SKB_LAB | Регистрация</title>
+    <link rel="shortcut icon" type="image/png" href="{% static 'img/ico.ico' %}"/>
+    <link rel="stylesheet" href={% static 'style/style.css' %}>
+    <link rel="stylesheet" href={% static 'style/adaptive-style.css' %}>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital@0;1&display=swap" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src={% static 'js/phoneinput.js' %}></script>
+    <link rel="shortcut icon" type="image/png" href="{% static 'img/favicon.ico' %}"/>
+</head>
+<body>
+<header>
+    <div class="header-container">
+        <a href="/">
+            <img class="logo" src={% static 'img/logo.png' %} alt="Логотип">
+            {{ user_form.login.error_messages }}
+            {{ errors }}
+            {{ user_form.login.errors }}
+            {{ user_form.non_field_errors }}
+        </a>
+    </div>
+</header>
+<div class="log-block">
+
+    <form name="reg" class="form-reg" id="reg" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <h1 class="reg-h">Регистрация в личном кабинете сотрудника</h1>
+        <div>
+            <label class="log-label" for="login">Ваш логин</label><br>
+            <input type="text" placeholder="Логин" class="reg-input"
+                   name="{{ user_form.login.name }}"
+                   id="{{ user_form.login.id_for_label }}"
+                   {% if user_form.login.field.required %}required{% endif %}>
+        </div>
+        <div style="margin-top: 35px">
+            <label class="log-label" for="password">Ваш пароль</label><br>
+            <input type="password" placeholder="Пароль" class="reg-input"
+                   name="{{ user_form.password.name }}"
+                   id="{{ user_form.password.id_for_label }}"
+                   {% if user_form.password.field.required %}required{% endif %}>
+        </div>
+        <div style="margin-top: 35px">
+            <label class="log-label" for="FIO">ФИО</label><br>
+            <input type="text" placeholder="ФИО" class="reg-input"
+                   name="{{ user_form.name.name }}"
+                   id="{{ user_form.name.id_for_label }}"
+                   {% if user_form.name.field.required %}required{% endif %}>
+        </div>
+        <div style="margin-top: 35px">
+            <label class="log-label" for="tel">Ваш номер телефона</label><br>
+
+            <input type="tel" data-tel-input maxlength="18" class="reg-input"
+                   placeholder="Номер телефона"
+                   name="{{ user_form.phone.name }}"
+                   id="{{ user_form.name.id_for_label }}"
+                   maxlength="{{ user_form.name.field.max_length }}"
+                   {% if user_form.name.field.required %}required{% endif %}>
+        </div>
+
+
+        <div style="margin-top: 35px">
+            <label class="log-label" for="position">Выберите должность из списка</label><br>
+
+            <select class="reg-input sel-input" type="select"
+                    id={{ user_form.position.position_name }}
+                            name={{ user_form.position }}
+            </select>
+        </div>
+        <div style="margin-top: 35px">
+            <label class="log-label" for="login_telegram">Ваш логин Telegram</label><br>
+            <input type="text" class="reg-input"
+                   placeholder="Логин Telegram"
+                   name="{{ user_form.telegram_login.name }}"
+                   id="{{ user_form.telegram_login.id_for_label }}"
+                   {% if user_form.telegram_login.field.required %}required{% endif %}>
+        </div>
+        <div style="margin-top: 35px">
+            <label class="log-label" for="login_slack">Ваш логин Slack</label><br>
+            <input type="text" class="reg-input"
+                   placeholder="Логин Slack"
+                   name="{{ user_form.slack_login.name }}"
+                   id="{{ user_form.slack_login.id_for_label }}"
+                   {% if user_form.slack_login.field.required %}required{% endif %}>
+        </div>
+        <div style="margin-top: 35px">
+
+            <label class="log-label" for="system">Запрос на доступ к системам</label><br>
+            <select class="reg-input sel-input" name="system" id="system" form="reg" multiple
+                    style="height: 100px; padding-top: 10px; padding-bottom: 10px;">
+
+                {% for conversation in conversations %}
+                    <option>{{ conversation.conversation_name }}({{ conversation.messenger }})</option>
+                {% endfor %}
+                {% for system in systems %}
+                    <option>{{ system.system_name }}</option>
+                {% endfor %}
+            </select>
+
+        </div>
+
+        <div style="margin-top: 35px">
+            <label class="log-label" for="text">Расскажите о себе</label><br>
+
+            {#            <input type="text" class="reg-input"#}
+            {#                   placeholder="Описание"#}
+            {#                   name="{{ user_form.info.name }}"#}
+            {#                   id="{{ user_form.info.id_for_label }}"#}
+            {#                   {% if user_form.info.field.required %}required{% endif %}>#}
+            <textarea id="{{ user_form.info.id_for_label }}" name="{{ user_form.info.name }}" class="reg-input"
+                      placeholder="Описание"
+                      {% if user_form.info.field.required %}required{% endif %}></textarea>
+        </div>
+
+
+        {#        <div style="margin-top: 35px">#}
+        {#            <label class="log-label">Ваше фото</label>#}
+        {#            <img id="imgInp" alt="" style="float: left; width: 50px">#}
+        {#            <label style="float: left;" class="reg-input reg-download" for="id_photo">Выбрать фото</label>#}
+        {#                        <input class="reg-input reg-download-photo" id="photo" name="password" type="file"#}
+        {#                               placeholder="Выбрать фото">#}
+        {#            <input class="reg-input reg-download-photo" type="file" name="photo" accept="image/*" #}
+        {#                   style="display: none">#}
+        {#            #}
+        {#        </div>#}
+        <div style="margin-top: 35px; text-align: left">
+            <label class="log-label" style="    float: inherit;">Ваше фото</label>
+            <div class="reg-img-block">
+                <label class="reg-input reg-download" for="id_photo" style="width: 130px; height: 20px;">Выбрать
+                    фото</label>
+                <img id="imgInp" alt="" class="reg-img">
+            </div>
+            <input class="reg-input reg-download-photo" id="id_photo" name="photo" type="file"
+                   placeholder="Выбрать фото" style="display: none" accept="image/*">
+            <script type="text/javascript">
+                function readURL(input) {
+                    if (input.files && input.files[0]) {
+                        var reader = new FileReader();
+
+                        reader.onload = function (e) {
+                            $('#imgInp').attr('src', e.target.result);
+                        }
+
+                        reader.readAsDataURL(input.files[0]); // convert to base64 string
+                    }
+                }
+
+                $("#id_photo").change(function () {
+                    readURL(this);
+                });
+            </script>
+        </div>
+
+
+        <div style="float:left;" class="check">
+            <input style="floar:left;" type="checkbox" name="{{ user_form.is_new_employee.name }}"
+                   id="{{ user_form.is_new_employee.id_for_label }}">
+            <span style="color: black; margin-left: 10px;">Новый сотрудник</span>
+        </div>
+        <div style="float:left;" class="check">
+            <input style="float:left;" class="check_box" type="checkbox" name="checkbox" required>
+            <span style="color: black; margin-left: 10px;">Я согласен на <a><u>обработку персональных данных</u></a></span>
+        </div>
+
+
+        <div>
+            <input class="sub-log" type="submit" name="submit" value="Зарегистрироваться">
+        </div>
+    </form>
+
+</div>
+<script src={% static 'js/ajax-form.js' %}></script>
+</body>
+</html>

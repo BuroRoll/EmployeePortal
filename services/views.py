@@ -1,12 +1,17 @@
 import json
 
 import requests
+from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
+from django.shortcuts import render
 from django.views import View
-from .models import Conversation, Messenger
+from accounts.models import Account, Position
+from . import slackBot
+
+from .models import Conversation, Messenger, System
 
 TELEGRAM_URL = "https://api.telegram.org/bot"
-BOT_TOKEN = '1758647032:AAGzI_bIdCfptgajV9GTrDM5G25LmCrhRWM'
+BOT_TOKEN = '1758647032:AAFDLU2mbQ7TS3o2Ywbq65xIv9KJALNj2uE'
 
 
 # https://api.telegram.org/bot<token>/setWebhook?url=<url>/webhooks/telegram/
@@ -61,7 +66,7 @@ class TGBotView(View):
                 }
                 requests.post(
                     f"{TELEGRAM_URL}{BOT_TOKEN}/sendMessage", data=data)
-            else:
+            elif not channel.conversation_for_accesses:
                 data = {
                     "chat_id": channel.conversation_id,
                     "text": msg_for_all,
@@ -69,3 +74,42 @@ class TGBotView(View):
                 }
                 requests.post(
                     f"{TELEGRAM_URL}{BOT_TOKEN}/sendMessage", data=data)
+
+    @staticmethod
+    def send_to_access(name, login, selected_conversations, conversation):
+        msg = 'Сотруднику ' + name + '(@' + login + ')' + '\n' \
+              + 'Нужен доступ к ' + ', '.join(selected_conversations)
+
+        data = {
+            "chat_id": conversation.conversation_id,
+            "text": msg,
+            "parse_mode": "Markdown",
+        }
+        requests.post(
+            f"{TELEGRAM_URL}{BOT_TOKEN}/sendMessage", data=data)
+
+
+@login_required
+def get_system_access(request):
+    if request.method == 'POST':
+        selected_system = request.POST.getlist('system')
+        print(type(request.user.position))
+        username = request.user.name
+        telegram_login = request.user.telegram_login
+        slack_login = request.user.slack_login
+        telegram_messenger_id = Messenger.objects.filter(messenger_name='Telegram')[0].id
+        slack_messenger_id = Messenger.objects.filter(messenger_name='Slack')[0].id
+        for conversations_for_accesses in Conversation.objects.filter(conversation_for_accesses=True):
+            if conversations_for_accesses.messenger_id == telegram_messenger_id:
+                TGBotView.send_to_access(username,
+                                         telegram_login,
+                                         selected_system, conversations_for_accesses)
+            elif conversations_for_accesses.messenger_id == slack_messenger_id:
+                slackBot.send_msg_to_access(username,
+                                            slack_login,
+                                            selected_system, conversations_for_accesses)
+    conversations = Conversation.objects.all()
+    systems = System.objects.all()
+
+    return render(request,
+                  'systems/systems.html', {'conversations': conversations, 'systems': systems})

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>SKB_LAB | Профиль</title>
+    <link rel="shortcut icon" type="image/png" href="{% static 'img/favicon.ico' %}"/>
+    <link rel="stylesheet" href={% static 'style/style.css' %}>
+    <link rel="stylesheet" href={% static 'style/adaptive-style.css' %}>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital@0;1&display=swap" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src={% static 'js/phoneinput.js' %}></script>
+</head>
+<body class="grey">
+<header>
+    <div class="header-container">
+        <a href="/">
+            <img class="logo" src={% static 'img/logo.png' %} alt="Логотип">
+        </a>
+        <div class="right-header">
+            <h1>Личный кабинет</h1>
+            <div class="delta-header">
+                <img class="profile-header" alt="Аватар" src=/media/{{ request.user.photo }} >
+                <h2 class="nickname-header">{{ request.user.login }}</h2>
+                <a href="/logout" style="height: 28px"><img src={% static 'img/out.png' %} alt="Выход" width="28px"
+                                                            height="28px"></a>
+            </div>
+        </div>
+    </div>
+</header>
+<div class="content-container">
+    <div class="left-menu">
+        <ul>
+            <a href="/">
+                <li class="left-menu-element"><img class="left-menu-img" src={% static 'img/profile.png' %} alt=""><span
+                        class="left-menu-text">Профиль</span></li>
+            </a>
+            <a href="/">
+                <li class="left-menu-element"><img class="left-menu-img" src={% static 'img/calen.png' %} alt=""><span
+                        class="left-menu-text">График отпусков</span></li>
+            </a>
+            <a href="/systems/get_access/">
+                <li class="left-menu-element"><img class="left-menu-img" src={% static 'img/set.png' %} alt=""><span
+                        class="left-menu-text">Доступы к системам</span></li>
+            </a>
+            <a href="/get_all_employees">
+                <li class="left-menu-element"><img class="left-menu-img" src={% static 'img/sotrud.png' %} alt=""><span
+                        class="left-menu-text">Список сотрудников</span></li>
+            </a>
+            {% if request.user.position.access_to_candidates %}
+                <a href="/get_all_candidates">
+                    <li class="left-menu-element"><img class="left-menu-img"
+                                                       src={% static "img/sotrud.png" %} alt=""><span
+                            class="left-menu-text">Список кандидатов</span></li>
+                </a>
+            {% endif %}
+            {% if request.user.position.access_to_vacation_list %}
+                <a href="/">
+                    <li class="left-menu-element"><img class="left-menu-img"
+                                                       src={% static "img/calen_list.png" %} alt=""><span
+                            class="left-menu-text">Список отпусков</span></li>
+                </a>
+            {% endif %}
+
+        </ul>
+    </div>
+
+    <div class="red-block">
+        <h2 class="h-red">Мои данные</h2>
+        <form class="content-red" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="left-content-red">
+                <img id="imgInp" src=/media/{{ request.user.photo }} alt="" class="red-img">
+
+                <input class="red-download" type="file" name="photo" accept="image/*" id="id_photo"
+                       style="display: none">
+                <label for="id_photo" class="red-download"><img src={% static 'img/photo.png' %} alt="" width="28px"
+                                                                class="photo"> Загрузить фото</label><br>
+                <script type="text/javascript">
+                    function readURL(input) {
+                        if (input.files && input.files[0]) {
+                            var reader = new FileReader();
+
+                            reader.onload = function (e) {
+                                $('#imgInp').attr('src', e.target.result);
+                            }
+
+                            reader.readAsDataURL(input.files[0]); // convert to base64 string
+                        }
+                    }
+
+                    $("#id_photo").change(function () {
+                        readURL(this);
+                    });
+                </script>
+
+            </div>
+            <div class="right-content-red">
+                <div style="display: flex">
+                    <div>
+                        <div class="red-left-right">
+                            <label class="log-label red-label" for="second_name">ФИО:</label><br>
+                            <input class="reg-input red-input"
+                                   placeholder="ФИО"
+                                   name="{{ user_form.name.name }}"
+                                   id="{{ user_form.name.id_for_label }}"
+                                   {% if user_form.name.value != None %}value="{{ user_form.name.value|stringformat:'s' }}"{% endif %}
+                                   maxlength="{{ user_form.name.field.max_length }}"
+                                   {% if user_form.name.field.required %}required{% endif %}>
+                        </div>
+                        <div class="red-left-right">
+                            <label class="log-label red-label" for="first_name">Логин Telegram:</label><br>
+                            <input class="reg-input red-input" type="text"
+                                   placeholder="Telegram login"
+                                   name="{{ user_form.telegram_login.name }}"
+                                   id="{{ user_form.telegram_login.id_for_label }}"
+                                   {% if user_form.telegram_login.value != None %}value="{{ user_form.telegram_login.value|stringformat:'s' }}"{% endif %}
+                                   {% if user_form.telegram_login.field.required %}required{% endif %}>
+                        </div>
+                        <div class="red-left-right">
+                            <label class="log-label red-label" for="middle_name">Логин Slack:</label><br>
+                            <input class="reg-input red-input" type="text"
+                                   placeholder="Slack login"
+                                   name="{{ user_form.slack_login.name }}"
+                                   id="{{ user_form.slack_login.id_for_label }}"
+                                   {% if user_form.slack_login.value != None %}value="{{ user_form.slack_login.value|stringformat:'s' }}"{% endif %}
+                                   {% if user_form.slack_login.field.required %}required{% endif %}>
+                        </div>
+                        <div class="red-left-right">
+                            <label class="log-label red-label"
+                                   for={{ user_form.name.id_for_label }}>Телефон:</label><br>
+                            <input data-tel-input id="{{ user_form.phone.id_for_label }}"
+                                   name="{{ user_form.phone.name }}" class="reg-input red-input" type="text"
+                                   placeholder="Номер телефона" maxlength="18"
+                                   {% if user_form.phone.value != None %}value="{{ user_form.phone.value|stringformat:'s' }}"{% endif %}>
+                        </div>
+                    </div>
+                    <div class="delta-right">
+                        <select class="reg-input sel-input red-sel-input" type="select"
+                                id={{ user_form.positionz }}
+                                        name={{ user_form.position }}
+                        <option selected value="user_form.position">
+                        </option>
+
+                        </select>
+                        <span class="opisanie">Описание:</span>
+                        <div class="text-opisanie">
+                            {{ request.user.info }}
+                        </div>
+                    </div>
+
+                </div>
+                <input type="submit" class="red-download red-save" value="Сохранить изменения">
+            </div>
+        </form>
+    </div>
+
+</div>
+</body>
+</html>

@@ -1,10 +1,14 @@
-import requests
 import json
+
+import requests
+
 from .models import Conversation, Messenger
 
 
 def post_message_to_slack(data, slack_user_name='Новый сотрудник', blocks=None):
     mess = Messenger.objects.get(messenger_name='Slack')
+    # channels = Conversation.objects.exclude(conversation_for_accesses=False, hr_conversation=False).filter(
+    #     messenger=mess)
     channels = Conversation.objects.filter(messenger=mess)
     msg_for_hr = 'У нас новый сотрудник ' + data.cleaned_data['name'] + '\n' \
                  + 'На должности ' + str(data.cleaned_data['position']) + '\n' \
@@ -22,7 +26,7 @@ def post_message_to_slack(data, slack_user_name='Новый сотрудник',
                 'username': slack_user_name,
                 'blocks': json.dumps(blocks) if blocks else None
             }).json()
-        else:
+        elif not channel.conversation_for_accesses:
             requests.post('https://slack.com/api/chat.postMessage', {
                 'token': channel.token,
                 'channel': channel.conversation_id,
@@ -30,3 +34,15 @@ def post_message_to_slack(data, slack_user_name='Новый сотрудник',
                 'username': slack_user_name,
                 'blocks': json.dumps(blocks) if blocks else None
             }).json()
+
+
+def send_msg_to_access(name, login, selected_conversations, conversation, blocks=None):
+    msg = 'Сотруднику ' + name + '(@' + login + ')' + '\n' \
+          + 'Нужен доступ к ' + ', '.join(selected_conversations)
+    requests.post('https://slack.com/api/chat.postMessage', {
+        'token': conversation.token,
+        'channel': conversation.conversation_id,
+        'text': msg,
+        'username': 'Доступ к системам',
+        'blocks': json.dumps(blocks) if blocks else None
+    }).json()

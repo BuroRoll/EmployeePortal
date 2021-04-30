@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>SKB_LAB | Список сотрудников</title>
+    <link rel="stylesheet" href={% static 'style/style.css' %}>
+    <link rel="stylesheet" href={% static 'style/adaptive-style.css' %}>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital@0;1&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" type="image/png" href="{% static 'img/favicon.ico' %}"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript" charset="utf8"
+            src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>
+</head>
+<style>
+    th {
+        width: 212px;
+    }
+
+    input {
+        font-size: 18px;
+        padding-left: 20px;
+        width: 850px;
+        height: 50px;
+    }
+</style>
+<style>
+    {#body {font-family: Arial, Helvetica, sans-serif;}#}
+
+    /* The Modal (background) */
+    .modal {
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 1; /* Sit on top */
+        padding-top: 100px; /* Location of the box */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgb(0, 0, 0); /* Fallback color */
+        background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+    }
+
+    /* Modal Content */
+    .modal-content {
+        background-color: #fefefe;
+        margin: auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+    }
+
+    /* The Close Button */
+    .close {
+        color: #aaaaaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+    .close:hover,
+    .close:focus {
+        color: #000;
+        text-decoration: none;
+        cursor: pointer;
+    }
+</style>
+<body class="grey">
+<header>
+    <div class="header-container">
+        <a href="/">
+            <img class="logo" src={% static  "img/logo.png" %} alt="Логотип">
+        </a>
+        <div class="right-header">
+            <h1>Личный кабинет</h1>
+            <div class="delta-header">
+                <img class="profile-header" src=/media/{{ request.user.photo }} alt="Аватарка">
+                <h2 class="nickname-header">{{ request.user.login }}</h2>
+                <a href="/logout" style="height: 28px"><img src={% static "img/out.png" %} alt="Выход" width="28px"
+                                                            height="28px"></a>
+            </div>
+        </div>
+    </div>
+</header>
+<div class="content-container">
+    <div class="left-menu">
+        <ul>
+            <a href="/">
+                <li class="left-menu-element"><img class="left-menu-img" src={% static 'img/profile.png' %} alt=""><span
+                        class="left-menu-text">Профиль</span></li>
+            </a>
+            <a href="/">
+                <li class="left-menu-element"><img class="left-menu-img" src={% static 'img/calen.png' %} alt=""><span
+                        class="left-menu-text">График отпусков</span></li>
+            </a>
+            <a href="/systems/get_access/">
+                <li class="left-menu-element"><img class="left-menu-img" src={% static 'img/set.png' %} alt=""><span
+                        class="left-menu-text">Доступы к системам</span></li>
+            </a>
+            <a href="/get_all_employees">
+                <li class="left-menu-element"><img class="left-menu-img" src={% static 'img/sotrud.png' %} alt=""><span
+                        class="left-menu-text">Список сотрудников</span></li>
+            </a>
+            {% if request.user.position.access_to_candidates %}
+                <a href="/get_all_candidates">
+                    <li class="left-menu-element"><img class="left-menu-img"
+                                                       src={% static "img/sotrud.png" %} alt=""><span
+                            class="left-menu-text">Список кандидатов</span></li>
+                </a>
+            {% endif %}
+            {% if request.user.position.access_to_vacation_list %}
+                <a href="/">
+                    <li class="left-menu-element"><img class="left-menu-img"
+                                                       src={% static "img/calen_list.png" %} alt=""><span
+                            class="left-menu-text">Список отпусков</span></li>
+                </a>
+            {% endif %}
+            <button id="myBtn">Open Modal</button>
+        </ul>
+    </div>
+    <div class="right-container">
+        <h1 class="h-list">Список кандидатов</h1>
+        {#        <form action="">#}
+        {#            <input class="candidate-list" type="text" onkeyup="tableSearch()" placeholder="Поиск сотрудников"#}
+        {#                   name="share" id="search">#}
+        {#        </form>#}
+        <table class="candidate-table" id="paged">
+            <thead>
+            <tr class="candidate-list-block">
+                <th>Фамилия ️<img style='width: 13px' src= {% static 'img/updown.ico' %}></th>
+                <th>Имя️ <img style='width: 13px' src= {% static 'img/updown.ico' %}></th>
+                <th>Отчество <img style='width: 13px' src= {% static 'img/updown.ico' %}></th>
+                <th>Претендуемая должность ️<img style='width: 13px' src= {% static 'img/updown.ico' %}></th>
+                <th style="width: 80px">️</th>
+            </tr>
+            </thead>
+            <tbody id="tbody">
+            </tbody>
+            <!-- Расскоментируем если вернемся к той таблице
+            <tfoot>
+            <tr class="nav-back">
+                <td colspan="4"></td>
+            </tr>
+            </tfoot> -->
+        </table>
+
+        <div class="page-panel" style="display: none;">
+            <div class="prev">
+                <img src={% static  "img/pointer.png" %} alt="" class="prev-img">
+                Предыдущий
+            </div>
+
+            <div class="next">
+                Следующий
+                <img src={% static  "img/pointer.png" %} alt="" class="next-img">
+            </div>
+        </div>
+
+    </div>
+
+</div>
+<script defer>
+    let employees = JSON.parse('{{ candidates | safe }}');
+    let positions = JSON.parse('{{ positions | safe }}');
+
+    for (let i = 0; i < employees.length; i++) {
+        let fio = employees[i].fields.name.split(' ');
+        let tr = document.createElement('tr');
+        tr.classList.add('candidate-list-block');
+        let td1 = tr.appendChild(document.createElement('td'));
+        td1.innerHTML = fio[0]
+        let td2 = tr.appendChild(document.createElement('td'))
+        td2.innerHTML = fio[1]
+        let td3 = tr.appendChild(document.createElement('td'))
+        td3.innerHTML = fio[2]
+        let td4 = tr.appendChild(document.createElement('td'))
+        td4.innerHTML = positions[employees[i].fields.position - 1].fields.position_name;
+        let td5 = tr.appendChild(document.createElement('td'))
+        {#let td5 = tr.appendChild(document.createElement('td'))#}
+        {#let delimg = document.createElement('img');#}
+        {#delimg.src = {% static 'img/delete.png' %};#}
+        {#delimg.classList.add('delete-img');#}
+        td5.innerHTML = '<img src={% static "img/delete.png"%} class="delete-img">';
+        document.getElementById('tbody').appendChild(tr);
+
+    }
+</script>
+
+
+<script defer>$(document).ready(function () {
+    $('#paged').DataTable();
+});
+</script>
+<div id="myModal" class="modal">
+
+    <!-- Modal content -->
+    <div class="red-block candidate-block">
+        <h2 class="h-red h-candidate">Новый кандидат</h2>
+        <form class="candidate-form" id="new_candidate">
+            {% csrf_token %}
+            <div class="top-margin">
+                <label class="log-label" for="FIO">ФИО</label><br>
+
+                <input class="reg-input new-input" type="text" name="name" maxlength="250" required id="id_name">
+            </div>
+            <div class="top-margin">
+                <label class="log-label" for="position">Выберите должность из списка</label><br>
+
+                <select class="reg-input sel-input" type="select"
+                        name={{ candidate_form.position }}
+                                </div>
+                    <input type="submit" class="candidate-submit" value="Добавить">
+        </form>
+    </div>
+
+</div>
+</body>
+<script>
+    // Get the modal
+    let modal = document.getElementById("myModal");
+
+    // Get the button that opens the modal
+    let btn = document.getElementById("myBtn");
+
+    // Get the <span> element that closes the modal
+    let span = document.getElementsByClassName("candidate-submit")[0];
+
+    // When the user clicks the button, open the modal
+    btn.onclick = function () {
+        modal.style.display = "block";
+    }
+
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function () {
+        modal.style.display = "none";
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function (event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+</script>
+
+
+<script>
+    // getCookie Provided by Django in the Official Docs
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    const csrftoken = getCookie('csrftoken');
+
+    // Setting the Click Event Listener on the Submit Button
+    $('[type="submit"]').on('click', function (e) {
+        e.preventDefault()
+        // Making the AJAX Request
+        $.ajax({
+
+            url: $("form")[0].action,
+            type: "POST",
+            data: {
+                name: $("#id_name")[0].value,
+                position: $("#id_position").val(),
+            },
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            },
+            success: function (data) {
+                console.log(data);
+                location.reload()
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+    })
+
+</script>
+<script src={% static 'js/hr-table.js' %}></script>
+</html>
+</body>
+</html>
