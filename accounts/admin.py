@@ -1,9 +1,9 @@
 from django.contrib import admin
-from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from django.contrib.auth.models import Group
 
-from .models import *
 from .forms import UserRegisterForm, UserChangeForm
+from .models import *
 
 
 class AccountAdmin(BaseUserAdmin):
@@ -21,13 +21,18 @@ class AccountAdmin(BaseUserAdmin):
         ('Personal info', {'fields': ('name', 'phone')}),
     )
 
+    search_fields = ('name',)
+    list_filter = ('position', )
     ordering = ('login',)
     filter_horizontal = ()
 
 
+class CandidatesAdmin(admin.ModelAdmin):
+    model = Candidate
+    list_display = ('name', 'position')
+
+
 admin.site.register(Account, AccountAdmin)
 admin.site.register(Position)
+admin.site.register(Candidate, CandidatesAdmin)
 admin.site.unregister(Group)
-
-
-

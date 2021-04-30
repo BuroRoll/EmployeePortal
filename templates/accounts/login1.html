@@ -2,29 +2,36 @@
 {% load static %}
 <html lang="en">
 <head>
+    <link rel="shortcut icon" type="image/png" href="{% static 'img/ico.ico' %}"/>
     <meta charset="UTF-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width">
-    <title>Вход</title>
+    <title>SKB_LAB | Вход</title>
     <link rel="stylesheet" href={% static 'style/style.css' %}>
+    <link rel="stylesheet" href={% static 'style/adaptive-style.css' %}>
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital@0;1&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" type="image/png" href="{% static 'img/favicon.ico' %}"/>
 </head>
 <body>
 <header>
     <div class="header-container">
         <a href="/">
-            <img class="logo" src={% static 'img/logo.png' %} alt='Логотип'>
+            <img class="logo" src={% static 'img/logo.png' %} alt="Логотип">
         </a>
     </div>
 </header>
-<div class="reg-block">
-    <h1 class="reg-h">Вход в личный кабинет</h1>
+<div class="reg-block auto-height">
+    <h1 class="reg-h">Вход</h1>
+    {% for error in form.errors %}
+        <div class="danger-block-login">
+            <b>Не удается войти.</b> <br>
+            <span> Пожалуйста, проверьте правильность написания <b>логина</b> и <b>пароля</b>.</span>
+        </div>
+    {% endfor %}
     <form method="post" enctype="multipart/form-data" name="reg" class="form-reg">
         {% csrf_token %}
-        {% for error in form.errors %}
-            <h1>ERROR</h1>
-        {% endfor %}
+
         <div>
             <label class="log-label" for="login">Ваш логин</label><br>
             <input class="reg-input" type="text" placeholder="Логин"
@@ -32,14 +39,15 @@
                    id="{{ form.login.id_for_label }}"
                    {% if user_form.login.field.required %}required{% endif %}>
         </div>
+
         <div style="margin-top: 35px">
             <label class="log-label" for="password">Ваш пароль</label><br>
-            <input class="reg-input" type="password" placeholder="Пароль"
+            <input id="password" name="password" class="reg-input" type="password" placeholder="Пароль"
                    name="{{ form.password.name }}"
                    id="{{ form.password.id_for_label }}"
                    {% if user_form.name.field.required %}required{% endif %}>
         </div>
-        <div>
+        <div style="padding-bottom: 55px">
             <input class="sub-log" type="submit" value="Вход">
             <br>
             <a class="pred_sub" href="/register">Нет аккаунта? Зарегистрироваться</a>
@@ -49,3 +57,5 @@
 </div>
 </body>
 </html>
+
+

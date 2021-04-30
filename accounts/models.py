@@ -41,6 +41,8 @@ class AccountManager(BaseUserManager):
 
 class Position(models.Model):
     position_name = models.CharField(max_length=100)
+    access_to_candidates = models.BooleanField(default=False)
+    access_to_vacation_list = models.BooleanField(default=False)
 
     def __str__(self):
         return self.position_name
@@ -67,3 +69,8 @@ class Account(AbstractBaseUser, PermissionsMixin):
 
     USERNAME_FIELD = 'login'
     REQUIRED_FIELDS = ['name', 'phone']
+
+
+class Candidate(models.Model):
+    name = models.CharField(max_length=250)
+    position = models.ForeignKey(Position, on_delete=models.CASCADE, null=True)

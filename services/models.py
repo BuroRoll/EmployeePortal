@@ -16,6 +16,14 @@ class Conversation(models.Model):
     admin = models.CharField(max_length=150, blank=True)
     hr_conversation = models.BooleanField(default=False)
     conversation_for_accesses = models.BooleanField(default=False)
+    conversation_for_info = models.BooleanField(default=False)
 
     def __str__(self):
         return self.conversation_name
+
+
+class System(models.Model):
+    system_name = models.CharField(max_length=250)
+
+    def __str__(self):
+        return self.system_name

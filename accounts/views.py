@@ -4,16 +4,15 @@ from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
 from django.core.serializers import serialize
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 
-
 from services import slackBot
-from services.models import Conversation
+from services.models import Conversation, Messenger, System
 from services.views import TGBotView
 from .forms import *
 from .forms import RegistrationForm
-from .models import Account
-from .models import Position
+from .models import Account, Position, Candidate
 
 
 def user_login(request):
@@ -35,22 +34,17 @@ def user_login(request):
 
 
 @login_required
-def dashboard(request):
+def account(request):
     if request.method == 'POST':
         user_form = UserChangeForm(instance=request.user, data=request.POST, files=request.FILES)
         if user_form.is_valid():
-            print(user_form)
             user_form.save()
         return redirect('/')
     else:
-        if Account.objects.filter(login=request.user)[0].position == 'HR' or Account.objects.filter(login=request.user)[0].position == 'hr':
-            user_form = HrChangeForm(instance=request.user)
-        else:
-            user_form = UserChangeForm(instance=request.user)
+        user_form = UserChangeForm(instance=request.user)
         return render(request,
                       'accounts/account1.html',
                       {'user_form': user_form})
-    # return render(request, 'accounts/account1.html', {'section': 'dashboard'})
 
 
 @login_required
@@ -59,7 +53,7 @@ def change_password(request):
         form = PasswordChangeForm(request.user, request.POST)
         if form.is_valid():
             user = form.save()
-            update_session_auth_hash(request, user)  # Important!
+            update_session_auth_hash(request, user)
             messages.success(request, 'Your password was successfully updated!')
             return redirect('/')
         else:
@@ -77,67 +71,59 @@ def register(request):
             new_user.set_password(user_form.cleaned_data['password'])
             new_user.save()
             login(request, new_user)
-            selected_conversations = request.POST.getlist('select')
+            selected_conversations = request.POST.getlist('system')
             if user_form.cleaned_data['is_new_employee']:
                 slackBot.post_message_to_slack(user_form)
                 TGBotView.send_to_all(user_form)
             if len(selected_conversations) > 0:
+                telegram_messenger_id = Messenger.objects.filter(messenger_name='Telegram')[0].id
+                slack_messenger_id = Messenger.objects.filter(messenger_name='Slack')[0].id
                 for conversations_for_accesses in Conversation.objects.filter(conversation_for_accesses=True):
-                    if conversations_for_accesses.messenger.messenger_name == 'Telegram':
+                    if conversations_for_accesses.messenger_id == telegram_messenger_id:
                         TGBotView.send_to_access(user_form.cleaned_data['name'],
                                                  user_form.cleaned_data['telegram_login'],
                                                  selected_conversations, conversations_for_accesses)
-                    if conversations_for_accesses.messenger.messenger_name == 'Slack':
+                    elif conversations_for_accesses.messenger_id == slack_messenger_id:
                         slackBot.send_msg_to_access(user_form.cleaned_data['name'],
                                                     user_form.cleaned_data['slack_login'],
                                                     selected_conversations, conversations_for_accesses)
             return redirect('/')
-    # else:
     user_form = RegistrationForm()
     conversations = Conversation.objects.all()
-    return render(request, 'accounts/register1.html', {'user_form': user_form, 'conversations': conversations})
+    systems = System.objects.all()
+    return render(request, 'accounts/register1.html',
+                  {'user_form': user_form, 'conversations': conversations, 'systems': systems})
 
 
-@login_required
-def edit(request):
-    if request.method == 'POST':
-        user_form = UserChangeForm(instance=request.user, data=request.POST, files=request.FILES)
-        if user_form.is_valid():
-            print(user_form)
-            user_form.save()
-        return redirect('/')
-    else:
-        user_form = UserChangeForm(instance=request.user)
-        return render(request,
-                      'accounts/edit.html',
-                      {'user_form': user_form})
-
-
+# Метод для получения списка сотрудников
 @login_required
 def get_all_employees(request):
     employee = Account.objects.filter(is_superuser=False)
     positions = Position.objects.all()
     employee = serialize('json', employee, fields=['name', 'position'])
     positions = serialize('json', positions, fields=['position_name'])
-    return render(request, 'accounts/table-test.html', {'employees': employee, 'positions': positions})
+    return render(request, 'accounts/employees_table.html',
+                  {'employees': employee, 'positions': positions})
 
 
+@login_required
+def get_all_candidates(request):
+    if request.method == "POST":
+        form = CandidateForm(request.POST)
+        if form.is_valid():
+            candidate = form.save()
+            # return JsonResponse({"msg": "Candidate successfully saved."})
+        else:
+            return JsonResponse({"msg": "Invalid data"})
+    candidates = Candidate.objects.all()
+    positions = Position.objects.all()
+    candidates = serialize('json', candidates, fields=['name', 'position'])
+    positions = serialize('json', positions, fields=['position_name'])
+    candidate_form = CandidateForm()
+    return render(request, 'accounts/candidates_table.html',
+                  {'candidates': candidates, 'positions': positions, 'candidate_form': candidate_form})
 
-# let employees = JSON.parse('{{ employees | safe }}');
-#     let positions = JSON.parse('{{ positions | safe }}');
-#
-#     for (let i = 0; i < employees.length; i++) {
-#         let fio = employees[i].fields.name.split(' ');
-#         let tr = document.createElement('tr');
-#         tr.classList.add('candidate-list-block');
-#         let td1 = tr.appendChild(document.createElement('td'));
-#         td1.innerHTML = fio[0]
-#         let td2 = tr.appendChild(document.createElement('td'))
-#         td2.innerHTML = fio[1]
-#         let td3 = tr.appendChild(document.createElement('td'))
-#         td3.innerHTML = fio[2]
-#         let td4 = tr.appendChild(document.createElement('td'))
-#         td4.innerHTML = positions[employees[i].fields.position - 1].fields.position_name
-#
-#         document.getElementById('paged').appendChild(tr);
-#     }
+
+def candidate_form(request):
+    form = CandidateForm()
+    return render(request, 'accounts/candidates_table.html.html', {"form": form})

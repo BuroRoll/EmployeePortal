@@ -5,8 +5,10 @@
     <meta charset="UTF-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width">
-    <title>Профиль</title>
+    <title>SKB_LAB | Профиль</title>
+    <link rel="shortcut icon" type="image/png" href="{% static 'img/favicon.ico' %}"/>
     <link rel="stylesheet" href={% static 'style/style.css' %}>
+    <link rel="stylesheet" href={% static 'style/adaptive-style.css' %}>
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital@0;1&display=swap" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -21,7 +23,7 @@
         <div class="right-header">
             <h1>Личный кабинет</h1>
             <div class="delta-header">
-                <img class="profile-header" src=/media/{{ request.user.photo }} alt="Аватарка">
+                <img class="profile-header" alt="Аватар" src=/media/{{ request.user.photo }} >
                 <h2 class="nickname-header">{{ request.user.login }}</h2>
                 <a href="/logout" style="height: 28px"><img src={% static 'img/out.png' %} alt="Выход" width="28px"
                                                             height="28px"></a>
@@ -40,7 +42,7 @@
                 <li class="left-menu-element"><img class="left-menu-img" src={% static 'img/calen.png' %} alt=""><span
                         class="left-menu-text">График отпусков</span></li>
             </a>
-            <a href="/">
+            <a href="/systems/get_access/">
                 <li class="left-menu-element"><img class="left-menu-img" src={% static 'img/set.png' %} alt=""><span
                         class="left-menu-text">Доступы к системам</span></li>
             </a>
@@ -48,6 +50,21 @@
                 <li class="left-menu-element"><img class="left-menu-img" src={% static 'img/sotrud.png' %} alt=""><span
                         class="left-menu-text">Список сотрудников</span></li>
             </a>
+            {% if request.user.position.access_to_candidates %}
+                <a href="/get_all_candidates">
+                    <li class="left-menu-element"><img class="left-menu-img"
+                                                       src={% static "img/sotrud.png" %} alt=""><span
+                            class="left-menu-text">Список кандидатов</span></li>
+                </a>
+            {% endif %}
+            {% if request.user.position.access_to_vacation_list %}
+                <a href="/">
+                    <li class="left-menu-element"><img class="left-menu-img"
+                                                       src={% static "img/calen_list.png" %} alt=""><span
+                            class="left-menu-text">Список отпусков</span></li>
+                </a>
+            {% endif %}
+
         </ul>
     </div>
 
@@ -123,16 +140,16 @@
                     </div>
                     <div class="delta-right">
                         <select class="reg-input sel-input red-sel-input" type="select"
-                                id={{ user_form.position.position_name }}
+                                id={{ user_form.positionz }}
                                         name={{ user_form.position }}
                         <option selected value="user_form.position">
                         </option>
 
                         </select>
                         <span class="opisanie">Описание:</span>
-                        {#                        <textarea name="info" cols="40" rows="10" id="id_info"></textarea>#}
-
-                        {{ user_form.info }}
+                        <div class="text-opisanie">
+                            {{ request.user.info }}
+                        </div>
                     </div>
 
                 </div>

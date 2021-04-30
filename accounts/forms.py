@@ -1,7 +1,6 @@
 from django import forms
-from django.db.models import Q
 
-from .models import Account, Position
+from .models import Account, Candidate
 
 
 class RegistrationForm(forms.ModelForm):
@@ -22,6 +21,12 @@ class RegistrationForm(forms.ModelForm):
         if commit:
             user.save()
         return user
+
+    # def clean_login(self):
+    #     login = self.cleaned_data.get('login')
+    #     if Account.objects.filter(login=login).exists():
+    #         print('Login error!!!')
+    #         raise forms.ValidationError({"some_field": "raise an error",})
 
 
 class UserRegisterForm(forms.ModelForm):
@@ -60,11 +65,11 @@ class UserChangeForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(UserChangeForm, self).__init__(*args, **kwargs)
         self.fields['position'].empty_label = None
-        self.fields['position'].queryset = Position.objects.filter(~Q(position_name='HR'))
+        # self.fields['position'].queryset = Position.objects.filter(~Q(position_name='HR'))
 
     class Meta:
         model = Account
-        fields = ('name', 'photo', 'phone', 'slack_login', 'telegram_login', 'position', 'info')
+        fields = ('name', 'photo', 'phone', 'slack_login', 'telegram_login', 'position')
 
 
 class HrChangeForm(forms.ModelForm):
@@ -74,9 +79,15 @@ class HrChangeForm(forms.ModelForm):
 
     class Meta:
         model = Account
-        fields = ('name', 'photo', 'phone', 'slack_login', 'telegram_login', 'position', 'info')
+        fields = ('name', 'photo', 'phone', 'slack_login', 'telegram_login', 'position')
 
 
 class LoginForm(forms.Form):
     login = forms.CharField()
     password = forms.CharField(widget=forms.PasswordInput)
+
+
+class CandidateForm(forms.ModelForm):
+    class Meta:
+        model = Candidate
+        fields = ('name', 'position')

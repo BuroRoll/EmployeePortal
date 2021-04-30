@@ -26,7 +26,7 @@ SECRET_KEY = '@g_zwf1xr8f+$b29o317*7++4v79cw&gaiz0jl=2x8)%-atw7s'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['89cd6929c3b5.ngrok.io', '127.0.0.1']
+ALLOWED_HOSTS = ['65110a379361.ngrok.io', '127.0.0.1']
 
 # Application definition
 
@@ -76,22 +76,22 @@ WSGI_APPLICATION = 'EmployeePortal.wsgi.application'
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
 DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    #     'NAME': 'danil',
-    #     'USER': 'django',
-    #     'PASSWORD': 'django',
-    #     'HOST': '94.228.114.206',
-    #     'PORT': '5432',
-    # }
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'employee_project',
-        'USER': 'buroroll',
-        'PASSWORD': '220120',
-        'HOST': '188.225.42.201',
-        'PORT': '5432',
+        'NAME': 'employee_portal',
+        'USER': 'danilkonkov',
+        'PASSWORD': '',
+        'HOST': 'localhost',
+        'PORT': '',
     }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
+    #     'NAME': 'employee_project',
+    #     'USER': 'buroroll',
+    #     'PASSWORD': '220120',
+    #     'HOST': '188.225.42.201',
+    #     'PORT': '5432',
+    # }
 }
 
 # Password validation
