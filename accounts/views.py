@@ -111,7 +111,7 @@ def get_all_candidates(request):
     if request.method == "POST":
         form = CandidateForm(request.POST)
         if form.is_valid():
-            candidate = form.save()
+            form.save()
             # return JsonResponse({"msg": "Candidate successfully saved."})
         else:
             return JsonResponse({"msg": "Invalid data"})
@@ -126,4 +126,4 @@ def get_all_candidates(request):
 
 def candidate_form(request):
     form = CandidateForm()
-    return render(request, 'accounts/candidates_table.html.html', {"form": form})
+    return render(request, 'accounts/candidates_table.html', {"form": form})
