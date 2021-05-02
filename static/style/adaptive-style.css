@@ -94,6 +94,8 @@
     }
 
     .candidate-submit {
+        padding-left: 10px;
+        padding-right: 10px;
         width: 116.25px;
         height: 29.25px;
         border: none;

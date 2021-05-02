@@ -8,7 +8,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width">
-    <title>SKB_LAB | Список сотрудников</title>
+    <title>SKB_LAB | Список кандидатов</title>
     <link rel="stylesheet" href={% static 'style/style.css' %}>
     <link rel="stylesheet" href={% static 'style/adaptive-style.css' %}>
     <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -122,7 +122,7 @@
                             class="left-menu-text">Список отпусков</span></li>
                 </a>
             {% endif %}
-            <button id="myBtn">Open Modal</button>
+
         </ul>
     </div>
     <div class="right-container">
@@ -162,10 +162,12 @@
                 <img src={% static  "img/pointer.png" %} alt="" class="next-img">
             </div>
         </div>
-
+<button id="myBtn">Open Modal</button>
     </div>
 
 </div>
+
+
 <script defer>
     let employees = JSON.parse('{{ candidates | safe }}');
     let positions = JSON.parse('{{ positions | safe }}');
@@ -297,7 +299,44 @@
     })
 
 </script>
-<script src={% static 'js/hr-table.js' %}></script>
+<script>
+    let blocks = document.querySelectorAll('.candidate-list-block')
+
+for(let block of blocks) {
+    let tds = block.querySelectorAll('td')
+        if (tds.length !== 0) {
+            tds[4].onclick = function () {
+
+                if (tds[4].firstChild.textContent === 'Удалить') {
+                    deleteBlock()
+                }
+
+                setImg()
+                let img = tds[4].querySelector('img')
+                tds[4].removeChild(img)
+                tds[4].insertAdjacentHTML('beforeend', '<div id="delete-block">Удалить</div>')
+            }
+        }
+}
+
+
+function setImg() {
+    for (let b_delta of blocks) {
+        let tds_delta = b_delta.querySelectorAll('td')
+        if (tds_delta.length !== 0 && tds_delta[4].childNodes.length !== 0 ) {
+            while (tds_delta[4].firstChild) {
+                tds_delta[4].removeChild(tds_delta[4].lastChild);
+            }
+            tds_delta[4].insertAdjacentHTML('beforeend', '<img src={% static "img/delete.png"%} alt="" class="delete-img">')
+        }
+    }
+}
+
+function deleteBlock() {
+    alert('Удаление блока')
+}
+</script>
+{#<script src={% static 'js/hr-table.js' %}></script>#}
 </html>
 </body>
 </html>

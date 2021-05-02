@@ -40,21 +40,21 @@
                    id="{{ user_form.login.id_for_label }}"
                    {% if user_form.login.field.required %}required{% endif %}>
         </div>
-        <div style="margin-top: 35px">
+        <div class="top-margin">
             <label class="log-label" for="password">Ваш пароль</label><br>
             <input type="password" placeholder="Пароль" class="reg-input"
                    name="{{ user_form.password.name }}"
                    id="{{ user_form.password.id_for_label }}"
                    {% if user_form.password.field.required %}required{% endif %}>
         </div>
-        <div style="margin-top: 35px">
+        <div class="top-margin">
             <label class="log-label" for="FIO">ФИО</label><br>
             <input type="text" placeholder="ФИО" class="reg-input"
                    name="{{ user_form.name.name }}"
                    id="{{ user_form.name.id_for_label }}"
                    {% if user_form.name.field.required %}required{% endif %}>
         </div>
-        <div style="margin-top: 35px">
+        <div class="top-margin">
             <label class="log-label" for="tel">Ваш номер телефона</label><br>
 
             <input type="tel" data-tel-input maxlength="18" class="reg-input"
@@ -66,7 +66,7 @@
         </div>
 
 
-        <div style="margin-top: 35px">
+        <div class="top-margin">
             <label class="log-label" for="position">Выберите должность из списка</label><br>
 
             <select class="reg-input sel-input" type="select"
@@ -74,7 +74,7 @@
                             name={{ user_form.position }}
             </select>
         </div>
-        <div style="margin-top: 35px">
+        <div class="top-margin">
             <label class="log-label" for="login_telegram">Ваш логин Telegram</label><br>
             <input type="text" class="reg-input"
                    placeholder="Логин Telegram"
@@ -82,7 +82,7 @@
                    id="{{ user_form.telegram_login.id_for_label }}"
                    {% if user_form.telegram_login.field.required %}required{% endif %}>
         </div>
-        <div style="margin-top: 35px">
+        <div class="top-margin">
             <label class="log-label" for="login_slack">Ваш логин Slack</label><br>
             <input type="text" class="reg-input"
                    placeholder="Логин Slack"
@@ -90,7 +90,7 @@
                    id="{{ user_form.slack_login.id_for_label }}"
                    {% if user_form.slack_login.field.required %}required{% endif %}>
         </div>
-        <div style="margin-top: 35px">
+        <div class="top-margin">
 
             <label class="log-label" for="system">Запрос на доступ к системам</label><br>
             <select class="reg-input sel-input" name="system" id="system" form="reg" multiple
@@ -106,34 +106,16 @@
 
         </div>
 
-        <div style="margin-top: 35px">
+        <div class="top-margin">
             <label class="log-label" for="text">Расскажите о себе</label><br>
-
-            {#            <input type="text" class="reg-input"#}
-            {#                   placeholder="Описание"#}
-            {#                   name="{{ user_form.info.name }}"#}
-            {#                   id="{{ user_form.info.id_for_label }}"#}
-            {#                   {% if user_form.info.field.required %}required{% endif %}>#}
             <textarea id="{{ user_form.info.id_for_label }}" name="{{ user_form.info.name }}" class="reg-input"
                       placeholder="Описание"
                       {% if user_form.info.field.required %}required{% endif %}></textarea>
         </div>
-
-
-        {#        <div style="margin-top: 35px">#}
-        {#            <label class="log-label">Ваше фото</label>#}
-        {#            <img id="imgInp" alt="" style="float: left; width: 50px">#}
-        {#            <label style="float: left;" class="reg-input reg-download" for="id_photo">Выбрать фото</label>#}
-        {#                        <input class="reg-input reg-download-photo" id="photo" name="password" type="file"#}
-        {#                               placeholder="Выбрать фото">#}
-        {#            <input class="reg-input reg-download-photo" type="file" name="photo" accept="image/*" #}
-        {#                   style="display: none">#}
-        {#            #}
-        {#        </div>#}
         <div style="margin-top: 35px; text-align: left">
             <label class="log-label" style="    float: inherit;">Ваше фото</label>
             <div class="reg-img-block">
-                <label class="reg-input reg-download" for="id_photo" style="width: 130px; height: 20px;">Выбрать
+                <label class="reg-input reg-download" for="id_photo" style="width: 130px; height: 15px;">Выбрать
                     фото</label>
                 <img id="imgInp" alt="" class="reg-img">
             </div>
@@ -159,14 +141,14 @@
         </div>
 
 
-        <div style="float:left;" class="check">
-            <input style="floar:left;" type="checkbox" name="{{ user_form.is_new_employee.name }}"
+        <div class="check">
+            <input  type="checkbox" name="{{ user_form.is_new_employee.name }}"
                    id="{{ user_form.is_new_employee.id_for_label }}">
-            <span style="color: black; margin-left: 10px;">Новый сотрудник</span>
+            <span class="reg-checkbox">Новый сотрудник</span>
         </div>
-        <div style="float:left;" class="check">
-            <input style="float:left;" class="check_box" type="checkbox" name="checkbox" required>
-            <span style="color: black; margin-left: 10px;">Я согласен на <a><u>обработку персональных данных</u></a></span>
+        <div  class="check">
+            <input class="check_box" type="checkbox" name="checkbox" required>
+            <span class="reg-checkbox">Я согласен на <a><u>обработку персональных данных</u></a></span>
         </div>
 
 

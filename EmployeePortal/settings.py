@@ -26,7 +26,7 @@ SECRET_KEY = '@g_zwf1xr8f+$b29o317*7++4v79cw&gaiz0jl=2x8)%-atw7s'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['65110a379361.ngrok.io', '127.0.0.1']
+ALLOWED_HOSTS = ['d999a3acd940.ngrok.io', '127.0.0.1']
 
 # Application definition
 
@@ -56,8 +56,7 @@ ROOT_URLCONF = 'EmployeePortal.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates']
-        ,
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
