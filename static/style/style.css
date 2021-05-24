@@ -284,7 +284,8 @@ textarea {
 }
 
 .content-red {
-    display: flex;
+    //display: flex;
+    text-align: center;
 }
 
 .right-content-red {
@@ -667,4 +668,9 @@ nav-li {
 
 .dataTables_empty{
     font-size: 0;
+}
+
+.p-top {
+    padding-top: 10px;
+    max-width: 399px;
 }

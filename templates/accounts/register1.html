@@ -108,7 +108,7 @@
 
         <div class="top-margin">
             <label class="log-label" for="text">Расскажите о себе</label><br>
-            <textarea id="{{ user_form.info.id_for_label }}" name="{{ user_form.info.name }}" class="reg-input"
+            <textarea id="{{ user_form.info.id_for_label }}" name="{{ user_form.info.name }}" class="reg-input p-top"
                       placeholder="Описание"
                       {% if user_form.info.field.required %}required{% endif %}></textarea>
         </div>
@@ -148,7 +148,7 @@
         </div>
         <div  class="check">
             <input class="check_box" type="checkbox" name="checkbox" required>
-            <span class="reg-checkbox">Я согласен на <a><u>обработку персональных данных</u></a></span>
+            <span class="reg-checkbox delta-reg-checkbox">Я согласен на <a><u>обработку персональных данных</u></a></span>
         </div>
 
 

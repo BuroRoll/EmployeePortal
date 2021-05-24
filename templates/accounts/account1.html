@@ -71,6 +71,8 @@
         <h2 class="h-red">Мои данные</h2>
         <form class="content-red" method="post" enctype="multipart/form-data">
             {% csrf_token %}
+        <div></div>
+        <div style="display: flex">
             <div class="left-content-red">
                 <img id="imgInp" src=/media/{{ request.user.photo }} alt="" class="red-img">
 
@@ -152,8 +154,10 @@
                     </div>
 
                 </div>
-                <input type="submit" class="red-download red-save" value="Сохранить изменения">
+
             </div>
+        </div>
+        <input type="submit" class="red-download red-save" value="Сохранить изменения">
         </form>
     </div>
 
