@@ -9,6 +9,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width">
     <title>SKB_LAB | Список кандидатов</title>
+    <link rel="shortcut icon" type="image/png" href="{% static 'img/favicon.ico' %}"/>
     <link rel="stylesheet" href={% static 'style/style.css' %}>
     <link rel="stylesheet" href={% static 'style/adaptive-style.css' %}>
     <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -16,7 +17,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script type="text/javascript" charset="utf8"
             src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>
-    <link rel="shortcut icon" type="image/png" href="{% static 'img/favicon.ico' %}"/>
+
 </head>
 <style>
     th {
@@ -96,7 +97,7 @@
                 <li class="left-menu-element"><img class="left-menu-img" src={% static 'img/profile.png' %} alt=""><span
                         class="left-menu-text">Профиль</span></li>
             </a>
-            <a href="/">
+            <a href="/vacations/">
                 <li class="left-menu-element"><img class="left-menu-img" src={% static 'img/calen.png' %} alt=""><span
                         class="left-menu-text">График отпусков</span></li>
             </a>
@@ -116,21 +117,16 @@
                 </a>
             {% endif %}
             {% if request.user.position.access_to_vacation_list %}
-                <a href="/">
+                <a href="/download_vacations">
                     <li class="left-menu-element"><img class="left-menu-img"
                                                        src={% static "img/calen_list.png" %} alt=""><span
                             class="left-menu-text">Список отпусков</span></li>
                 </a>
             {% endif %}
-
         </ul>
     </div>
     <div class="right-container">
         <h1 class="h-list">Список кандидатов</h1>
-        {#        <form action="">#}
-        {#            <input class="candidate-list" type="text" onkeyup="tableSearch()" placeholder="Поиск сотрудников"#}
-        {#                   name="share" id="search">#}
-        {#        </form>#}
         <table class="candidate-table" id="paged">
             <thead>
             <tr class="candidate-list-block">
@@ -138,7 +134,7 @@
                 <th>Имя️ <img style='width: 13px' src= {% static 'img/updown.ico' %}></th>
                 <th>Отчество <img style='width: 13px' src= {% static 'img/updown.ico' %}></th>
                 <th>Должность ️<img style='width: 13px' src= {% static 'img/updown.ico' %}></th>
-                <th style="width: 80px">️</th>
+                <th style="width: 100px">️</th>
             </tr>
             </thead>
             <tbody id="tbody">
@@ -171,10 +167,10 @@
 <script defer>
     let employees = JSON.parse('{{ candidates | safe }}');
     let positions = JSON.parse('{{ positions | safe }}');
-
     for (let i = 0; i < employees.length; i++) {
         let fio = employees[i].fields.name.split(' ');
         let tr = document.createElement('tr');
+        tr.setAttribute('id', employees[i].pk)
         tr.classList.add('candidate-list-block');
         let td1 = tr.appendChild(document.createElement('td'));
         td1.innerHTML = fio[0]
@@ -185,10 +181,7 @@
         let td4 = tr.appendChild(document.createElement('td'))
         td4.innerHTML = positions[employees[i].fields.position - 1].fields.position_name;
         let td5 = tr.appendChild(document.createElement('td'))
-        {#let td5 = tr.appendChild(document.createElement('td'))#}
-        {#let delimg = document.createElement('img');#}
-        {#delimg.src = {% static 'img/delete.png' %};#}
-        {#delimg.classList.add('delete-img');#}
+        td5.setAttribute('id', employees[i].pk)
         td5.innerHTML = '<img src={% static "img/delete.png"%} class="delete-img">';
         document.getElementById('tbody').appendChild(tr);
 
@@ -196,9 +189,47 @@
 </script>
 
 
-<script defer>$(document).ready(function () {
-    $('#paged').DataTable();
-});
+{#<script defer>#}
+{#    let table = $(document).ready(function () {#}
+{#        $('#paged').DataTable({#}
+{#            "language": {#}
+{#                "paginate": {#}
+{#                    "previous": "Предыдущая",#}
+{#                    "next": 'Следующая'#}
+{#                },#}
+{#                searchPlaceholder: 'Поиск'#}
+{#            },#}
+{#        });#}
+{#    });#}
+{#    $(document).ready(function (){#}
+{#        $("div.dataTables_filter input").focus();#}
+{#    })#}
+{#</script>#}
+<script defer>
+    let table = $(document).ready(function () {
+        $('#paged').DataTable({
+            "language": {
+                paginate: {
+                    first: '«',
+                    previous: '‹',
+                    next: '›',
+                    last: '»'
+                },
+                aria: {
+                    paginate: {
+                        first: 'First',
+                        previous: 'Previous',
+                        next: 'Next',
+                        last: 'Last'
+                    }
+                },
+                searchPlaceholder: 'Поиск'
+            },
+        });
+    });
+    $(document).ready(function () {
+        $("div.dataTables_filter input").focus();
+    })
 </script>
 <div id="myModal" class="modal">
 
@@ -246,7 +277,7 @@
 
     // When the user clicks anywhere outside of the modal, close it
     window.onclick = function (event) {
-        if (event.target == modal) {
+        if (event.target === modal) {
             modal.style.display = "none";
         }
     }
@@ -275,10 +306,10 @@
 
     // Setting the Click Event Listener on the Submit Button
     $('[type="submit"]').on('click', function (e) {
+        console.log($("form")[0].action)
         e.preventDefault()
         // Making the AJAX Request
         $.ajax({
-
             url: $("form")[0].action,
             type: "POST",
             data: {
@@ -289,8 +320,11 @@
                 xhr.setRequestHeader("X-CSRFToken", csrftoken);
             },
             success: function (data) {
-                console.log(data);
-                location.reload()
+                console.log(data)
+                $("#new_candidate")[0].reset();
+                add_new_candidate(data)
+
+                {#location.reload()#}
             },
             error: function (error) {
                 console.log(error);
@@ -298,45 +332,83 @@
         });
     })
 
-</script>
-<script>
+    function add_new_candidate(data) {
+        let name = data.name
+        let position = data.position
+        let candidate_id = data.id
+
+        let fio = name.split(' ');
+        let tr = document.createElement('tr');
+        tr.setAttribute('id', candidate_id)
+        tr.classList.add('candidate-list-block');
+        let td1 = tr.appendChild(document.createElement('td'));
+        td1.innerHTML = fio[0]
+        let td2 = tr.appendChild(document.createElement('td'))
+        td2.innerHTML = fio[1]
+        let td3 = tr.appendChild(document.createElement('td'))
+        td3.innerHTML = fio[2]
+        let td4 = tr.appendChild(document.createElement('td'))
+        td4.innerHTML = positions[position - 1].fields.position_name;
+        let td5 = tr.appendChild(document.createElement('td'))
+        td5.setAttribute('id', candidate_id)
+        td5.onclick = function () {
+            if (td5.firstChild.textContent === 'Удалить') {
+                deleteBlock(td5.id, candidate_id)
+            }
+            setImg()
+            let img = td5.querySelector('img')
+            td5.removeChild(img)
+            td5.insertAdjacentHTML('beforeend', '<div id="delete-block">Удалить</div>')
+        }
+        td5.innerHTML = '<img src={% static "img/delete.png"%} class="delete-img">';
+        document.getElementById('tbody').appendChild(tr);
+        location.reload()
+    }
+
+
+    {#</script>#}
+    {#<script>#}
     let blocks = document.querySelectorAll('.candidate-list-block')
 
-for(let block of blocks) {
-    let tds = block.querySelectorAll('td')
+    for (let block of blocks) {
+        let tds = block.querySelectorAll('td')
         if (tds.length !== 0) {
             tds[4].onclick = function () {
-
                 if (tds[4].firstChild.textContent === 'Удалить') {
-                    deleteBlock()
+                    deleteBlock(tds[4].id, block.id)
                 }
-
                 setImg()
                 let img = tds[4].querySelector('img')
                 tds[4].removeChild(img)
                 tds[4].insertAdjacentHTML('beforeend', '<div id="delete-block">Удалить</div>')
             }
         }
-}
+    }
 
 
-function setImg() {
-    for (let b_delta of blocks) {
-        let tds_delta = b_delta.querySelectorAll('td')
-        if (tds_delta.length !== 0 && tds_delta[4].childNodes.length !== 0 ) {
-            while (tds_delta[4].firstChild) {
-                tds_delta[4].removeChild(tds_delta[4].lastChild);
+    function setImg() {
+        for (let b_delta of blocks) {
+            let tds_delta = b_delta.querySelectorAll('td')
+            if (tds_delta.length !== 0 && tds_delta[4].childNodes.length !== 0) {
+                while (tds_delta[4].firstChild) {
+                    tds_delta[4].removeChild(tds_delta[4].lastChild);
+                }
+                tds_delta[4].insertAdjacentHTML('beforeend', '<img src={% static "img/delete.png"%} alt="" class="delete-img">')
             }
-            tds_delta[4].insertAdjacentHTML('beforeend', '<img src={% static "img/delete.png"%} alt="" class="delete-img">')
         }
     }
-}
 
-function deleteBlock() {
-    alert('Удаление блока')
-}
+    async function deleteBlock(candidate_id, block_id) {
+        let response = await fetch('http://localhost:8000/delete_candidate/?id=' + candidate_id, {
+            method: 'GET'
+        });
+        if (response.ok) {
+            let elem = document.getElementById(block_id);
+            elem.parentNode.removeChild(elem);
+            location.reload()
+        }
+    }
 </script>
-{#<script src={% static 'js/hr-table.js' %}></script>#}
 </html>
 </body>
 </html>

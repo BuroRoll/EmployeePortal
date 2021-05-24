@@ -5,26 +5,28 @@
     <meta charset="UTF-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width">
-    <title>SKB_LAB | Доступ к системам</title>
-    <link rel="stylesheet" href={% static "style/style.css" %}>
+    <title>SKB_LAB | Мой график отпусков</title>
+    <link rel="shortcut icon" type="image/png" href="{% static 'img/favicon.ico' %}"/>
+    <link rel="stylesheet" href={% static 'style/style.css' %}>
     <link rel="stylesheet" href={% static 'style/adaptive-style.css' %}>
+    <link rel="stylesheet" href={% static 'style/style-calendar.css' %}>
+    <link rel="stylesheet" href={% static 'style/style-calendar.css' %}>
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital@0;1&display=swap" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <link rel="shortcut icon" type="image/png" href="{% static 'img/favicon.ico' %}"/>
 </head>
 <body class="grey">
 <header>
     <div class="header-container">
         <a href="/">
-            <img class="logo" src={% static "img/logo.png" %} alt="Логотип">
+            <img class="logo" src={% static 'img/logo.png' %} alt="Логотип">
         </a>
         <div class="right-header">
             <h1>Личный кабинет</h1>
             <div class="delta-header">
                 <img class="profile-header" alt="Аватар" src=/media/{{ request.user.photo }} >
                 <h2 class="nickname-header">{{ request.user.login }}</h2>
-                <a href="/logout" style="height: 28px"><img src={% static "img/out.png" %} alt="Выход" width="28px"
+                <a href="/logout" style="height: 28px"><img src={% static 'img/out.png' %} alt="Выход" width="28px"
                                                             height="28px"></a>
             </div>
         </div>
@@ -65,35 +67,39 @@
             {% endif %}
         </ul>
     </div>
-    <div class="red-block sys-block" style="margin-right: 20px;">
-        <h2 class="h-red h-sys">Доступные системы</h2>
-        <div class="sys-imgs">
-            <img src={% static "img/slack.png" %} alt="slack" class="sys-img">
-            <img src={% static "img/telegram.png" %} alt="telegram" class="sys-img">
-            <img src={% static "img/whatsapp.png" %} alt="whatsapp" class="sys-img">
+    <div>
+        <div class="high-calendar">
+            <div class="calendar-count-block">
+                <div class="calendar-text">Оставшееся количество дней отпуска для выбора</div>
+                <div class="calendar-count"></div>
+            </div>
+            <div class="right-high-calendar">
+                <i><u>Перед выбором Вашего отпуска пожалуйста, согласуйте его с руководством</u></i>
+            </div>
         </div>
-        <div class="sys-imgs" style="width: 200px">
-            <img src={% static "img/git.png" %} alt="git" class="sys-img">
-            <img src={% static "img/github.png" %} alt="github" class="sys-img">
+        <div class="right-calendar-block">
+            <div class="cal-cont">
+                <div class="calendar-container">
+
+                </div>
+                <div class="calendar-sub-btn">Подтвердить выбор</div>
+            </div>
         </div>
-
-    </div>
-    <div class="red-block sys-block" style="margin-left: 0px;">
-        <form action="" class="sys-form" id="sys" method="post">
-            {% csrf_token %}
-            <h2 class="h-red h-sys">Запрос на получение доступа к системам</h2>
-
-            <select class="reg-input sel-input" name="system" id="system" form="sys" style="width: 310px">
-                {% for conversation in conversations %}
-                    <option>{{ conversation.conversation_name }}({{ conversation.messenger }})</option>
-                {% endfor %}
-                {% for system in systems %}
-                    <option>{{ system.system_name }}</option>
-                {% endfor %}
-            </select>
-            <input type="submit" class="red-download red-save sys-save" value="Подтвердить запрос">
-        </form>
     </div>
 </div>
+<script src={% static "js/vacationJS.js" %}></script>
+<script>
+    (async function () {
+        let response = await fetch('/get_vacations/' + {{ request.user.pk }} +'/?format=json', {
+            method: 'GET'
+        });
+        let answer = await response.json();
+        let count = answer.vacation_days + ''
+        let datas = answer.vacation
+
+        setCountDays(count)
+        setDays(datas)
+    })();
+</script>
 </body>
 </html>

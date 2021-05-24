@@ -38,7 +38,7 @@
                 <li class="left-menu-element"><img class="left-menu-img" src={% static 'img/profile.png' %} alt=""><span
                         class="left-menu-text">Профиль</span></li>
             </a>
-            <a href="/">
+            <a href="/vacations/">
                 <li class="left-menu-element"><img class="left-menu-img" src={% static 'img/calen.png' %} alt=""><span
                         class="left-menu-text">График отпусков</span></li>
             </a>
@@ -58,13 +58,12 @@
                 </a>
             {% endif %}
             {% if request.user.position.access_to_vacation_list %}
-                <a href="/">
+                <a href="/download_vacations">
                     <li class="left-menu-element"><img class="left-menu-img"
                                                        src={% static "img/calen_list.png" %} alt=""><span
                             class="left-menu-text">Список отпусков</span></li>
                 </a>
             {% endif %}
-
         </ul>
     </div>
 

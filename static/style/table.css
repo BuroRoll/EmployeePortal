@@ -1,0 +1,49 @@
+th
+{
+        width: 212px;
+    }
+
+    input {
+        font-size: 18px;
+        padding-left: 20px;
+        width: 850px;
+        height: 50px;
+    }
+
+    @media (max-height: 800px) {
+        .h-list {
+            font-size: 21px;
+        }
+
+        input {
+            font-size: 13.5px;
+            padding-left: 15px;
+            width: 637.5px;
+            height: 37.5px;
+        }
+
+        .candidate-list-block {
+            width: 637.5px;
+            height: 37.5px;
+        }
+
+        .candidate-table {
+            width: 637.5px;
+            font-size: 14px;
+        }
+
+        .dataTables_paginate {
+            width: 637.5px;
+            height: 37.5px;
+            font-size: 14px;
+        }
+
+        #paged_previous {
+            margin-left: 52.5px;
+            margin-right: 15px;
+        }
+        #paged_next {
+            margin-left: 15px;
+        }
+
+    }

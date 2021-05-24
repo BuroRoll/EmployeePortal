@@ -2,22 +2,22 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import Group
 
-from .forms import UserRegisterForm, UserChangeForm
+from .forms import UserRegisterForm, AdminUserChangeForm
 from .models import *
 
 
 class AccountAdmin(BaseUserAdmin):
-    form = UserChangeForm
+    form = AdminUserChangeForm
     add_form = UserRegisterForm
 
     list_display = ('login', 'name', 'position')
 
     fieldsets = (
-        (None, {'fields': ('login', 'is_staff', 'is_superuser', 'password')}),
-        ('Personal info', {'fields': ('name', 'phone', 'photo', 'position')}),
+        (None, {'fields': ('login', 'password')}),
+        ('Personal info', {'fields': ('name', 'phone', 'vacation', 'position', 'vacation_days')}),
     )
     add_fieldsets = (
-        (None, {'fields': ('login', 'is_staff', 'is_superuser', 'password1', 'password2')}),
+        (None, {'fields': ('login', 'password1', 'password2')}),
         ('Personal info', {'fields': ('name', 'phone')}),
     )
 

@@ -5,7 +5,6 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.views import View
-from accounts.models import Account, Position
 from . import slackBot
 
 from .models import Conversation, Messenger, System

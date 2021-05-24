@@ -1,6 +1,7 @@
 from django import forms
+from django.db.models import Q
 
-from .models import Account, Candidate
+from .models import Account, Candidate, Position
 
 
 class RegistrationForm(forms.ModelForm):
@@ -21,12 +22,6 @@ class RegistrationForm(forms.ModelForm):
         if commit:
             user.save()
         return user
-
-    # def clean_login(self):
-    #     login = self.cleaned_data.get('login')
-    #     if Account.objects.filter(login=login).exists():
-    #         print('Login error!!!')
-    #         raise forms.ValidationError({"some_field": "raise an error",})
 
 
 class UserRegisterForm(forms.ModelForm):
@@ -52,29 +47,31 @@ class UserRegisterForm(forms.ModelForm):
         return user
 
 
-# class ImagePreviewWidget(forms.widgets.FileInput):
-#     def render(self, name, value, attrs=None, **kwargs):
-#         input_html = super().render(name, value, attrs=None, **kwargs)
-#         img_html = mark_safe(f'<img height="300px" src="{value.url}"/><br>')
-#         return f'{img_html}{input_html}'
-
-
 class UserChangeForm(forms.ModelForm):
-    # photo = forms.ImageField(label=('Фото'), required=False, error_messages={'invalid': ("Image files only")},
-    #                          widget=ImagePreviewWidget)
     def __init__(self, *args, **kwargs):
         super(UserChangeForm, self).__init__(*args, **kwargs)
         self.fields['position'].empty_label = None
-        # self.fields['position'].queryset = Position.objects.filter(~Q(position_name='HR'))
+        self.fields['position'].queryset = Position.objects.filter(~Q(access_to_candidates=True))
+        self.fields['position'].queryset = Position.objects.filter(~Q(access_to_vacation_list=True))
 
     class Meta:
         model = Account
         fields = ('name', 'photo', 'phone', 'slack_login', 'telegram_login', 'position')
 
 
-class HrChangeForm(forms.ModelForm):
+class SpecialAccessEmployeeForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
-        super(HrChangeForm, self).__init__(*args, **kwargs)
+        super(SpecialAccessEmployeeForm, self).__init__(*args, **kwargs)
+        self.fields['position'].empty_label = None
+
+    class Meta:
+        model = Account
+        fields = ('name', 'photo', 'phone', 'slack_login', 'telegram_login', 'position')
+
+
+class AdminUserChangeForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(AdminUserChangeForm, self).__init__(*args, **kwargs)
         self.fields['position'].empty_label = None
 
     class Meta:

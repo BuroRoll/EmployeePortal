@@ -9,11 +9,11 @@
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>
       <jdbc-url>jdbc:postgresql://127.0.0.1:5432/EmployeePortal</jdbc-url>
     </data-source>
-    <data-source source="LOCAL" name="employee_portal@localhost" uuid="210f0b7a-2f1e-481f-b013-efe35192ab28">
+    <data-source source="LOCAL" name="e@localhost" uuid="cee94f5d-0f44-43e2-8b89-094b45ce89c6">
       <driver-ref>postgresql</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>
-      <jdbc-url>jdbc:postgresql://localhost:5432/employee_portal</jdbc-url>
+      <jdbc-url>jdbc:postgresql://localhost:5432/e</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
   </component>
