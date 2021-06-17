@@ -52,7 +52,7 @@ def user_login(request):
 @login_required
 def account(request):
     if request.method == 'POST':
-        position = Position.objects.get(id=request.user.id)
+        position = Position.objects.get(id=request.user.position.id)
         if position.access_to_candidates or position.access_to_vacation_list:
             user_form = SpecialAccessEmployeeForm(instance=request.user, data=request.POST, files=request.FILES)
         else:
@@ -61,6 +61,7 @@ def account(request):
             user_form.save()
         return redirect('/')
     else:
+        print(request.user.position.id)
         position = Position.objects.get(id=request.user.position.id)
         if position.access_to_candidates or position.access_to_vacation_list:
             user_form = SpecialAccessEmployeeForm(instance=request.user)
@@ -176,14 +177,10 @@ def download_vacations(request):
     users = Account.objects.filter(~Q(vacation=''))
     print_in_xlsx(users)
     file_location = 'media/Vacations.xlsx'
-
     with open(file_location, 'rb') as f:
         file_data = f.read()
-
     response = HttpResponse(file_data, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-
     response['Content-Disposition'] = 'attachment; filename="Vacations.xlsx"'
-    print(response)
     return response
 
 
