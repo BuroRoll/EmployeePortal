@@ -93,7 +93,7 @@
                 <li class="left-menu-element"><img class="left-menu-img" src={% static 'img/calen.png' %} alt=""><span
                         class="left-menu-text">График отпусков</span></li>
             </a>
-            <a href="/systems/get_access/">
+            <a href="/get_access/">
                 <li class="left-menu-element"><img class="left-menu-img" src={% static 'img/set.png' %} alt=""><span
                         class="left-menu-text">Доступы к системам</span></li>
             </a>
@@ -391,9 +391,10 @@
     }
 
     async function deleteBlock(candidate_id, block_id) {
-        let response = await fetch('http://localhost:8000/delete_candidate/?id=' + candidate_id, {
+        let response = await fetch('/delete_candidate/?id=' + candidate_id, {
             method: 'GET'
         });
+        console.log(response.body)
         if (response.ok) {
             let elem = document.getElementById(block_id);
             elem.parentNode.removeChild(elem);

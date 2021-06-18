@@ -11,9 +11,10 @@
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital@0;1&display=swap" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src={% static 'js/systems.js' %}></script>
     <link rel="shortcut icon" type="image/png" href="{% static 'img/favicon.ico' %}"/>
 </head>
-<body class="grey">
+<body class="grey" onload="getData()">
 <header>
     <div class="header-container">
         <a href="/">
@@ -79,21 +80,23 @@
 
     </div>
     <div class="red-block sys-block" style="margin-left: 0px;">
-        <form action="" class="sys-form" id="sys" method="post">
+        <form onsubmit="sendData(); return false;" class="sys-form" id="sys">
             {% csrf_token %}
             <h2 class="h-red h-sys">Запрос на получение доступа к системам</h2>
 
             <select class="reg-input sel-input" name="system" id="system" form="sys" style="width: 310px">
-                {% for conversation in conversations %}
-                    <option>{{ conversation.conversation_name }}({{ conversation.messenger }})</option>
-                {% endfor %}
-                {% for system in systems %}
-                    <option>{{ system.system_name }}</option>
-                {% endfor %}
+                {#                {% for conversation in conversations %}#}
+                {#                    <option>{{ conversation.conversation_name }}({{ conversation.messenger }})</option>#}
+                {#                {% endfor %}#}
+                {#                {% for system in systems %}#}
+                {#                    <option>{{ system.system_name }}</option>#}
+                {#                {% endfor %}#}
             </select>
-            <input type="submit" class="red-download red-save sys-save" value="Подтвердить запрос" щт>
+
+            <input type="submit" class="red-download red-save sys-save" value="Подтвердить запрос" id="submit_btn">
         </form>
     </div>
+    <div id="snackbar">Запрос успешно отправлен</div>
 </div>
 </body>
 </html>

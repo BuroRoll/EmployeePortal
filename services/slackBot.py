@@ -37,8 +37,12 @@ def post_message_to_slack(data, slack_user_name='Новый сотрудник',
 
 
 def send_msg_to_access(name, login, selected_conversations, conversation, blocks=None):
-    msg = 'Сотруднику ' + name + '(@' + login + ')' + '\n' \
-          + 'Нужен доступ к ' + ', '.join(selected_conversations)
+    if isinstance(selected_conversations, str):
+        msg = 'Сотруднику ' + name + '(@' + login + ')' + '\n' \
+              + 'Нужен доступ к ' + selected_conversations
+    else:
+        msg = 'Сотруднику ' + name + '(@' + login + ')' + '\n' \
+              + 'Нужен доступ к ' + ', '.join(selected_conversations)
     requests.post('https://slack.com/api/chat.postMessage', {
         'token': conversation.token,
         'channel': conversation.conversation_id,

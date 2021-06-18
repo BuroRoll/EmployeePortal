@@ -2,9 +2,11 @@ body {
     margin: 0;
     font-family: 'Roboto', sans-serif;
 }
+
 input {
     outline: none;
 }
+
 a {
     text-decoration: none;
     color: black;
@@ -45,6 +47,7 @@ textarea {
     align-items: center;
     display: flex;
 }
+
 .logo {
     height: 60px;
     width: 211px;
@@ -165,6 +168,7 @@ textarea {
     margin-left: 79px;
 
 }
+
 .delta-header {
     display: flex;
 
@@ -196,7 +200,7 @@ textarea {
 
 .left-menu-text {
     font-style: normal;
-    font-weight:600;
+    font-weight: 600;
     font-size: 18px;
     line-height: 21px;
     margin-left: 16px;
@@ -232,7 +236,7 @@ textarea {
     height: 153px;
     border-radius: 100px;
     margin-bottom: 65px;
-    object-fit:cover;
+    object-fit: cover;
 }
 
 .photo {
@@ -260,10 +264,10 @@ textarea {
     padding-right: 15px;
 
     -webkit-touch-callout: none; /* iOS Safari */
-    -webkit-user-select: none;   /* Chrome/Safari/Opera */
-    -khtml-user-select: none;    /* Konqueror */
-    -moz-user-select: none;      /* Firefox */
-    -ms-user-select: none;       /* Internet Explorer/Edge */
+    -webkit-user-select: none; /* Chrome/Safari/Opera */
+    -khtml-user-select: none; /* Konqueror */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
     user-select: none;
 }
 
@@ -284,7 +288,7 @@ textarea {
 }
 
 .content-red {
-    //display: flex;
+/ / display: flex;
     text-align: center;
 }
 
@@ -446,8 +450,8 @@ textarea {
     padding-left: 50px;
     font-size: 20px;
     margin-bottom: 1px;
-    //background: url("/img/mini-share.png");
-    //background-repeat: no-repeat; /*Убираем повтор изображения*/
+/ / background: url("/img/mini-share.png");
+/ / background-repeat: no-repeat; /*Убираем повтор изображения*/
 }
 
 .candidate-table {
@@ -462,6 +466,7 @@ textarea {
     background: #FFFFFF;
     border-radius: 8px;
 }
+
 .page-panel {
     width: 850px;
     height: 52px;
@@ -470,6 +475,7 @@ textarea {
     border-radius: 8px;
     display: flex;
 }
+
 .pages {
     display: flex;
 }
@@ -520,13 +526,13 @@ textarea {
 .page-nav {
     display: flex;
     width: 500px;
-    //justify-content: space-between;
+/ / justify-content: space-between;
     padding-left: 50px;
 }
 
 .nav-back {
     background: white;
-    //border-top: 20px solid #F4F4F4;
+/ / border-top: 20 px solid #F4F4F4;
     border-radius: 8px;
 }
 
@@ -562,6 +568,7 @@ nav-li {
 .auto-height {
     height: auto;
 }
+
 /**/
 
 .dataTables_length {
@@ -666,11 +673,106 @@ nav-li {
     user-select: none;
 }
 
-.dataTables_empty{
+.dataTables_empty {
     font-size: 0;
 }
 
 .p-top {
     padding-top: 10px;
     max-width: 399px;
+}
+
+#snackbar_for_vacations {
+    visibility: hidden; /* Hidden by default. Visible on click */
+    max-width: 250px; /* Set a default minimum width */
+    /*margin-left: -125px; !* Divide value of min-width by 2 *!*/
+    background-color: #333; /* Black background color */
+    color: #fff; /* White text color */
+    text-align: center; /* Centered text */
+    border-radius: 2px; /* Rounded borders */
+    padding: 16px; /* Padding */
+    margin: auto;
+    /*position: fixed;*/
+    /*position: fixed; !* Sit on top of the screen *!*/
+    /*z-index: 1; !* Add a z-index if needed *!*/
+    /*left: 50%; !* Center the snackbar *!*/
+    bottom: 30px; /* 30px from the bottom */
+}
+
+/* Show the snackbar when clicking on a button (class added with JavaScript) */
+#snackbar_for_vacations.show {
+    visibility: visible; /* Show the snackbar */
+    /* Add animation: Take 0.5 seconds to fade in and out the snackbar.
+    However, delay the fade out process for 2.5 seconds */
+    -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+#snackbar {
+    visibility: hidden; /* Hidden by default. Visible on click */
+    min-width: 250px; /* Set a default minimum width */
+    margin-left: -125px;
+    background-color: #333; /* Black background color */
+    color: #fff; /* White text color */
+    text-align: center; /* Centered text */
+    border-radius: 2px; /* Rounded borders */
+    padding: 16px; /* Padding */
+    position: fixed; /* Sit on top of the screen */
+    z-index: 1; /* Add a z-index if needed */
+    left: 50%; /* Center the snackbar */
+    bottom: 30px; /* 30px from the bottom */
+}
+
+/* Show the snackbar when clicking on a button (class added with JavaScript) */
+#snackbar.show {
+    visibility: visible; /* Show the snackbar */
+    /* Add animation: Take 0.5 seconds to fade in and out the snackbar.
+    However, delay the fade out process for 2.5 seconds */
+    -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+/* Animations to fade the snackbar in and out */
+@-webkit-keyframes fadein {
+    from {
+        bottom: 0;
+        opacity: 0;
+    }
+    to {
+        bottom: 30px;
+        opacity: 1;
+    }
+}
+
+@keyframes fadein {
+    from {
+        bottom: 0;
+        opacity: 0;
+    }
+    to {
+        bottom: 30px;
+        opacity: 1;
+    }
+}
+
+@-webkit-keyframes fadeout {
+    from {
+        bottom: 30px;
+        opacity: 1;
+    }
+    to {
+        bottom: 0;
+        opacity: 0;
+    }
+}
+
+@keyframes fadeout {
+    from {
+        bottom: 30px;
+        opacity: 1;
+    }
+    to {
+        bottom: 0;
+        opacity: 0;
+    }
 }

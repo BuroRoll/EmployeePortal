@@ -43,7 +43,7 @@
                 <li class="left-menu-element"><img class="left-menu-img" src={% static 'img/calen.png' %} alt=""><span
                         class="left-menu-text">График отпусков</span></li>
             </a>
-            <a href="/systems/get_access/">
+            <a href="/get_access/">
                 <li class="left-menu-element"><img class="left-menu-img" src={% static 'img/set.png' %} alt=""><span
                         class="left-menu-text">Доступы к системам</span></li>
             </a>
@@ -83,8 +83,11 @@
 
                 </div>
                 <div class="calendar-sub-btn">Подтвердить выбор</div>
+                <div id="snackbar_for_vacations">Данные успешно отправлены</div>
             </div>
+
         </div>
+
     </div>
 </div>
 <script src={% static "js/vacationJS.js" %}></script>

@@ -1,27 +1,17 @@
 import io
 import json
-import os
-from wsgiref.util import FileWrapper
 
 import xlsxwriter
-
 from django.contrib import messages
 from django.contrib.auth import login, authenticate
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
 from django.core.serializers import serialize
-from django.db.models import Q
-from django.http import JsonResponse, HttpResponse, FileResponse
+from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect
 from rest_framework import generics
 from rest_framework.decorators import api_view
-from rest_framework.response import Response
-
-
-
-
-from .serializer import VacationSerializer
 
 from services import slackBot
 from services.models import Conversation, Messenger, System
@@ -29,6 +19,7 @@ from services.views import TGBotView
 from .forms import *
 from .forms import RegistrationForm
 from .models import Account, Position, Candidate
+from .serializer import VacationSerializer
 
 
 def user_login(request):
@@ -168,9 +159,11 @@ def delete_candidate(request):
 def vacations_table(request):
     return render(request, 'accounts/vacations.html')
 
+
 @login_required
 def download_vacations_page(request):
     return render(request, 'accounts/download_vacations.html')
+
 
 @login_required
 def download_vacations(request):
@@ -197,20 +190,18 @@ def print_in_xlsx(data):
         worksheet.write(i, 0, user.name)
         worksheet.set_column('A:A', len(user.name))
         vac = user.vacation.split(';')
-        for v in vac[:len(vac)-1]:
+        for v in vac[:len(vac) - 1]:
             worksheet.write(i, 1, v)
-            i+=1
+            i += 1
     workbook.close()
 
 
-@login_required
+@api_view(['POST'])
 def set_vacations_days(request):
-    if request.method == "POST":
-        data = json.loads(request.body)
-        user = Account.objects.filter(pk=request.user.pk)[0]
-        user.set_vacation(data['day_counts'], data['vacations_days'])
-        return HttpResponse('ok')
-
+    data = request.data
+    user = Account.objects.filter(pk=request.user.pk)[0]
+    user.set_vacation(data['day_counts'], data['vacations_days'])
+    return HttpResponse('ok')
 
 
 class GetUserVacation(generics.RetrieveAPIView):

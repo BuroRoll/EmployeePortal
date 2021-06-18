@@ -138,7 +138,18 @@ subBtn.onclick = function () {
                     vacations_days: sub,
                     day_counts: countDate
                 })
-            }).then()
+            }).then(
+                response => {
+                    if (response.ok) {
+                        let snackbar = document.getElementById("snackbar_for_vacations");
+                        snackbar.className = "show";
+                        setTimeout(function () {
+                            snackbar.className = snackbar.className.replace("show", "");
+                        }, 3000);
+                    } else {
+                        return Promise.reject(response)
+                    }
+                })
         } else {
             alert('Нужно обязательно выбрать промежуток не менее 14 дней')
         }
@@ -220,8 +231,6 @@ function checkIntervalDate(strDate) {
 
 function setDays(str) {
     let arr = strToArr(str)
-    console.log(arr)
-    console.log(typeof arr)
     for (let date of arr) {
         let elementDate = document.getElementById(date.toString())
         elementDate.classList.add('flag')
@@ -234,20 +243,6 @@ function setCountDays(str) {
     doc.innerHTML = str
 }
 
-// function normalizeDate(str) {
-//     let res = ''
-//     let arr = str.split(';').filter((x) => x !== '')
-//     for (let date of arr) {
-//         let delta_arr = date.split('->')
-//         if (delta_arr.length !== 1) {
-//             res += toNormalize(delta_arr[0]) + '->' + toNormalize(delta_arr[1]) + ';'
-//         } else {
-//             res += toNormalize(delta_arr[0]) + ';'
-//         }
-//
-//     }
-//     return res
-// }
 
 function toNormalize(str) {
     let d_arr = str.split('/')

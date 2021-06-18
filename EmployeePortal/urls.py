@@ -8,7 +8,8 @@ from services.views import TGBotView
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('accounts.urls')),
-    path('systems/', include('services.urls')),
+    # path('systems/', include('services.urls')),
+    path('', include('services.urls')),
     path('webhooks/telegram/', csrf_exempt(TGBotView.as_view())),
 ]
 
