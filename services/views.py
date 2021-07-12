@@ -6,7 +6,8 @@ from django.http import JsonResponse
 from django.shortcuts import render
 from django.views import View
 from rest_framework import generics
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from . import slackBot
@@ -48,7 +49,6 @@ class TGBotView(View):
         }
         requests.post(
             f"{TELEGRAM_URL}{BOT_TOKEN}/sendMessage", data=data)
-
 
     @staticmethod
     def send_to_all(data):
@@ -105,6 +105,7 @@ class TGBotView(View):
         requests.post(
             f"{TELEGRAM_URL}{BOT_TOKEN}/sendMessage", data=data)
 
+
 # @login_required
 # def get_system_access(request):
 #     if request.method == 'POST':
@@ -135,11 +136,13 @@ def get_system_access(request):
     return render(request, 'systems/systems.html')
 
 
+@permission_classes([IsAuthenticated])
 class SystemsList(generics.ListAPIView):
     queryset = System.objects.all()
     serializer_class = SystemsSerializer
 
 
+@permission_classes([IsAuthenticated])
 class ConversationsList(generics.ListAPIView):
     queryset = Conversation.objects.all()
     serializer_class = ConversationsSerializer
@@ -153,6 +156,7 @@ def get_systems(request):
 
 
 @api_view(['POST'])
+@login_required
 def send_request_for_access(request):
     if request.data['type'] == 'System':
         selected = System.objects.get(id=request.data['id']).system_name

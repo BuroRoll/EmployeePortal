@@ -103,6 +103,8 @@
 <script defer>
     let employees = JSON.parse('{{ employees | safe }}');
     let positions = JSON.parse('{{ positions | safe }}');
+    console.log(positions)
+    console.log(employees)
     for (let i = 0; i < employees.length; i++) {
         let fio = employees[i].fields.name.split(' ');
         let tr = document.createElement('tr');
@@ -114,8 +116,12 @@
         let td3 = tr.appendChild(document.createElement('td'))
         td3.innerHTML = fio[2]
         let td4 = tr.appendChild(document.createElement('td'))
-        td4.innerHTML = positions[employees[i].fields.position - 1].fields.position_name
-
+        for (let j = 0; j < positions.length; j++) {
+            if (positions[j].pk === employees[i].fields.position) {
+                td4.innerHTML = positions[j].fields.position_name
+                break
+            }
+        }
         document.getElementById('tbody').appendChild(tr);
     }
 </script>

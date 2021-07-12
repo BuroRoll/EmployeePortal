@@ -1,5 +1,4 @@
 import io
-import json
 
 import xlsxwriter
 from django.contrib import messages
@@ -11,7 +10,8 @@ from django.core.serializers import serialize
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect
 from rest_framework import generics
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 
 from services import slackBot
 from services.models import Conversation, Messenger, System
@@ -104,6 +104,8 @@ def register(request):
                                                     user_form.cleaned_data['slack_login'],
                                                     selected_conversations, conversations_for_accesses)
             return redirect('/')
+        else:
+            return render(request, 'accounts/register1.html', {'invalid': True, 'form': user_form})
     user_form = RegistrationForm()
     conversations = Conversation.objects.all()
     systems = System.objects.all()
@@ -197,6 +199,7 @@ def print_in_xlsx(data):
 
 
 @api_view(['POST'])
+@login_required
 def set_vacations_days(request):
     data = request.data
     user = Account.objects.filter(pk=request.user.pk)[0]
@@ -204,6 +207,7 @@ def set_vacations_days(request):
     return HttpResponse('ok')
 
 
+@permission_classes([IsAuthenticated])
 class GetUserVacation(generics.RetrieveAPIView):
     queryset = Account.objects.all()
     serializer_class = VacationSerializer
