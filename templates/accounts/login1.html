@@ -40,14 +40,14 @@
                    {% if user_form.login.field.required %}required{% endif %}>
         </div>
 
-        <div style="margin-top: 35px">
+        <div class="top-margin">
             <label class="log-label" for="password">Ваш пароль</label><br>
             <input id="password" name="password" class="reg-input" type="password" placeholder="Пароль"
                    name="{{ form.password.name }}"
                    id="{{ form.password.id_for_label }}"
                    {% if user_form.name.field.required %}required{% endif %}>
         </div>
-        <div style="padding-bottom: 55px">
+        <div class="padding-bottom">
             <input class="sub-log" type="submit" value="Вход">
             <br>
             <a class="pred_sub" href="/register">Нет аккаунта? Зарегистрироваться</a>

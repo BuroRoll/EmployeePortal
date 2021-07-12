@@ -38,21 +38,28 @@
             <input type="text" placeholder="Логин" class="reg-input"
                    name="{{ user_form.login.name }}"
                    id="{{ user_form.login.id_for_label }}"
-                   {% if user_form.login.field.required %}required{% endif %}>
+                    {% if invalid %}
+                        value={{ form.login.value }}
+                    {% endif %}
+            {% if user_form.login.field.required %}required{% endif %}>
         </div>
         <div style="margin-top: 35px">
             <label class="log-label" for="password">Ваш пароль</label><br>
             <input type="password" placeholder="Пароль" class="reg-input"
                    name="{{ user_form.password.name }}"
                    id="{{ user_form.password.id_for_label }}"
+
                    {% if user_form.password.field.required %}required{% endif %}>
         </div>
         <div style="margin-top: 35px">
             <label class="log-label" for="FIO">ФИО</label><br>
-            <input type="text" placeholder="ФИО" class="reg-input"
+            <input type="text" placeholder="ФИО" class="reg-input FIO_input"
                    name="{{ user_form.name.name }}"
                    id="{{ user_form.name.id_for_label }}"
-                   {% if user_form.name.field.required %}required{% endif %}>
+                    {% if invalid %}
+                        value="{{ form.name.value }}"
+                    {% endif %}
+            {% if user_form.name.field.required %}required{% endif %}>
         </div>
         <div style="margin-top: 35px">
             <label class="log-label" for="tel">Ваш номер телефона</label><br>
@@ -62,7 +69,10 @@
                    name="{{ user_form.phone.name }}"
                    id="{{ user_form.name.id_for_label }}"
                    maxlength="{{ user_form.name.field.max_length }}"
-                   {% if user_form.name.field.required %}required{% endif %}>
+                    {% if invalid %}
+                        value="{{ form.phone.value }}"
+                    {% endif %}
+            {% if user_form.name.field.required %}required{% endif %}>
         </div>
 
 
@@ -80,6 +90,9 @@
                    placeholder="Логин Telegram"
                    name="{{ user_form.telegram_login.name }}"
                    id="{{ user_form.telegram_login.id_for_label }}"
+                   {% if invalid %}
+                        value="{{ form.telegram_login.value }}"
+                    {% endif %}
                    {% if user_form.telegram_login.field.required %}required{% endif %}>
         </div>
         <div style="margin-top: 35px">
@@ -88,6 +101,9 @@
                    placeholder="Логин Slack"
                    name="{{ user_form.slack_login.name }}"
                    id="{{ user_form.slack_login.id_for_label }}"
+                   {% if invalid %}
+                        value="{{ form.slack_login.value }}"
+                    {% endif %}
                    {% if user_form.slack_login.field.required %}required{% endif %}>
         </div>
         <div style="margin-top: 35px">
@@ -177,5 +193,21 @@
 
 </div>
 <script src={% static 'js/ajax-form.js' %}></script>
+<script>
+    let input = document.getElementsByClassName('FIO_input')[0]
+    let regExp = /([А-ЯЁ][а-яё]+[\-\s]?){3,}/
+    let r_button = document.querySelector('.sub-log')
+
+    input.oninput = function () {
+        if (regExp.test(input.value)) {
+            r_button.disabled = false
+            console.log('ok')
+            console.log(input.value)
+        } else {
+            r_button.disabled = true
+            console.log('damn')
+        }
+    };
+</script>
 </body>
 </html>

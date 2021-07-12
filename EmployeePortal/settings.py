@@ -26,7 +26,7 @@ SECRET_KEY = '@g_zwf1xr8f+$b29o317*7++4v79cw&gaiz0jl=2x8)%-atw7s'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['65110a379361.ngrok.io', '127.0.0.1']
+ALLOWED_HOSTS = ['a87fdbbf21ff.ngrok.io', '*']
 
 # Application definition
 
@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
     'accounts',
     'services',
 ]
@@ -56,8 +57,7 @@ ROOT_URLCONF = 'EmployeePortal.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates']
-        ,
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -78,7 +78,7 @@ WSGI_APPLICATION = 'EmployeePortal.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'employee_portal',
+        'NAME': 'e',
         'USER': 'danilkonkov',
         'PASSWORD': '',
         'HOST': 'localhost',
@@ -112,6 +112,12 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ]
+}
+
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
@@ -132,6 +138,7 @@ USE_TZ = True
 # STATIC_ROOT = os.path.join(BASE_DIR,  'static')
 
 STATIC_URL = '/static/'
+
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),

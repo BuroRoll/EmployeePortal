@@ -9,8 +9,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width">
     <title>SKB_LAB | Список сотрудников</title>
-
     <link rel="stylesheet" href={% static 'style/style.css' %}>
+    <link rel="stylesheet" href={% static 'style/table.css' %}>
     <link rel="stylesheet" href={% static 'style/adaptive-style.css' %}>
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital@0;1&display=swap" rel="stylesheet">
@@ -19,18 +19,6 @@
     <script type="text/javascript" charset="utf8"
             src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>
 </head>
-<style>
-    th {
-        width: 212px;
-    }
-
-    input {
-        font-size: 18px;
-        padding-left: 20px;
-        width: 850px;
-        height: 50px;
-    }
-</style>
 <body class="grey">
 <header>
     <div class="header-container">
@@ -55,11 +43,11 @@
                 <li class="left-menu-element"><img class="left-menu-img" src={% static 'img/profile.png' %} alt=""><span
                         class="left-menu-text">Профиль</span></li>
             </a>
-            <a href="/">
+            <a href="/vacations/">
                 <li class="left-menu-element"><img class="left-menu-img" src={% static 'img/calen.png' %} alt=""><span
                         class="left-menu-text">График отпусков</span></li>
             </a>
-            <a href="/systems/get_access/">
+            <a href="/get_access/">
                 <li class="left-menu-element"><img class="left-menu-img" src={% static 'img/set.png' %} alt=""><span
                         class="left-menu-text">Доступы к системам</span></li>
             </a>
@@ -75,7 +63,7 @@
                 </a>
             {% endif %}
             {% if request.user.position.access_to_vacation_list %}
-                <a href="/">
+                <a href="/download_vacations">
                     <li class="left-menu-element"><img class="left-menu-img"
                                                        src={% static "img/calen_list.png" %} alt=""><span
                             class="left-menu-text">Список отпусков</span></li>
@@ -85,10 +73,6 @@
     </div>
     <div class="right-container">
         <h1 class="h-list">Список сотрудников</h1>
-        {#        <form action="">#}
-        {#            <input class="candidate-list" type="text" onkeyup="tableSearch()" placeholder="Поиск сотрудников"#}
-        {#                   name="share" id="search">#}
-        {#        </form>#}
         <table class="candidate-table" id="paged">
             <thead>
             <tr class="candidate-list-block">
@@ -100,12 +84,6 @@
             </thead>
             <tbody id="tbody">
             </tbody>
-            <!-- Расскоментируем если вернемся к той таблице
-            <tfoot>
-            <tr class="nav-back">
-                <td colspan="4"></td>
-            </tr>
-            </tfoot> -->
         </table>
 
         <div class="page-panel" style="display: none;">
@@ -119,14 +97,14 @@
                 <img src={% static  "img/pointer.png" %} alt="" class="next-img">
             </div>
         </div>
-
     </div>
 
 </div>
 <script defer>
     let employees = JSON.parse('{{ employees | safe }}');
     let positions = JSON.parse('{{ positions | safe }}');
-
+    console.log(positions)
+    console.log(employees)
     for (let i = 0; i < employees.length; i++) {
         let fio = employees[i].fields.name.split(' ');
         let tr = document.createElement('tr');
@@ -138,23 +116,42 @@
         let td3 = tr.appendChild(document.createElement('td'))
         td3.innerHTML = fio[2]
         let td4 = tr.appendChild(document.createElement('td'))
-        td4.innerHTML = positions[employees[i].fields.position - 1].fields.position_name
-
+        for (let j = 0; j < positions.length; j++) {
+            if (positions[j].pk === employees[i].fields.position) {
+                td4.innerHTML = positions[j].fields.position_name
+                break
+            }
+        }
         document.getElementById('tbody').appendChild(tr);
     }
 </script>
 
 
-
-<script defer>$(document).ready(function () {
-    $('#paged').DataTable();
-});
-</script>
 <script defer>
-    let prev = document.querySelector('#paged_previous');
-    prev.innerHTML = 'Предыдущий';
-    let next = document.querySelector('#paged_next');
-    next.innerHTML = 'Следующий';
+    let table = $(document).ready(function () {
+        $('#paged').DataTable({
+            "language": {
+                paginate: {
+                    first: '«',
+                    previous: '‹',
+                    next: '›',
+                    last: '»'
+                },
+                aria: {
+                    paginate: {
+                        first: 'First',
+                        previous: 'Previous',
+                        next: 'Next',
+                        last: 'Last'
+                    }
+                },
+                searchPlaceholder: 'Поиск'
+            },
+        });
+    });
+    $(document).ready(function () {
+        $("div.dataTables_filter input").focus();
+    })
 </script>
 </body>
 </html>

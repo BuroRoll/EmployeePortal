@@ -38,11 +38,11 @@
                 <li class="left-menu-element"><img class="left-menu-img" src={% static 'img/profile.png' %} alt=""><span
                         class="left-menu-text">Профиль</span></li>
             </a>
-            <a href="/">
+            <a href="/vacations/">
                 <li class="left-menu-element"><img class="left-menu-img" src={% static 'img/calen.png' %} alt=""><span
                         class="left-menu-text">График отпусков</span></li>
             </a>
-            <a href="/systems/get_access/">
+            <a href="/get_access/">
                 <li class="left-menu-element"><img class="left-menu-img" src={% static 'img/set.png' %} alt=""><span
                         class="left-menu-text">Доступы к системам</span></li>
             </a>
@@ -58,13 +58,12 @@
                 </a>
             {% endif %}
             {% if request.user.position.access_to_vacation_list %}
-                <a href="/">
+                <a href="/download_vacations">
                     <li class="left-menu-element"><img class="left-menu-img"
                                                        src={% static "img/calen_list.png" %} alt=""><span
                             class="left-menu-text">Список отпусков</span></li>
                 </a>
             {% endif %}
-
         </ul>
     </div>
 
@@ -72,6 +71,8 @@
         <h2 class="h-red">Мои данные</h2>
         <form class="content-red" method="post" enctype="multipart/form-data">
             {% csrf_token %}
+        <div></div>
+        <div style="display: flex">
             <div class="left-content-red">
                 <img id="imgInp" src=/media/{{ request.user.photo }} alt="" class="red-img">
 
@@ -153,8 +154,10 @@
                     </div>
 
                 </div>
-                <input type="submit" class="red-download red-save" value="Сохранить изменения">
+
             </div>
+        </div>
+        <input type="submit" class="red-download red-save" value="Сохранить изменения">
         </form>
     </div>
 
