@@ -3,6 +3,7 @@
 *.pot
 *.py[co]
 .tox/
+.idea
 __pycache__
 MANIFEST
 dist/
@@ -16,3 +17,4 @@ tests/report/
 /.idea/
 /accounts/migrations/
 /services/migrations/
+/devices/migrations/
