@@ -50,6 +50,10 @@
                 <li class="left-menu-element"><img class="left-menu-img" src={% static 'img/sotrud.png' %} alt=""><span
                         class="left-menu-text">Список сотрудников</span></li>
             </a>
+            <a href="/devices">
+                <li class="left-menu-element"><img class="left-menu-img" src={% static 'img/sotrud.png' %} alt=""><span
+                        class="left-menu-text">Тестовые девайсы</span></li>
+            </a>
             {% if request.user.position.access_to_candidates %}
                 <a href="/get_all_candidates">
                     <li class="left-menu-element"><img class="left-menu-img"
@@ -71,93 +75,93 @@
         <h2 class="h-red">Мои данные</h2>
         <form class="content-red" method="post" enctype="multipart/form-data">
             {% csrf_token %}
-        <div></div>
-        <div style="display: flex">
-            <div class="left-content-red">
-                <img id="imgInp" src=/media/{{ request.user.photo }} alt="" class="red-img">
+            <div></div>
+            <div style="display: flex">
+                <div class="left-content-red">
+                    <img id="imgInp" src=/media/{{ request.user.photo }} alt="" class="red-img">
 
-                <input class="red-download" type="file" name="photo" accept="image/*" id="id_photo"
-                       style="display: none">
-                <label for="id_photo" class="red-download"><img src={% static 'img/photo.png' %} alt="" width="28px"
-                                                                class="photo"> Загрузить фото</label><br>
-                <script type="text/javascript">
-                    function readURL(input) {
-                        if (input.files && input.files[0]) {
-                            var reader = new FileReader();
+                    <input class="red-download" type="file" name="photo" accept="image/*" id="id_photo"
+                           style="display: none">
+                    <label for="id_photo" class="red-download"><img src={% static 'img/photo.png' %} alt="" width="28px"
+                                                                    class="photo"> Загрузить фото</label><br>
+                    <script type="text/javascript">
+                        function readURL(input) {
+                            if (input.files && input.files[0]) {
+                                var reader = new FileReader();
 
-                            reader.onload = function (e) {
-                                $('#imgInp').attr('src', e.target.result);
+                                reader.onload = function (e) {
+                                    $('#imgInp').attr('src', e.target.result);
+                                }
+
+                                reader.readAsDataURL(input.files[0]); // convert to base64 string
                             }
-
-                            reader.readAsDataURL(input.files[0]); // convert to base64 string
                         }
-                    }
 
-                    $("#id_photo").change(function () {
-                        readURL(this);
-                    });
-                </script>
+                        $("#id_photo").change(function () {
+                            readURL(this);
+                        });
+                    </script>
 
-            </div>
-            <div class="right-content-red">
-                <div style="display: flex">
-                    <div>
-                        <div class="red-left-right">
-                            <label class="log-label red-label" for="second_name">ФИО:</label><br>
-                            <input class="reg-input red-input"
-                                   placeholder="ФИО"
-                                   name="{{ user_form.name.name }}"
-                                   id="{{ user_form.name.id_for_label }}"
-                                   {% if user_form.name.value != None %}value="{{ user_form.name.value|stringformat:'s' }}"{% endif %}
-                                   maxlength="{{ user_form.name.field.max_length }}"
-                                   {% if user_form.name.field.required %}required{% endif %}>
+                </div>
+                <div class="right-content-red">
+                    <div style="display: flex">
+                        <div>
+                            <div class="red-left-right">
+                                <label class="log-label red-label" for="second_name">ФИО:</label><br>
+                                <input class="reg-input red-input"
+                                       placeholder="ФИО"
+                                       name="{{ user_form.name.name }}"
+                                       id="{{ user_form.name.id_for_label }}"
+                                       {% if user_form.name.value != None %}value="{{ user_form.name.value|stringformat:'s' }}"{% endif %}
+                                       maxlength="{{ user_form.name.field.max_length }}"
+                                       {% if user_form.name.field.required %}required{% endif %}>
+                            </div>
+                            <div class="red-left-right">
+                                <label class="log-label red-label" for="first_name">Логин Telegram:</label><br>
+                                <input class="reg-input red-input" type="text"
+                                       placeholder="Telegram login"
+                                       name="{{ user_form.telegram_login.name }}"
+                                       id="{{ user_form.telegram_login.id_for_label }}"
+                                       {% if user_form.telegram_login.value != None %}value="{{ user_form.telegram_login.value|stringformat:'s' }}"{% endif %}
+                                       {% if user_form.telegram_login.field.required %}required{% endif %}>
+                            </div>
+                            <div class="red-left-right">
+                                <label class="log-label red-label" for="middle_name">Логин Slack:</label><br>
+                                <input class="reg-input red-input" type="text"
+                                       placeholder="Slack login"
+                                       name="{{ user_form.slack_login.name }}"
+                                       id="{{ user_form.slack_login.id_for_label }}"
+                                       {% if user_form.slack_login.value != None %}value="{{ user_form.slack_login.value|stringformat:'s' }}"{% endif %}
+                                       {% if user_form.slack_login.field.required %}required{% endif %}>
+                            </div>
+                            <div class="red-left-right">
+                                <label class="log-label red-label"
+                                       for={{ user_form.name.id_for_label }}>Телефон:</label><br>
+                                <input data-tel-input id="{{ user_form.phone.id_for_label }}"
+                                       name="{{ user_form.phone.name }}" class="reg-input red-input" type="text"
+                                       placeholder="Номер телефона" maxlength="18"
+                                       {% if user_form.phone.value != None %}value="{{ user_form.phone.value|stringformat:'s' }}"{% endif %}>
+                            </div>
                         </div>
-                        <div class="red-left-right">
-                            <label class="log-label red-label" for="first_name">Логин Telegram:</label><br>
-                            <input class="reg-input red-input" type="text"
-                                   placeholder="Telegram login"
-                                   name="{{ user_form.telegram_login.name }}"
-                                   id="{{ user_form.telegram_login.id_for_label }}"
-                                   {% if user_form.telegram_login.value != None %}value="{{ user_form.telegram_login.value|stringformat:'s' }}"{% endif %}
-                                   {% if user_form.telegram_login.field.required %}required{% endif %}>
-                        </div>
-                        <div class="red-left-right">
-                            <label class="log-label red-label" for="middle_name">Логин Slack:</label><br>
-                            <input class="reg-input red-input" type="text"
-                                   placeholder="Slack login"
-                                   name="{{ user_form.slack_login.name }}"
-                                   id="{{ user_form.slack_login.id_for_label }}"
-                                   {% if user_form.slack_login.value != None %}value="{{ user_form.slack_login.value|stringformat:'s' }}"{% endif %}
-                                   {% if user_form.slack_login.field.required %}required{% endif %}>
-                        </div>
-                        <div class="red-left-right">
-                            <label class="log-label red-label"
-                                   for={{ user_form.name.id_for_label }}>Телефон:</label><br>
-                            <input data-tel-input id="{{ user_form.phone.id_for_label }}"
-                                   name="{{ user_form.phone.name }}" class="reg-input red-input" type="text"
-                                   placeholder="Номер телефона" maxlength="18"
-                                   {% if user_form.phone.value != None %}value="{{ user_form.phone.value|stringformat:'s' }}"{% endif %}>
-                        </div>
-                    </div>
-                    <div class="delta-right">
-                        <select class="reg-input sel-input red-sel-input" type="select"
-                                id={{ user_form.positionz }}
-                                        name={{ user_form.position }}
-                        <option selected value="user_form.position">
-                        </option>
+                        <div class="delta-right">
+                            <select class="reg-input sel-input red-sel-input" type="select"
+                                    id={{ user_form.positionz }}
+                                            name={{ user_form.position }}
+                            <option selected value="user_form.position">
+                            </option>
 
-                        </select>
-                        <span class="opisanie">Описание:</span>
-                        <div class="text-opisanie">
-                            {{ request.user.info }}
+                            </select>
+                            <span class="opisanie">Описание:</span>
+                            <div class="text-opisanie">
+                                {{ request.user.info }}
+                            </div>
                         </div>
+
                     </div>
 
                 </div>
-
             </div>
-        </div>
-        <input type="submit" class="red-download red-save" value="Сохранить изменения">
+            <input type="submit" class="red-download red-save" value="Сохранить изменения">
         </form>
     </div>
 

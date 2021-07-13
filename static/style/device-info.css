@@ -1,0 +1,99 @@
+.device_info-container {
+    width: 65%;
+    height: 581px;
+
+    background: #FFFFFF;
+    border: 1px solid #ACACAC;
+    box-sizing: border-box;
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+    border-radius: 16px;
+    margin: 72px auto auto auto;
+}
+
+.device_info-content {
+    width: 80%;
+    margin: 50px auto auto;
+    display: flex;
+    justify-content: space-between;
+}
+
+.device-content-block {
+    font-size: 18px;
+    border-bottom: 1px solid #AFAFAF;
+    margin-bottom: 25px;
+}
+
+.grey-text {
+    color: #AFAFAF;
+}
+
+.name {
+    padding-top: 21px;
+    padding-bottom: 21px;
+}
+
+.device_info-content-left {
+    width: 40%;
+}
+
+.get-device {
+    padding: 10px 50px;
+    background: #00A826;
+    border-radius: 16px;
+    color: white;
+    margin: 83px auto auto;
+    cursor: pointer;
+    width: fit-content;
+}
+
+@media (max-width: 1550px) {
+    .device-content-block {
+        font-size: 13.5px;
+        margin-bottom: 18px;
+    }
+
+    .device_info-container {
+        height: 436px;
+    }
+
+    .name {
+        padding-top: 15px;
+        padding-bottom: 15px;
+    }
+
+    .get-device {
+        padding: 7px 37.5px;
+        background: #00A826;
+        border-radius: 16px;
+        color: white;
+        margin: 62px auto auto;
+        cursor: pointer;
+        width: fit-content;
+    }
+
+
+}
+
+
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0, 0, 0); /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+}
+
+.hoverBtn{
+    opacity: 1;
+    cursor: pointer;
+}
+
+.hoverBtn:hover {
+    opacity: 0.7;
+}

@@ -24,9 +24,6 @@
 
 </style>
 <style>
-    {#body {font-family: Arial, Helvetica, sans-serif;}#}
-
-    /* The Modal (background) */
     .modal {
         display: none; /* Hidden by default */
         position: fixed; /* Stay in place */
@@ -100,6 +97,10 @@
             <a href="/get_all_employees">
                 <li class="left-menu-element"><img class="left-menu-img" src={% static 'img/sotrud.png' %} alt=""><span
                         class="left-menu-text">Список сотрудников</span></li>
+            </a>
+            <a href="/devices">
+                <li class="left-menu-element"><img class="left-menu-img" src={% static 'img/sotrud.png' %} alt=""><span
+                        class="left-menu-text">Тестовые девайсы</span></li>
             </a>
             {% if request.user.position.access_to_candidates %}
                 <a href="/get_all_candidates">
@@ -180,23 +181,6 @@
     }
 </script>
 
-
-{#<script defer>#}
-{#    let table = $(document).ready(function () {#}
-{#        $('#paged').DataTable({#}
-{#            "language": {#}
-{#                "paginate": {#}
-{#                    "previous": "Предыдущая",#}
-{#                    "next": 'Следующая'#}
-{#                },#}
-{#                searchPlaceholder: 'Поиск'#}
-{#            },#}
-{#        });#}
-{#    });#}
-{#    $(document).ready(function (){#}
-{#        $("div.dataTables_filter input").focus();#}
-{#    })#}
-{#</script>#}
 <script defer>
     let table = $(document).ready(function () {
         $('#paged').DataTable({
@@ -224,7 +208,6 @@
     })
 </script>
 <div id="myModal" class="modal">
-
     <!-- Modal content -->
     <div class="red-block candidate-block">
         <h2 class="h-red h-candidate">Новый кандидат</h2>
@@ -284,7 +267,6 @@
             const cookies = document.cookie.split(';');
             for (let i = 0; i < cookies.length; i++) {
                 const cookie = cookies[i].trim();
-                // Does this cookie string begin with the name we want?
                 if (cookie.substring(0, name.length + 1) === (name + '=')) {
                     cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
                     break;
@@ -295,8 +277,6 @@
     }
 
     const csrftoken = getCookie('csrftoken');
-
-    // Setting the Click Event Listener on the Submit Button
     $('[type="submit"]').on('click', function (e) {
         console.log($("form")[0].action)
         e.preventDefault()
