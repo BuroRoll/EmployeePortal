@@ -18,3 +18,5 @@ tests/report/
 /accounts/migrations/
 /services/migrations/
 /devices/migrations/
+/venv/
+.env
