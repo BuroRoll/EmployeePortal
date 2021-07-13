@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>SKB_LAB | Список тестовых устройст</title>
+    <link rel="stylesheet" href={% static 'style/style.css' %}>
+    <link rel="stylesheet" href={% static 'style/table.css' %}>
+    <link rel="stylesheet" href={% static 'style/adaptive-style.css' %}>
+    <link rel="stylesheet" href={% static 'style/device-info.css' %}>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital@0;1&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" type="image/png" href="{% static 'img/favicon.ico' %}"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript" charset="utf8"
+            src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>
+
+</head>
+<body class="grey">
+<header>
+    <div class="header-container">
+        <a href="/">
+            <img class="logo" src={% static  "img/logo.png" %} alt="Логотип">
+        </a>
+        <div class="right-header">
+            <h1>Личный кабинет</h1>
+            <div class="delta-header">
+                <img class="profile-header" src=/media/{{ request.user.photo }} alt="Аватарка">
+                <h2 class="nickname-header">{{ request.user.login }}</h2>
+                <a href="/logout" style="height: 28px"><img src={% static "img/out.png" %} alt="Выход" width="28px"
+                                                            height="28px"></a>
+            </div>
+        </div>
+    </div>
+</header>
+<div class="content-container">
+    <div class="left-menu">
+        <ul>
+            <a href="/">
+                <li class="left-menu-element"><img class="left-menu-img" src={% static 'img/profile.png' %} alt=""><span
+                        class="left-menu-text">Профиль</span></li>
+            </a>
+            <a href="/vacations/">
+                <li class="left-menu-element"><img class="left-menu-img" src={% static 'img/calen.png' %} alt=""><span
+                        class="left-menu-text">График отпусков</span></li>
+            </a>
+            <a href="/get_access/">
+                <li class="left-menu-element"><img class="left-menu-img" src={% static 'img/set.png' %} alt=""><span
+                        class="left-menu-text">Доступы к системам</span></li>
+            </a>
+            <a href="/get_all_employees">
+                <li class="left-menu-element"><img class="left-menu-img" src={% static 'img/sotrud.png' %} alt=""><span
+                        class="left-menu-text">Список сотрудников</span></li>
+            </a>
+            <a href="/devices">
+                <li class="left-menu-element"><img class="left-menu-img" src={% static 'img/sotrud.png' %} alt=""><span
+                        class="left-menu-text">Тестовые девайсы</span></li>
+            </a>
+            {% if request.user.position.access_to_candidates %}
+                <a href="/get_all_candidates">
+                    <li class="left-menu-element"><img class="left-menu-img"
+                                                       src={% static "img/sotrud.png" %} alt=""><span
+                            class="left-menu-text">Список кандидатов</span></li>
+                </a>
+            {% endif %}
+            {% if request.user.position.access_to_vacation_list %}
+                <a href="/download_vacations">
+                    <li class="left-menu-element"><img class="left-menu-img"
+                                                       src={% static "img/calen_list.png" %} alt=""><span
+                            class="left-menu-text">Список отпусков</span></li>
+                </a>
+            {% endif %}
+        </ul>
+    </div>
+    <div class="right-container">
+        <h1 class="h-list">Список устройств</h1>
+        <table class="candidate-table" id="paged">
+            <thead>
+            <tr class="candidate-list-block">
+                <th>Тип ️<img style='width: 13px' src= {% static 'img/updown.ico' %}></th>
+                <th>Название <img style='width: 13px' src= {% static 'img/updown.ico' %}></th>
+                <th>Наличие <img style='width: 13px' src= {% static 'img/updown.ico' %}></th>
+            </tr>
+            </thead>
+            <tbody id="tbody">
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+</body>
+<div id="myModal" class="modal">
+    <!-- Modal content -->
+    <div class="device_info-container">
+        <h2 style="text-align: center">Основная информация</h2>
+        <div class="device_info-content">
+            <div class="device_info-content-left">
+                <div class="device-content-block">
+                    <div class="grey-text">Название девайса</div>
+                    <div class="name" id="device-name"></div>
+                </div>
+                <div class="device-content-block">
+                    <div class="grey-text">ФИО пользователя:</div>
+                    <div class="name" id="device-owner-name"></div>
+                </div>
+                <div class="device-content-block">
+                    <div class="grey-text">Дата взятия девайса:</div>
+                    <div class="name" id="device-time-of-taking"></div>
+                </div>
+            </div>
+            <div class="device_info-content-left">
+                <div class="device-content-block">
+                    <div class="grey-text">Логин в Telegram:</div>
+                    <div class="name" id="device-owner-telegram"></div>
+                </div>
+                <div class="device-content-block">
+                    <div class="grey-text">Логин в Slack:</div>
+                    <div class="name" id="device-owner-slack"></div>
+                </div>
+                <div class="device-content-block">
+                    <div class="grey-text">Телефон:</div>
+                    <div class="name" id="device-owner-phone"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="get-device">Взять</div>
+
+    </div>
+
+</div>
+
+<script>
+
+    let response = fetch('/devices_list/?format=json', {
+        method: 'GET'
+    }).then(response => response.json())
+        .then(response => {
+            let devices = response
+            for (let i = 0; i < devices.length; i++) {
+                let tr = document.createElement('tr');
+                tr.classList.add('candidate-list-block');
+                tr.classList.add('hoverBtn');
+                tr.setAttribute('id', devices[i].id)
+                tr.addEventListener('click', getDeviceData.bind(null, devices[i].id));
+                let td1 = tr.appendChild(document.createElement('td'));
+                td1.innerHTML = devices[i].type
+                let td2 = tr.appendChild(document.createElement('td'))
+                td2.innerHTML = devices[i].name
+                let td3 = tr.appendChild(document.createElement('td'))
+                if (devices[i].owner != null)
+                    td3.innerHTML = '-'
+                else
+                    td3.innerHTML = '✓'
+                document.getElementById('tbody').appendChild(tr);
+            }
+        }).then(() => {
+            $(document).ready(function () {
+                $('#paged').DataTable({
+                    "language": {
+                        paginate: {
+                            first: '«',
+                            previous: '‹',
+                            next: '›',
+                            last: '»'
+                        },
+                        aria: {
+                            paginate: {
+                                first: 'First',
+                                previous: 'Previous',
+                                next: 'Next',
+                                last: 'Last'
+                            }
+                        },
+                        searchPlaceholder: 'Поиск'
+                    },
+                });
+            });
+            $(document).ready(function () {
+                $("div.dataTables_filter input").focus();
+            })
+        })
+    let modal = document.getElementById("myModal");
+
+    function getDeviceData(id) {
+        modal.style.display = "block";
+        window.onclick = function (event) {
+            if (event.target === modal) {
+                modal.style.display = "none";
+            }
+        }
+        fetch('/devices_details/' + id, {
+            method: 'GET'
+        }).then(response => response.json())
+            .then(data => {
+                let time_of_taking = ''
+                if (data['time_of_taked'] != null) {
+                    let date = new Date(data['time_of_taked'])
+                    let currentTzOffset = -date.getTimezoneOffset() / 60
+                    date.setHours(date.getHours() + currentTzOffset);
+                    time_of_taking =
+                        `${date.toLocaleDateString()} ${date.toLocaleTimeString().slice(0, -3)}`
+                }
+                document.getElementById("device-name").innerHTML = data['name'];
+                document.getElementById("device-owner-name").innerHTML = data['owner_name'];
+                document.getElementById("device-owner-name").setAttribute('owner_id', data['owner_id']);
+                document.getElementById("device-time-of-taking").innerHTML = time_of_taking;
+                document.getElementById("device-owner-telegram").innerHTML = data['owner_telegram'];
+                document.getElementById("device-owner-slack").innerHTML = data['owner_slack'];
+                document.getElementById("device-owner-phone").innerHTML = data['owner_phone'];
+                let get_device = document.getElementsByClassName("get-device")[0]
+                let user_id = {{ user.id }};
+                user_id = user_id.toString();
+
+                if (document.getElementById("device-owner-name").getAttribute('owner_id') === 'null') {
+                    get_device.innerHTML = 'Взять'
+                    get_device.style.background = "#00A826";
+                    get_device.style.pointerEvents = 'auto'
+                    get_device.onclick = function () {
+                        fetch('/set_owner/?device_id=' + data['id'], {
+                            method: 'GET'
+                        }).then(response => {
+                            if (response.ok) {
+                                modal.style.display = "none";
+                                document.getElementById(data['id']).lastChild.innerHTML = '-'
+                            }
+                        })
+                    }
+                } else if (document.getElementById("device-owner-name").getAttribute('owner_id') === user_id) {
+                    get_device.innerHTML = 'Отдать'
+                    get_device.style.background = "#00A826";
+                    get_device.style.pointerEvents = 'auto'
+                    get_device.onclick = function () {
+                        fetch('/unset_owner/?device_id=' + data['id'], {
+                            method: 'GET'
+                        }).then(response => {
+                            if (response.ok) {
+                                modal.style.display = "none";
+                                document.getElementById(data['id']).lastChild.innerHTML = '✓'
+                            }
+                        })
+                    }
+                } else {
+                    get_device.innerHTML = 'Устройство занято'
+                    get_device.style.background = "#ff9d9d";
+                    get_device.style.pointerEvents = 'none'
+                }
+            })
+    }
+
+
+</script>
+</html>
+</body>
+</html>

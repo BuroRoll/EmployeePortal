@@ -3,12 +3,6 @@ from rest_framework import serializers
 from .models import Conversation, System
 
 
-# class ConversationsSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Conversation
-#         fields = ['id', 'conversation_name', 'messenger']
-
-
 class SystemsSerializer(serializers.ModelSerializer):
     class Meta:
         model = System
