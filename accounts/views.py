@@ -52,7 +52,6 @@ def account(request):
             user_form.save()
         return redirect('/')
     else:
-        print(request.user.position.id)
         position = Position.objects.get(id=request.user.position.id)
         if position.access_to_candidates or position.access_to_vacation_list:
             user_form = SpecialAccessEmployeeForm(instance=request.user)
@@ -138,9 +137,9 @@ def get_all_candidates(request):
     positions = Position.objects.all()
     candidates = serialize('json', candidates, fields=['name', 'position'])
     positions = serialize('json', positions, fields=['position_name'])
-    candidate_form = CandidateForm()
+    candidates_form = CandidateForm()
     return render(request, 'accounts/candidates_table.html',
-                  {'candidates': candidates, 'positions': positions, 'candidate_form': candidate_form})
+                  {'candidates': candidates, 'positions': positions, 'candidate_form': candidates_form})
 
 
 @login_required
@@ -151,8 +150,8 @@ def candidate_form(request):
 
 @login_required
 def delete_candidate(request):
-    id = request.GET.get("id", )
-    candidate = Candidate.objects.get(id=id)
+    candidate_id = request.GET.get("id", )
+    candidate = Candidate.objects.get(id=candidate_id)
     candidate.delete()
     return HttpResponse('Deleted')
 
@@ -180,7 +179,7 @@ def download_vacations(request):
 
 
 def print_in_xlsx(data):
-    output = io.BytesIO()
+    io.BytesIO()
     workbook = xlsxwriter.Workbook('media/Vacations.xlsx')
     worksheet = workbook.add_worksheet()
     bold = workbook.add_format({'bold': True})
