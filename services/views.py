@@ -27,7 +27,7 @@ class TGBotView(View):
             t_chat = t_message["chat"]
             try:
                 text = t_message["text"].strip().lower()
-            except Exception as e:
+            except Exception as _:
                 return JsonResponse({"ok": "POST request processed"})
             text = text.lstrip("/")
             if text == 'add_chat':
