@@ -54,6 +54,10 @@
                 <li class="left-menu-element"><img class="left-menu-img" src={% static 'img/sotrud.png' %} alt=""><span
                         class="left-menu-text">Тестовые девайсы</span></li>
             </a>
+        <a href="/events">
+                <li class="left-menu-element"><img class="left-menu-img" src={% static 'img/sotrud.png' %} alt=""><span
+                        class="left-menu-text">События</span></li>
+            </a>
             {% if request.user.position.access_to_candidates %}
                 <a href="/get_all_candidates">
                     <li class="left-menu-element"><img class="left-menu-img"

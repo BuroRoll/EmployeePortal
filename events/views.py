@@ -86,6 +86,10 @@ def create_event(request):
     event.save()
     return Response({'success': 'ok'})
 
+@login_required
+def event_manager(request):
+    return render(request, 'events/event-manager.html')
+
 
 class EventsMembers(generics.RetrieveAPIView):
     queryset = Event.objects.all()
