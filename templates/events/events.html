@@ -6,6 +6,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width">
     <title>Мероприятия</title>
+    <link rel="shortcut icon" type="image/png" href="{% static 'img/favicon.ico' %}"/>
     <link rel="stylesheet" href={% static "style/style.css" %}>
     <link rel="stylesheet" href={% static "style/events.css" %}>
     <link rel="stylesheet" href={% static "style/adaptive-style.css" %}>
@@ -13,6 +14,8 @@
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital@0;1&display=swap" rel="stylesheet">
+    <link rel='stylesheet' href='/static/icons/font/css/open-iconic.css'>
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body class="grey" onload="set_events()">
@@ -35,44 +38,60 @@
 <div class="content-container">
     <div class="left-menu">
         <ul>
-            <a href="/">
-                <li class="left-menu-element"><img class="left-menu-img" src={% static 'img/profile.png' %} alt=""><span
-                        class="left-menu-text">Профиль</span></li>
+            <a href="/account">
+                <li class="left-menu-element"><span class="oi" data-glyph="person" aria-hidden="true"></span></span>
+                    <span class="left-menu-text">Профиль</span></li>
             </a>
             <a href="/vacations/">
-                <li class="left-menu-element"><img class="left-menu-img" src={% static 'img/calen.png' %} alt=""><span
+                <li class="left-menu-element"><span class="oi" data-glyph="calendar" aria-hidden="true"></span><span
                         class="left-menu-text">График отпусков</span></li>
             </a>
             <a href="/get_access/">
-                <li class="left-menu-element"><img class="left-menu-img" src={% static 'img/set.png' %} alt=""><span
+                <li class="left-menu-element"><span class="oi" data-glyph="wrench" aria-hidden="true"></span><span
                         class="left-menu-text">Доступы к системам</span></li>
             </a>
             <a href="/get_all_employees">
-                <li class="left-menu-element"><img class="left-menu-img" src={% static 'img/sotrud.png' %} alt=""><span
-                        class="left-menu-text">Список сотрудников</span></li>
-            </a>
-            <a href="/devices">
-                <li class="left-menu-element"><img class="left-menu-img" src={% static 'img/sotrud.png' %} alt=""><span
-                        class="left-menu-text">Тестовые девайсы</span></li>
+                <li class="left-menu-element"><span class="oi" data-glyph="people" aria-hidden="true"></span>
+                    <span
+                            class="left-menu-text">Сотрудники</span></li>
             </a>
             {% if request.user.position.access_to_candidates %}
                 <a href="/get_all_candidates">
-                    <li class="left-menu-element"><img class="left-menu-img"
-                                                       src={% static "img/sotrud.png" %} alt=""><span
-                            class="left-menu-text">Список кандидатов</span></li>
+                    <li class="left-menu-element"><span class="oi" data-glyph="spreadsheet" aria-hidden="true"></span>
+                        <span
+                                class="left-menu-text">Кандидаты</span></li>
                 </a>
             {% endif %}
             {% if request.user.position.access_to_vacation_list %}
                 <a href="/download_vacations">
-                    <li class="left-menu-element"><img class="left-menu-img"
-                                                       src={% static "img/calen_list.png" %} alt=""><span
-                            class="left-menu-text">Список отпусков</span></li>
+                    <li class="left-menu-element"><span class="oi" data-glyph="folder" aria-hidden="true"></span>
+                        <span
+                                class="left-menu-text">Список отпусков</span></li>
                 </a>
             {% endif %}
+            <a href="/events">
+                <li class="left-menu-element"><span class="oi" data-glyph="bullhorn" aria-hidden="true"></span>
+                    <span
+                            class="left-menu-text">Мероприятия</span></li>
+            </a>
+            <a href="/devices">
+                <li class="left-menu-element"><span class="oi" data-glyph="monitor" aria-hidden="true"></span>
+                    <span
+                            class="left-menu-text">Тестовые девайсы</span></li>
+            </a>
+            <a href="/map">
+                <li class="left-menu-element"><span class="oi" data-glyph="globe" aria-hidden="true"></span>
+                    <span
+                            class="left-menu-text">Карта путешествий</span></li>
+            </a>
         </ul>
     </div>
-
-    <div class="events-container" id="events_container">
+    <div style="width: 70%; margin-left: auto; margin-right: auto">
+        <a href="/event_manager/">
+            <div class="event-manager-btn">+ Мои мероприятия</div>
+        </a>
+        <div class="events-container" id="events_container" style="width: 100%">
+        </div>
     </div>
 
 </div>
@@ -101,8 +120,8 @@
 
     function create_event(event_data) {
         let free_places = event_data.members_count - event_data.members.length
-        let event_date_data = event_data.event_date.split(/[.,/]+/)
-        let event_date = new Date(event_date_data[2], event_date_data[1] - 1, event_date_data[0])
+        let event_date_data = event_data.event_date.split(/[.,/-]+/)
+        let event_date = new Date(event_date_data[0], event_date_data[1] - 1, event_date_data[2])
         let diffDays = Math.ceil(Math.abs(event_date.getTime() - new Date().getTime()) / (1000 * 3600 * 24));
         if (new Date().getTime() - event_date.getTime() > 86400000)
             return null
@@ -121,7 +140,7 @@
                             <div class="event-info-block">
                                 <div class="event-info-block-left">
                                     <h4 class="title-event">Время выставки</h4>
-                                    <p class="date-info">${event_data.event_date}<br>${event_data.event_time}</p>
+                                    <p class="date-info"><span class="event_block_date" >${event_data.event_date}</span><br>${event_data.event_time}</p>
                                 </div>
                                 <div class="event-info-block-right">
                                     <h4 class="title-event">Место проведения</h4>
@@ -135,8 +154,8 @@
                             </div>
 
                             <div class="party">
-                                <div>Всего мест: <span class="max-count">${event_data.members_count}</span></div>
-                                <a href="" style="color: grey; text-decoration: underline">Список участников</a>
+                                <div class="show-count ${event_data.show_members_count}">Всего мест: <span class="max-count">${event_data.members_count}</span></div>
+                                <a class="show-list ${event_data.show_members}" href="" style="color: grey; text-decoration: underline">Список участников</a>
                             </div>
 
                             <div class="event-sub green-btn" id='${event_data.id}'>
@@ -160,7 +179,7 @@
             subBtn.disabled = true
             console.log(subBtn.disabled)
         }
-        return div;
+        return div
     }
 
     function f() {
@@ -169,6 +188,19 @@
         for (let block of event_blocks) {
             let pointer = block.querySelector('.pointer')
 
+            //Заполнение данных: количество оставшихся дней до мероприятия и оформление даты
+            let daysBefore = block.querySelector('.days-before-start')
+            let month = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
+            let date = block.querySelector('.event_block_date')
+            let dateText = date.textContent
+            let date_arr = dateText.split(/[.,/-]+/)
+            let date_text = `${parseInt(date_arr[2])} ${month[parseInt(date_arr[1]) - 1]} ${date_arr[0]} г.`
+            date.textContent = date_text
+            let oneDay = 1000 * 60 * 60 * 24
+            {#daysBefore.textContent = Math.ceil(((new Date(dateText) - new Date()) / oneDay))#}
+            if (daysBefore.textContent < 0) {
+                block.remove()
+            }
 
             //Укорачивание названия
             let title = block.querySelector('h1')
@@ -177,7 +209,6 @@
 
             //Настройка цветов
             let freePlace = block.querySelector('.free-places')
-            let daysBefore = block.querySelector('.days-before-start')
             let maxPlace = block.querySelector('.max-count')
 
             if (daysBefore.textContent <= 3) {
@@ -208,6 +239,15 @@
             }
 
             let subBtn = block.querySelector('.event-sub')
+
+            let showCount = block.querySelector('.show-count')
+            let showList = block.querySelector('.show-list')
+            if (showList.classList.contains('false')) {
+                showList.remove()
+            }
+            if (showCount.classList.contains('false')) {
+                showCount.remove()
+            }
 
             //Обработка кнопки мероприятия
             subBtn.onclick = function () {
@@ -242,97 +282,9 @@
                             console.log(error);
                         }
                     });
-
-                }
-            }
-
-
-        }
-
-    }
-
-</script>
-<script>
-    const csrftoken = getCookie('csrftoken')
-    let event_id = 5
-    let title = 'Название221 231'
-    let event_date = '21.07.2021'
-    let event_time = '11:30'
-    let event_place = 'Москва'
-    let description = 'Тут новое описание'
-    let show_members = true
-    let show_members_count = true
-    let members_count = 12
-    //Редактирование события
-    $.ajax({
-        url: '/update_event/',
-        type: "POST",
-        headers: {
-            //ВАЖНО!!!
-            "X-CSRFToken": csrftoken,
-            'Content-Type': 'application/json'
-        },
-        data: JSON.stringify({
-            event_id: event_id,
-            title: title,
-            event_date: event_date,
-            event_time: event_time,
-            event_place: event_place,
-            description: description,
-            show_members: show_members,
-            show_members_count: show_members_count,
-            members_count: members_count,
-        }),
-        success: function (data) {
-            console.log(data)
-        },
-        error: function (error) {
-            console.log(error);
-        },
-        datatype: 'json'
-    });
-
-
-    //Создание события
-    $.ajax({
-        url: '/create_event/',
-        type: "POST",
-        headers: {
-            "X-CSRFToken": csrftoken,
-            'Content-Type': 'application/json'
-        },
-        data: JSON.stringify({
-            title: title,
-            event_date: event_date,
-            event_time: event_time,
-            event_place: event_place,
-            description: description,
-            show_members: show_members,
-            show_members_count: show_members_count,
-            members_count: members_count,
-        }),
-        success: function (data) {
-            console.log(data)
-        },
-        error: function (error) {
-            console.log(error);
-        },
-        datatype: 'json'
-    });
-
-    function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
                 }
             }
         }
-        return cookieValue;
     }
 </script>
 </body>

@@ -37,6 +37,7 @@
 }
 
 .get-device {
+    text-transform: uppercase;
     padding: 10px 50px;
     background: #00A826;
     border-radius: 16px;
@@ -62,6 +63,7 @@
     }
 
     .get-device {
+        font-size: 12px;
         padding: 7px 37.5px;
         background: #00A826;
         border-radius: 16px;

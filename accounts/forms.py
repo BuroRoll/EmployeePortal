@@ -56,7 +56,7 @@ class UserChangeForm(forms.ModelForm):
 
     class Meta:
         model = Account
-        fields = ('name', 'photo', 'phone', 'slack_login', 'telegram_login', 'position')
+        fields = ('name', 'photo', 'phone', 'slack_login', 'telegram_login', 'position', 'info')
 
 
 class SpecialAccessEmployeeForm(forms.ModelForm):
@@ -66,7 +66,7 @@ class SpecialAccessEmployeeForm(forms.ModelForm):
 
     class Meta:
         model = Account
-        fields = ('name', 'photo', 'phone', 'slack_login', 'telegram_login', 'position')
+        fields = ('name', 'photo', 'phone', 'slack_login', 'telegram_login', 'position', 'info')
 
 
 class AdminUserChangeForm(forms.ModelForm):
@@ -76,7 +76,7 @@ class AdminUserChangeForm(forms.ModelForm):
 
     class Meta:
         model = Account
-        fields = ('name', 'photo', 'phone', 'slack_login', 'telegram_login', 'position')
+        fields = ('name', 'photo', 'phone', 'slack_login', 'telegram_login', 'position', 'info')
 
 
 class LoginForm(forms.Form):

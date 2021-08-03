@@ -1,7 +1,7 @@
 .events-container {
     width: 70%;
     margin: auto;
-    margin-top: 50px;
+    margin-top: 20px;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
@@ -68,6 +68,7 @@
     object-fit: cover;
     border-top-left-radius: 16px;
     border-top-right-radius: 16px;
+    border-bottom: 1px solid #AFAFAF;
 }
 
 .event-info-block {
@@ -181,12 +182,13 @@
 }
 
 .event-red-img {
-    background-size: 100% 280px;
+    /*background-size: 100% 280px;*/
+    background-size: cover;
     width: 100%;
     height: 280px;
-    /*background-image: url("../img/event.png");*/
     border-top-left-radius: 16px;
     border-top-right-radius: 16px;
+    border-bottom: 1px solid #AFAFAF;
 }
 
 .event-delete {
@@ -262,6 +264,24 @@
 
 }
 
+#create-event {
+    margin-top: 50px;
+    margin-bottom: 0;
+}
+
+.event-manager-btn {
+    width: 22.5%;
+    margin-left: auto;
+    font-size: 13px;
+    color: white;
+    background-color: #FF7601;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 16px;
+    padding: 12px 0 12px 0;
+    margin-top: 50px;
+}
+
 @media (max-width: 1550px) {
     .event-img {
         height: 210px;
@@ -273,5 +293,84 @@
 
     .event-anons {
         width: auto;
+    }
+
+    .event-new-img {
+        width: 82.5px;
+        height: 82.5px;
+    }
+
+    .download-event-btn {
+        width: 100.5px;
+        background: #00A826;
+        border-radius: 16px;
+        color: white;
+        margin: auto;
+        padding: 7.5px;
+        cursor: pointer;
+        margin-top: 11.25px;
+        font-size: 12px;
+    }
+
+    .event-label {
+        color: #AFAFAF;
+        margin-bottom: 3.75px;
+        font-size: 12px;
+    }
+
+    .event-input {
+        background: #FFFFFF;
+        border: 1px solid #AFAFAF;
+        box-sizing: border-box;
+        border-radius: 8px;
+        padding: 9px;
+        width: 100%;
+        font-size: 12px;
+    }
+
+    label[for=list],label[for=count] {
+        font-size: 12px;
+    }
+
+    .event-sub, .info-block, .event-count, .event-input-date, .event-red-textarea, .event-delete {
+        font-size: 12px;
+    }
+
+    .red-event-block {
+        margin-top: 15px;
+    }
+
+    .event-input-date {
+        width: 120px;
+    }
+
+    .event-red-textarea {
+        width: 150px;
+        height: 37.5px;
+    }
+
+    #create-event {
+        margin-top: 37.5px;
+    }
+
+    .event-red-img {
+        height: 210px;
+    }
+
+    .section-button {
+        font-size: 22.5px;
+    }
+
+    .event-manager-btn {
+    width: 22.5%;
+    margin-left: auto;
+    font-size: 13.5px;
+    color: white;
+    background-color: #FF7601;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 16px;
+    padding: 9px 0 9px 0;
+    /*margin-top: 37.5px;*/
     }
 }

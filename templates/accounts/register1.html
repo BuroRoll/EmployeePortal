@@ -6,14 +6,13 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width">
     <title>SKB_LAB | Регистрация</title>
-    <link rel="shortcut icon" type="image/png" href="{% static 'img/ico.ico' %}"/>
+    <link rel="shortcut icon" type="image/png" href="{% static 'img/favicon.ico' %}"/>
     <link rel="stylesheet" href={% static 'style/style.css' %}>
     <link rel="stylesheet" href={% static 'style/adaptive-style.css' %}>
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital@0;1&display=swap" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src={% static 'js/phoneinput.js' %}></script>
-    <link rel="shortcut icon" type="image/png" href="{% static 'img/favicon.ico' %}"/>
 </head>
 <body>
 <header>
@@ -35,13 +34,14 @@
         <h1 class="reg-h">Регистрация в личном кабинете сотрудника</h1>
         <div>
             <label class="log-label" for="login">Ваш логин</label><br>
-            <input type="text" placeholder="Логин" class="reg-input"
+            <input type="text" placeholder="Логин" class="reg-input login-input"
                    name="{{ user_form.login.name }}"
                    id="{{ user_form.login.id_for_label }}"
                     {% if invalid %}
                         value={{ form.login.value }}
                     {% endif %}
             {% if user_form.login.field.required %}required{% endif %}>
+            <div class="login-error">Этот логин уже занят</div>
         </div>
         <div style="margin-top: 35px">
             <label class="log-label" for="password">Ваш пароль</label><br>
@@ -57,9 +57,9 @@
                    name="{{ user_form.name.name }}"
                    id="{{ user_form.name.id_for_label }}"
                     {% if invalid %}
-                        value="{{ form.name.value }}"
+                   value="{{ form.name.value }}"
                     {% endif %}
-            {% if user_form.name.field.required %}required{% endif %}>
+                   {% if user_form.name.field.required %}required{% endif %}>
         </div>
         <div style="margin-top: 35px">
             <label class="log-label" for="tel">Ваш номер телефона</label><br>
@@ -70,9 +70,9 @@
                    id="{{ user_form.name.id_for_label }}"
                    maxlength="{{ user_form.name.field.max_length }}"
                     {% if invalid %}
-                        value="{{ form.phone.value }}"
+                   value="{{ form.phone.value }}"
                     {% endif %}
-            {% if user_form.name.field.required %}required{% endif %}>
+                   {% if user_form.name.field.required %}required{% endif %}>
         </div>
 
 
@@ -90,8 +90,8 @@
                    placeholder="Логин Telegram"
                    name="{{ user_form.telegram_login.name }}"
                    id="{{ user_form.telegram_login.id_for_label }}"
-                   {% if invalid %}
-                        value="{{ form.telegram_login.value }}"
+                    {% if invalid %}
+                   value="{{ form.telegram_login.value }}"
                     {% endif %}
                    {% if user_form.telegram_login.field.required %}required{% endif %}>
         </div>
@@ -101,8 +101,8 @@
                    placeholder="Логин Slack"
                    name="{{ user_form.slack_login.name }}"
                    id="{{ user_form.slack_login.id_for_label }}"
-                   {% if invalid %}
-                        value="{{ form.slack_login.value }}"
+                    {% if invalid %}
+                   value="{{ form.slack_login.value }}"
                     {% endif %}
                    {% if user_form.slack_login.field.required %}required{% endif %}>
         </div>
@@ -124,32 +124,16 @@
 
         <div style="margin-top: 35px">
             <label class="log-label" for="text">Расскажите о себе</label><br>
-
-            {#            <input type="text" class="reg-input"#}
-            {#                   placeholder="Описание"#}
-            {#                   name="{{ user_form.info.name }}"#}
-            {#                   id="{{ user_form.info.id_for_label }}"#}
-            {#                   {% if user_form.info.field.required %}required{% endif %}>#}
             <textarea id="{{ user_form.info.id_for_label }}" name="{{ user_form.info.name }}" class="reg-input"
                       placeholder="Описание"
+                      style="resize: none; padding-top: 10px"
                       {% if user_form.info.field.required %}required{% endif %}></textarea>
         </div>
 
-
-        {#        <div style="margin-top: 35px">#}
-        {#            <label class="log-label">Ваше фото</label>#}
-        {#            <img id="imgInp" alt="" style="float: left; width: 50px">#}
-        {#            <label style="float: left;" class="reg-input reg-download" for="id_photo">Выбрать фото</label>#}
-        {#                        <input class="reg-input reg-download-photo" id="photo" name="password" type="file"#}
-        {#                               placeholder="Выбрать фото">#}
-        {#            <input class="reg-input reg-download-photo" type="file" name="photo" accept="image/*" #}
-        {#                   style="display: none">#}
-        {#            #}
-        {#        </div>#}
         <div style="margin-top: 35px; text-align: left">
             <label class="log-label" style="    float: inherit;">Ваше фото</label>
             <div class="reg-img-block">
-                <label class="reg-input reg-download" for="id_photo" style="width: 130px; height: 20px;">Выбрать
+                <label class="reg-input reg-download" for="id_photo" style="width: 130px; height: auto;">Выбрать
                     фото</label>
                 <img id="imgInp" alt="" class="reg-img">
             </div>
@@ -158,10 +142,12 @@
             <script type="text/javascript">
                 function readURL(input) {
                     if (input.files && input.files[0]) {
-                        var reader = new FileReader();
+                        let reader = new FileReader();
 
                         reader.onload = function (e) {
                             $('#imgInp').attr('src', e.target.result);
+                            $('#imgInp').show()
+
                         }
 
                         reader.readAsDataURL(input.files[0]); // convert to base64 string
@@ -175,14 +161,14 @@
         </div>
 
 
-        <div style="float:left;" class="check">
+        <div style="float:left; align-items: center;" class="check">
             <input style="floar:left;" type="checkbox" name="{{ user_form.is_new_employee.name }}"
                    id="{{ user_form.is_new_employee.id_for_label }}">
-            <span style="color: black; margin-left: 10px;">Новый сотрудник</span>
+            <span style="color: black; margin-left: 10px; height: fit-content;">Новый сотрудник</span>
         </div>
         <div style="float:left;" class="check">
             <input style="float:left;" class="check_box" type="checkbox" name="checkbox" required>
-            <span style="color: black; margin-left: 10px;">Я согласен на <a><u>обработку персональных данных</u></a></span>
+            <span style="color: black; margin-left: 10px; text-align: left;">Я согласен на <a><u>обработку персональных данных</u></a></span>
         </div>
 
 
@@ -208,6 +194,54 @@
             console.log('damn')
         }
     };
+</script>
+
+<script>
+    const csrftoken = getCookie('csrftoken')
+
+
+    $('.login-input').blur(function () {
+        $.ajax({
+            url: '/users_logins/',
+            type: "GET",
+            headers: {
+                "X-CSRFToken": csrftoken
+            },
+            success: function (data) {
+                let r_button = $('.sub-log')[0]
+                console.log(data.includes($('.login-input').val()))
+                if (data.includes($('.login-input').val())) {
+                    let item = document.querySelector('input[name=login]')
+                    item.style.border = '1px  solid red'
+                    r_button.disabled = false
+                    $('.login-error').show()
+                }else {
+                    let item = document.querySelector('input[name=login]')
+                    item.style.border = ''
+                    r_button.disabled = true
+                    $('.login-error').hide()
+                }
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        })
+    });
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
 </script>
 </body>
 </html>

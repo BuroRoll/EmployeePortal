@@ -1,0 +1,58 @@
+#mapid {
+    height: 700px;
+    width: 80%;
+    margin: 50px auto auto auto;
+    border-radius: 30px;
+}
+
+.map-block {
+    width: 30%;
+    height: auto;
+}
+
+.map-container {
+    width: 80%;
+    margin: auto;
+}
+
+.description-input {
+    width: 100%;
+    resize: none;
+    height: 200px;
+    border-radius: 8px;
+    outline: none;
+    background: #F2F2F2;
+    border: 1px solid #AFAFAF;
+    margin-top: 10px;
+}
+
+.marker-sub {
+    padding: 11px 0 11px 0;
+    width: 100%;
+    text-align: center;
+    border-radius: 16px;
+    color: white;
+    cursor: pointer;
+    margin: 25px 0 25px 0;
+    text-transform: uppercase;
+    transition: 200ms;
+    user-select: none;
+    background: #00A826;
+}
+
+@media (max-width: 1550px) {
+    .marker-sub {
+        font-size: 12px;
+        padding: 8.25px 0 8.25px 0;
+        margin: 18.75px 0 18.75px 0;
+
+    }
+
+    #mapid {
+        height: 525px;
+    }
+
+    .description-input {
+        height: 150px;
+    }
+}

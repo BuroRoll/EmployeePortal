@@ -19,3 +19,10 @@ class EventMembersSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
         fields = ['members_names']
+
+
+class EventDetailsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Event
+        fields = ['id', 'picture', 'title', 'event_date', 'event_time', 'event_place', 'description', 'show_members',
+                  'show_members_count', 'members_count', 'members']

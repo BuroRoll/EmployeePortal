@@ -5,17 +5,28 @@
     <meta charset="UTF-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width">
-    <title>Мероприятия</title>
+    <title>Редактор мероприятий</title>
+    <link rel="shortcut icon" type="image/png" href="{% static 'img/favicon.ico' %}"/>
     <link rel="stylesheet" href={% static "style/style.css" %}>
     <link rel="stylesheet" href={% static "style/events.css" %}>
     <link rel="stylesheet" href={% static "style/adaptive-style.css" %}>
     <link rel="stylesheet" href={% static "style/events.css" %}>
-
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital@0;1&display=swap" rel="stylesheet">
+    <link rel='stylesheet' href='/static/icons/font/css/open-iconic.css'>
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
-<body class="grey" onload="set_events()">
+<style>
+    ul {
+        min-width: 250px;
+    }
+
+    .events-container {
+        width: 90%;
+    }
+</style>
+<body class="grey">
 <header>
     <div class="header-container">
         <a href="/">
@@ -35,52 +46,515 @@
 <div class="content-container">
     <div class="left-menu">
         <ul>
-            <a href="/">
-                <li class="left-menu-element"><img class="left-menu-img" src={% static 'img/profile.png' %} alt=""><span
-                        class="left-menu-text">Профиль</span></li>
+            <a href="/account">
+                <li class="left-menu-element"><span class="oi" data-glyph="person" aria-hidden="true"></span></span>
+                    <span class="left-menu-text">Профиль</span></li>
             </a>
             <a href="/vacations/">
-                <li class="left-menu-element"><img class="left-menu-img" src={% static 'img/calen.png' %} alt=""><span
+                <li class="left-menu-element"><span class="oi" data-glyph="calendar" aria-hidden="true"></span><span
                         class="left-menu-text">График отпусков</span></li>
             </a>
             <a href="/get_access/">
-                <li class="left-menu-element"><img class="left-menu-img" src={% static 'img/set.png' %} alt=""><span
+                <li class="left-menu-element"><span class="oi" data-glyph="wrench" aria-hidden="true"></span><span
                         class="left-menu-text">Доступы к системам</span></li>
             </a>
             <a href="/get_all_employees">
-                <li class="left-menu-element"><img class="left-menu-img" src={% static 'img/sotrud.png' %} alt=""><span
-                        class="left-menu-text">Список сотрудников</span></li>
-            </a>
-            <a href="/devices">
-                <li class="left-menu-element"><img class="left-menu-img" src={% static 'img/sotrud.png' %} alt=""><span
-                        class="left-menu-text">Тестовые девайсы</span></li>
-            </a>
-            <a href="/events">
-                <li class="left-menu-element"><img class="left-menu-img" src={% static 'img/sotrud.png' %} alt=""><span
-                        class="left-menu-text">События</span></li>
+                <li class="left-menu-element"><span class="oi" data-glyph="people" aria-hidden="true"></span>
+                    <span
+                            class="left-menu-text">Сотрудники</span></li>
             </a>
             {% if request.user.position.access_to_candidates %}
                 <a href="/get_all_candidates">
-                    <li class="left-menu-element"><img class="left-menu-img"
-                                                       src={% static "img/sotrud.png" %} alt=""><span
-                            class="left-menu-text">Список кандидатов</span></li>
+                    <li class="left-menu-element"><span class="oi" data-glyph="spreadsheet" aria-hidden="true"></span>
+                        <span
+                                class="left-menu-text">Кандидаты</span></li>
                 </a>
             {% endif %}
             {% if request.user.position.access_to_vacation_list %}
                 <a href="/download_vacations">
-                    <li class="left-menu-element"><img class="left-menu-img"
-                                                       src={% static "img/calen_list.png" %} alt=""><span
-                            class="left-menu-text">Список отпусков</span></li>
+                    <li class="left-menu-element"><span class="oi" data-glyph="folder" aria-hidden="true"></span>
+                        <span
+                                class="left-menu-text">Список отпусков</span></li>
                 </a>
             {% endif %}
+            <a href="/events">
+                <li class="left-menu-element"><span class="oi" data-glyph="bullhorn" aria-hidden="true"></span>
+                    <span
+                            class="left-menu-text">Мероприятия</span></li>
+            </a>
+            <a href="/devices">
+                <li class="left-menu-element"><span class="oi" data-glyph="monitor" aria-hidden="true"></span>
+                    <span
+                            class="left-menu-text">Тестовые девайсы</span></li>
+            </a>
+            <a href="/map">
+                <li class="left-menu-element"><span class="oi" data-glyph="globe" aria-hidden="true"></span>
+                    <span
+                            class="left-menu-text">Карта путешествий</span></li>
+            </a>
         </ul>
     </div>
+    <div style="width: 80%">
+        <div class="section-buttons">
+            <div class="section-button create-event active-btn">Создать мероприятие</div>
+            <div class="section-button my-events">Ваши мероприятия</div>
+        </div>
+        <div id="create-new-event" class="events-container">
+            <div class="event-block event-red-style  show">
+                <form id="ajax" class="download-event-img">
+                    <img id="min_imgInp" class="event-new-img" src="{% static 'img/event-img.png' %}" alt="">
+                    <div style="display: flex"><label for="id_photo" class="download-event-btn">Добавить фото</label>
+                    </div>
 
-    <div class="events-container" id="events_container">
+                    <input name="photo" type="file" id="id_photo" style="display: none">
+                    <div class="event-red-info">
+                        <div style="display:flex; justify-content: space-between">
+                            <div class="red-event-block" style="width: 55%">
+                                <div class="event-label">Название:</div>
+                                <input name="name" class="event-input" type="text" placeholder="Выставка «...»"
+                                       required>
+                            </div>
+                            <div class="red-event-block" style="width: 35%">
+                                <div class="event-label">Количество мест:</div>
+                                <input name="event-count" class="event-input" type="text" placeholder="100" required>
+                            </div>
+                        </div>
+                        <div class="red-event-block" style="width: 100%">
+                            <div class="event-label">Дата проведения:</div>
+                            <input name="date-event" class="event-input" type="date" placeholder="18.07.2021" required>
+                        </div>
+                        <div class="red-event-block" style="width: 100%">
+                            <div class="event-label">Время проведения:</div>
+                            <input name="time-event" class="event-input" type="text" placeholder="с 10:00 до 15:00"
+                                   required>
+                        </div>
+                        <div class="red-event-block" style="width: 100%">
+                            <div class="event-label">Место проведения:</div>
+                            <input name="location-event" class="event-input" type="text"
+                                   placeholder="г.Екатеринбург, ул. Мира, 19, 1 этаж" required>
+                        </div>
+                        <div class="red-event-block" style="width: 100%; ">
+                            <div class="event-label">Описание:</div>
+                            <div style="display: flex; justify-content: space-between;
+    align-items: center;">
+                                <textarea name="description" placeholder="Описание мероприятия" class="event-input"
+                                          type="text"
+                                          style="width: 60%; height: 100px; outline: none; resize: none"
+                                          required></textarea>
+                                <div style="font-size: 13px">
+                                    <div>
+                                        <input name="view-list" type="checkbox" id="list" checked>
+                                        <label for="list">Список участников</label>
+                                    </div>
+                                    <div>
+                                        <input name="view-count" type="checkbox" id="count" checked>
+                                        <label for="count">Количество мест</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="create-event" class="event-sub green-btn">
+                                Создать мероприятие
+                                {#                            <input id="create-event" class="event-sub green-btn" onclick="create_event()"#}
+                                {#                                   value="Создать мероприятие">#}
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+
+            </div>
+
+
+            <div id="test-block" class="event-block  show">
+                <img id="imgInp" class="event-img" src="{% static 'img/event-img.png' %}" alt="">
+                <div class="event-content">
+                    <div class="event-panel"><h1>Выставка «...»</h1> <img class="pointer"
+                                                                          src="{% static 'img/strelka.png' %}" alt="">
+                    </div>
+                    <div class="event-count">
+                        <div class="free-place">Свободных мест: <span class="free-places">100</span></div>
+                        <div class="day-event">Дней до начала: <span class="days-before-start">5</span></div>
+                    </div>
+                    <div class="info-block">
+                        <div class="event-info-block">
+                            <div class="event-info-block-left">
+                                <h4 class="title-event">Время выставки</h4>
+                                <p class="date-info"><span class="event-date">18 июля 2021 г.</span><br><span
+                                        class="event-time">с 10:00 до 15:00</span></p>
+                            </div>
+                            <div class="event-info-block-right">
+                                <h4 class="title-event">Место проведения</h4>
+                                <p class="event-place">г.Екатеринбург, ул. Мира, 19, 1 этаж</p>
+                            </div>
+                        </div>
+
+                        <div class="event-anons">
+                            <h4 class="title-event">Описание</h4>
+                            <p class="event-opisanie">Описание мероприятия </p>
+                        </div>
+
+                        <div class="party">
+                            <div class="e-count">Всего мест: <span class="max-count">100</span></div>
+                            <a class="e-list" href=""
+                               style="color: grey; text-decoration: underline; pointer-events: none;">Список
+                                участников</a>
+                        </div>
+                        <div class="event-sub green-btn" style="pointer-events: none;">
+                            Подать заявку
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div id="my_events" class="events-container">
+            {% for event in events %}
+                <div id="block_{{ event.id }}" class="event-block  no-show my-red-block">
+                    <div class="event-red-img" style="background-image: url({{ event.picture.url }});">
+                        <div style="height: 15px"></div>
+                        <div id="{{ event.id }}" class="event-delete">Удалить</div>
+                    </div>
+                    <div class="event-content">
+                        <div class="event-panel"><h1>{{ event.title }}</h1> <img class="pointer"
+                                                                                 src="{% static 'img/strelka.png' %}"
+                                                                                 alt=""></div>
+                        <div class="event-count">
+                            <div class="free-place">Свободных мест: <span
+                                    class="free-places">{{ event.free_count }}</span></div>
+                            <div class="day-event">Дней до начала: <span class="days-before-start"></span></div>
+                        </div>
+                        <div class="info-block">
+                            <div class="event-info-block">
+                                <div class="event-info-block-left">
+                                    <h4 class="title-event">Время выставки</h4>
+                                    <p class="date-info">
+                                        <input name="new-date" class="event-input-date" type="date"
+                                               value="{{ event.event_date }}"><br>
+                                        <input name="new-time" class="event-input-date" type="text"
+                                               value="{{ event.event_time }}"></p>
+                                </div>
+                                <div class="event-info-block-right">
+                                    <h4 class="title-event">Место проведения</h4>
+                                    <p class="event-place">
+                                        <textarea name="new-place" id=""
+                                                  class="event-red-textarea">{{ event.event_place }}</textarea></p>
+                                </div>
+                            </div>
+
+                            <div class="event-anons">
+                                <h4 class="title-event">Описание</h4>
+                                <p class="event-opisanie"><textarea style="width: 300px" class="event-red-textarea"
+                                                                    name="new-description">{{ event.description }} </textarea>
+                                </p>
+                            </div>
+
+                            <div class="party">
+                                <div>Всего мест: <span class="max-count"><input name="new-count"
+                                                                                class="event-input-date" type="number"
+                                                                                value="{{ event.members_count }}"
+                                                                                style="width: 50px"></span></div>
+                            </div>
+
+                            <div id="{{ event.id }}" class="event-sub green-btn">
+                                Сохранить изменения
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
     </div>
 
+    <div id="snackbar">Мероприятие успешно создано</div>
 </div>
+<script>
+    let n = document.querySelectorAll('.my-red-block').length
+</script>
+<script src={% static "js/new_event.js" %}></script>
+<script>
+    const csrftoken = getCookie('csrftoken')
+
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            let reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#imgInp').attr('src', e.target.result);
+                $('#min_imgInp').attr('src', e.target.result)
+            }
+
+            reader.readAsDataURL(input.files[0]); // convert to base64 string
+        }
+    }
+
+    $("#id_photo").change(function () {
+        readURL(this);
+    });
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
 
 
+    //Создание события
+    function create_event() {
+        let data = new FormData(document.getElementById('ajax'));
+
+        $.ajax({
+            url: '/create_event/',
+            type: "POST",
+            headers: {
+                "X-CSRFToken": csrftoken
+            },
+            data: data,
+            processData: false,
+            contentType: false,
+            success: function (data) {
+                let snackbar = document.getElementById("snackbar");
+                snackbar.className = "show";
+                setTimeout(function () {
+                    snackbar.className = snackbar.className.replace("show", "");
+                }, 3000);
+                {#get_event(data['event_id'])#}
+                cleanForm()
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+    }
+
+    function cleanForm() {
+        $('#imgInp').attr('src', '/static/img/event-orange_pin.png');
+        $('#min_imgInp').attr('src', '/static/img/event-orange_pin.png')
+        document.querySelector('input[name=name]').value = ''
+        document.querySelector('input[name=event-count]').value = ''
+        document.querySelectorAll('input[type=date]').value = ''
+        document.querySelector('input[name=date-event]').value = ''
+        document.querySelector('input[name=time-event]').value = ''
+        document.querySelector('input[name=location-event]').value = ''
+        document.querySelector('textarea[name=description]').value = ''
+        let test_block = document.getElementById('test-block')
+        test_block.querySelector('h1').innerHTML = 'Выставка «...»'
+        test_block.querySelector('.free-places').innerHTML = '100'
+        test_block.querySelector('.max-count').innerHTML = '100'
+        test_block.querySelector('.event-date').innerHTML = '18 июля 2021 г.'
+        test_block.querySelector('.event-time').innerHTML = 'с 10:00 до 15:00'
+        test_block.querySelector('.days-before-start').innerHTML = '5'
+        test_block.querySelector('.event-place').innerHTML = 'г.Екатеринбург, ул. Мира, 19, 1 этаж'
+        test_block.querySelector('.event-opisanie').innerHTML = 'Описание мероприятия'
+        test_block.querySelector('.e-count').innerHTML = 'Всего мест: 100'
+    }
+
+    function get_event(event_id) {
+        $.ajax({
+            url: '/event_details/' + event_id + '/',
+            type: "GET",
+            headers: {
+                "X-CSRFToken": csrftoken
+            },
+            processData: false,
+            contentType: false,
+            success: function (data) {
+                add_event_in_list(data)
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+    }
+
+    function add_event_in_list(event_data) {
+        console.log(event_data)
+        let div = document.createElement('div')
+        let event_list = document.getElementById('my_events')
+        div.setAttribute('id', 'block_' + event_data.id)
+        div.setAttribute('class', 'event-block  no-show my-red-block')
+        div.innerHTML = `
+                    <div class="event-red-img" style="background-image: url(${event_data.picture});">
+                        <div style="height: 15px"></div>
+                        <div id="${event_data.id}" class="event-delete">Удалить</div>
+                    </div>
+                    <div class="event-content">
+                        <div class="event-panel"><h1>${event_data.title}</h1> <img class="pointer"
+                                                                                 src="{% static 'img/strelka.png' %}"
+                                                                                 alt=""></div>
+                        <div class="event-count">
+                            <div class="free-place">Свободных мест: <span
+                                    class="free-places">${event_data.free_count}</span></div>
+                            <div class="day-event">Дней до начала: <span class="days-before-start"></span></div>
+                        </div>
+                        <div class="info-block">
+                            <div class="event-info-block">
+                                <div class="event-info-block-left">
+                                    <h4 class="title-event">Время выставки</h4>
+                                    <p class="date-info">
+                                        <input name="new-date" class="event-input-date" type="date"
+                                               value="${event_data.event_date}"><br>
+                                        <input name="new-time" class="event-input-date" type="text"
+                                               value="${event_data.event_time}"></p>
+                                </div>
+                                <div class="event-info-block-right">
+                                    <h4 class="title-event">Место проведения</h4>
+                                    <p class="event-place">
+                                        <textarea name="new-place" id=""
+                                                  class="event-red-textarea">${event_data.event_place}</textarea></p>
+                                </div>
+                            </div>
+
+                            <div class="event-anons">
+                                <h4 class="title-event">Описание</h4>
+                                <p class="event-opisanie"><textarea style="width: 300px" class="event-red-textarea"
+                                                                    name="new-description">${event_data.description} </textarea>
+                                </p>
+                            </div>
+
+                            <div class="party">
+                                <div>Всего мест: <span class="max-count"><input name="new-count"
+                                                                                class="event-input-date" type="number"
+                                                                                value="${event_data.members_count}"
+                                                                                style="width: 50px"></span></div>
+                            </div>
+
+                            <div id="${event_data.id}$" class="event-sub green-btn">
+                                Сохранить изменения
+                            </div>
+                        </div>
+                    </div>
+
+        `
+        event_list.appendChild(div)
+        set_settings()
+        delete_ev()
+    }
+
+    function noBorder(block) {
+        block.remove()
+    }
+
+    function delete_event(id) {
+        $.ajax({
+            url: '/delete_event/',
+            type: "GET",
+            data: {event_id: id},
+            success: function (data) {
+                let block = document.getElementById('block_' + id)
+                block.style.transition = '1s'
+                block.style.maxHeight = 0 + 'px'
+                setTimeout(noBorder, 1000, block)
+                block.remove
+
+            },
+            error: function (error) {
+                console.log(error);
+            },
+            datatype: 'json'
+        });
+    }
+
+    function edit_event(event_id, event_date, event_time, event_place, description, members_count) {
+        $.ajax({
+            url: '/update_event/',
+            type: "POST",
+            headers: {
+                //ВАЖНО!!!
+                "X-CSRFToken": csrftoken,
+                'Content-Type': 'application/json'
+            },
+            data: JSON.stringify({
+                event_id: event_id,
+                event_date: event_date,
+                event_time: event_time,
+                event_place: event_place,
+                description: description,
+                members_count: members_count,
+            }),
+            success: function (data) {
+                console.log(data)
+            },
+            error: function (error) {
+                console.log(error);
+            },
+            datatype: 'json'
+        });
+    }
+
+</script>
+<script>
+    set_settings()
+    {#delete_ev()#}
+
+    function set_settings() {
+        let events_red_block = document.querySelectorAll('.my-red-block')
+        for (let block of events_red_block) {
+            let pointer = block.querySelector('.pointer')
+
+            //Укорачивание названия
+            let title = block.querySelector('h1')
+            title.data = title.textContent
+            title.textContent = title.textContent.length > 20 ? title.textContent.substring(0, 20) + '...' : title.data
+
+            //Настройка цветов
+            let freePlace = block.querySelector('.free-places')
+            let daysBefore = block.querySelector('.days-before-start')
+            let maxPlace = block.querySelector('.max-count')
+
+            if (daysBefore.textContent <= 3) {
+                daysBefore.classList.add('red-text')
+            } else {
+                daysBefore.classList.add('green-text')
+            }
+
+            if (freePlace.textContent / maxPlace.textContent < 0.2) {
+                freePlace.classList.add('red-text')
+            } else {
+                freePlace.classList.add('green-text')
+            }
+
+            //Раскрытие блока
+            pointer.onclick = function () {
+                if (block.classList.contains('no-show')) {
+                    block.classList.add('show')
+                    block.classList.remove('no-show')
+                    pointer.style.transform = 'rotate(270deg)'
+                    title.textContent = title.data
+                } else {
+                    block.classList.add('no-show')
+                    block.classList.remove('show')
+                    pointer.style.transform = 'rotate(90deg)'
+                    title.textContent = title.textContent.length > 20 ? title.textContent.substring(0, 20) + '...' : title.data
+                }
+            }
+        }
+    }
+
+    {#function delete_ev() {#}
+    {#    let del_btns = document.querySelectorAll('.event-delete')#}
+    {#    for (let del_btn of del_btns) {#}
+    {#        del_btn.onclick = function () {#}
+    {#            if (del_btn.classList.contains('event-delete-double')) {#}
+    {#                delete_event(del_btn.id)#}
+    {#            } else {#}
+    {#                setDefault()#}
+    {#                del_btn.classList.add('event-delete-double')#}
+    {#            }#}
+    {#        }#}
+    {#    }#}
+    {#{#}
+
+
+
+</script>
 </body>
 </html>
