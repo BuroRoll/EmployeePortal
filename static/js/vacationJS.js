@@ -141,7 +141,7 @@ subBtn.onclick = function () {
             }).then(
                 response => {
                     if (response.ok) {
-                        let snackbar = document.getElementById("snackbar_for_vacations");
+                        let snackbar = document.getElementById("snackbar");
                         snackbar.className = "show";
                         setTimeout(function () {
                             snackbar.className = snackbar.className.replace("show", "");

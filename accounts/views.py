@@ -26,7 +26,7 @@ def user_login(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
-            form.errors['Неверный логин или пароль'] = form.error_class(['Ошибка'])
+            # form.errors['Неверный логин или пароль'] = form.error_class(['Ошибка'])
             cd = form.cleaned_data
             user = authenticate(login=cd['login'], password=cd['password'])
             if user is not None:
@@ -41,6 +41,11 @@ def user_login(request):
 
 
 @login_required
+def mainmenu(request):
+    return render(request, 'accounts/mainmenu.html')
+
+
+@login_required
 def account(request):
     if request.method == 'POST':
         position = Position.objects.get(id=request.user.position.id)
@@ -48,9 +53,10 @@ def account(request):
             user_form = SpecialAccessEmployeeForm(instance=request.user, data=request.POST, files=request.FILES)
         else:
             user_form = UserChangeForm(instance=request.user, data=request.POST, files=request.FILES)
+        print(user_form)
         if user_form.is_valid():
             user_form.save()
-        return redirect('/')
+        return redirect('/account')
     else:
         position = Position.objects.get(id=request.user.position.id)
         if position.access_to_candidates or position.access_to_vacation_list:
@@ -210,3 +216,9 @@ def set_vacations_days(request):
 class GetUserVacation(generics.RetrieveAPIView):
     queryset = Account.objects.all()
     serializer_class = VacationSerializer
+
+
+@api_view(['GET'])
+def get_users_logins(request):
+    users_logins = Account.objects.values_list('login', flat=True)
+    return JsonResponse(list(users_logins), safe=False)

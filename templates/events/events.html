@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Мероприятия</title>
+    <link rel="shortcut icon" type="image/png" href="{% static 'img/favicon.ico' %}"/>
+    <link rel="stylesheet" href={% static "style/style.css" %}>
+    <link rel="stylesheet" href={% static "style/events.css" %}>
+    <link rel="stylesheet" href={% static "style/adaptive-style.css" %}>
+    <link rel="stylesheet" href={% static "style/events.css" %}>
+    <link rel="shortcut icon" type="image/png" href="{% static 'img/favicon.ico' %}"/>
+    <link rel="stylesheet" href={% static 'style/style.css' %}>
+    <link rel="stylesheet" href={% static 'style/adaptive-style.css' %}>
+    <link rel="stylesheet" href={% static 'style/table.css' %}>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital@0;1&display=swap" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <script type="text/javascript" charset="utf8"
+            src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>
+    <link rel='stylesheet' href='/static/icons/font/css/open-iconic.css'>
+
+    {#    <link rel="preconnect" href="https://fonts.gstatic.com">#}
+    {#    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital@0;1&display=swap" rel="stylesheet">#}
+    {#    <link rel='stylesheet' href='/static/icons/font/css/open-iconic.css'>#}
+    {#    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>#}
+    {#    <script type="text/javascript" charset="utf8"#}
+    {#            src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>#}
+    {##}
+    {#    <script type="text/javascript" charset="utf8"#}
+    {#            src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>#}
+    {##}
+    {#    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>#}
+</head>
+<style>
+    .modal {
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 1; /* Sit on top */
+        padding-top: 100px; /* Location of the box */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgb(0, 0, 0); /* Fallback color */
+        background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+    }
+
+    /* Modal Content */
+    .modal-content {
+        background-color: #fefefe;
+        margin: auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+    }
+
+    /* The Close Button */
+    .close {
+        color: #aaaaaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+    .close:hover,
+    .close:focus {
+        color: #000;
+        text-decoration: none;
+        cursor: pointer;
+    }
+</style>
+<body class="grey" onload="set_events()">
+<header>
+    <div class="header-container">
+        <a href="/">
+            <img class="logo" src={% static  "img/logo.png" %} alt="Логотип">
+        </a>
+        <div class="right-header">
+            <h1>Личный кабинет</h1>
+            <div class="delta-header">
+                <img class="profile-header" src=/media/{{ request.user.photo }} alt="Аватарка">
+                <h2 class="nickname-header">{{ request.user.login }}</h2>
+                <a href="/logout" style="height: 28px"><img src={% static "img/out.png" %} alt="Выход" width="28px"
+                                                            height="28px"></a>
+            </div>
+        </div>
+    </div>
+</header>
+<div class="content-container">
+    <div class="left-menu">
+        <ul>
+            <a href="/account">
+                <li class="left-menu-element"><span class="oi" data-glyph="person" aria-hidden="true"></span></span>
+                    <span class="left-menu-text">Профиль</span></li>
+            </a>
+            <a href="/vacations/">
+                <li class="left-menu-element"><span class="oi" data-glyph="calendar" aria-hidden="true"></span><span
+                        class="left-menu-text">График отпусков</span></li>
+            </a>
+            <a href="/get_access/">
+                <li class="left-menu-element"><span class="oi" data-glyph="wrench" aria-hidden="true"></span><span
+                        class="left-menu-text">Доступы к системам</span></li>
+            </a>
+            <a href="/get_all_employees">
+                <li class="left-menu-element"><span class="oi" data-glyph="people" aria-hidden="true"></span>
+                    <span
+                            class="left-menu-text">Сотрудники</span></li>
+            </a>
+            {% if request.user.position.access_to_candidates %}
+                <a href="/get_all_candidates">
+                    <li class="left-menu-element"><span class="oi" data-glyph="spreadsheet" aria-hidden="true"></span>
+                        <span
+                                class="left-menu-text">Кандидаты</span></li>
+                </a>
+            {% endif %}
+            {% if request.user.position.access_to_vacation_list %}
+                <a href="/download_vacations">
+                    <li class="left-menu-element"><span class="oi" data-glyph="folder" aria-hidden="true"></span>
+                        <span
+                                class="left-menu-text">Список отпусков</span></li>
+                </a>
+            {% endif %}
+            <a href="/events">
+                <li class="left-menu-element"><span class="oi" data-glyph="bullhorn" aria-hidden="true"></span>
+                    <span
+                            class="left-menu-text">Мероприятия</span></li>
+            </a>
+            <a href="/devices">
+                <li class="left-menu-element"><span class="oi" data-glyph="monitor" aria-hidden="true"></span>
+                    <span
+                            class="left-menu-text">Тестовые девайсы</span></li>
+            </a>
+            <a href="/map">
+                <li class="left-menu-element"><span class="oi" data-glyph="globe" aria-hidden="true"></span>
+                    <span
+                            class="left-menu-text">Карта путешествий</span></li>
+            </a>
+        </ul>
+    </div>
+
+    <div style="width: 70%; margin-left: auto; margin-right: auto;">
+        {% if request.user.position.change_events %}
+            <a href="/event_manager/">
+                <div class="event-manager-btn">+ Мои мероприятия</div>
+            </a>
+        {% endif %}
+        <div class="events-container" id="events_container" style="width: 100%">
+        </div>
+    </div>
+
+
+</div>
+
+
+{#<div class="red-block candidate-block" style="width: fit-content; height: auto">#}
+{#    <table class="candidate-table" id="paged">#}
+{#        <thead>#}
+{#        <tr class="candidate-list-block">#}
+{#            <th>ФИО ️<img style='width: 13px' src= {% static 'img/updown.ico' %}></th>#}
+{#        </tr>#}
+{#        </thead>#}
+{#        <tbody id="tbody">#}
+{#        </tbody>#}
+{#    </table>#}
+{#</div>#}
+
+{#<div id="myModal" class="modal">#}
+{#    <!-- Modal content -->#}
+{#    <div class=" red-block candidate-block">#}
+{#        <table class="candidate-table" id="paged">#}
+{#            <thead>#}
+{#            <tr class="candidate-list-block">#}
+{#                <th>ФИО ️<img style='width: 13px' src= {% static 'img/updown.ico' %}></th>#}
+{#            </tr>#}
+{#            </thead>#}
+{#            <tbody id="tbody">#}
+{#            </tbody>#}
+{#        </table>#}
+{#    </div>#}
+{#</div>#}
+<script src={% static "js/events-animation.js" %}></script>
+<script>
+    async function set_events() {
+        fetch('/events_list/', {
+            method: 'GET'
+        }).then(response => response.json())
+            .then(response => {
+                set_data(response)
+            }).then(() => {
+            events_blocks()
+        });
+    }
+
+    async function set_data(data) {
+        let container = document.getElementById('events_container')
+        for (const event of data) {
+            let event_html = create_event(event)
+            if (event_html == null)
+                continue
+            container.appendChild(event_html)
+        }
+    }
+
+    function create_event(event_data) {
+        let free_places = event_data.members_count - event_data.members.length
+        let event_date_data = event_data.event_date.split(/[.,/-]+/)
+        let event_date = new Date(event_date_data[0], event_date_data[1] - 1, event_date_data[2])
+        let diffDays = Math.ceil(Math.abs(event_date.getTime() - new Date().getTime()) / (1000 * 3600 * 24));
+        if (new Date().getTime() - event_date.getTime() > 86400000)
+            return null
+        const div = document.createElement('div')
+        div.setAttribute('class', 'event-block  no-show')
+        div.innerHTML = `
+                    <img class="event-img" src=${event_data.picture} alt="">
+                    <div class="event-content">
+                        <div class="event-panel"><h1>${event_data.title}</h1> <img class="pointer" src={% static "img/strelka.png"%} alt=""></div>
+                        <div class="event-count">
+                            <div class="free-place">Свободных мест: <span class="free-places">${free_places}</span></div>
+                            <div class="day-event">Дней до начала: <span class="days-before-start">${diffDays}</span></div>
+                        </div>
+                        <div class="info-block">
+                            <div class="event-info-block">
+                                <div class="event-info-block-left">
+                                    <h4 class="title-event">Время выставки</h4>
+                                    <p class="date-info"><span class="event_block_date" >${event_data.event_date}</span><br>${event_data.event_time}</p>
+                                </div>
+                                <div class="event-info-block-right">
+                                    <h4 class="title-event">Место проведения</h4>
+                                    <p class="event-place">${event_data.event_place}</p>
+                                </div>
+                            </div>
+
+                            <div class="event-anons">
+                                <h4 class="title-event">Описание</h4>
+                                <p class="event-opisanie">${event_data.description}</p>
+                            </div>
+
+                            <div class="party">
+                                <div class="show-count ${event_data.show_members_count}">Всего мест: <span class="max-count">${event_data.members_count}</span></div>
+                                <a class="show-list ${event_data.show_members}" href="/event_members_page?event_id=${event_data.id}" style="color: grey; text-decoration: underline">Список участников</a>
+                            </div>
+
+                            <div class="event-sub green-btn" id='${event_data.id}'>
+                                Подать заявку
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        `
+        let subBtn = div.querySelector('.event-sub')
+        if (event_data.members.includes({{ user.id }})) {
+            subBtn.textContent = 'Отменить заявку'
+            subBtn.classList.remove('green-btn')
+            subBtn.classList.add('red-btn')
+        } else {
+            subBtn.textContent = 'Подать заявку'
+            subBtn.classList.remove('red-btn')
+            subBtn.classList.add('green-btn')
+        }
+        if (free_places <= 0) {
+            subBtn.disabled = true
+            console.log(subBtn.disabled)
+        }
+        return div
+    }
+
+    let modal = document.getElementById("myModal");
+    {#let member_table = $('#paged').DataTable({#}
+    {#    "language": {#}
+    {#        paginate: {#}
+    {#            first: '«',#}
+    {#            previous: '‹',#}
+    {#            next: '›',#}
+    {#            last: '»'#}
+    {#        },#}
+    {#        searchPlaceholder: 'Поиск'#}
+    {#    },#}
+    //});
+    $('#paged').DataTable({
+        serverSide: true,
+        ajax: {
+            url: '/event_members/71/',
+            dataFilter: function (data) {
+                {#console.log(data)#}
+                var json = jQuery.parseJSON(data);
+                console.log(json)
+                json.recordsTotal = json.data.length;
+                json.draw = 1
+                return JSON.stringify(json); // return JSON string
+            }
+        }
+    });
+
+    function getMembers(id) {
+        {#modal.style.display = "block"#}
+
+
+        window.onclick = function (event) {
+            if (event.target === modal) {
+                modal.style.display = "none";
+                {#document.getElementById('tbody').innerHTML = ''#}
+            }
+        }
+        $.ajax({
+                url: '/event_members/' + id + '/',
+                type: 'GET',
+                success: function (data) {
+
+                },
+                {#modal.style.display = "block";#}
+                {#for (const member of data['data']) {#}
+                {#    let tr = document.createElement('tr');#}
+                {#    let td1 = tr.appendChild(document.createElement('td'));#}
+                {#    td1.innerHTML = member#}
+                {#    tr.classList.add('candidate-list-block');#}
+                {#    document.getElementById('tbody').appendChild(tr);#}
+
+                {#$(document).ready(function () {#}
+                {#    $("div.dataTables_filter input").focus();#}
+                //
+
+                error: function (data) {
+                    console.log(data)
+                }
+            }
+        )
+    }
+
+
+    function events_blocks() {
+        let event_blocks = document.querySelectorAll('.event-block')
+
+        for (let block of event_blocks) {
+            let pointer = block.querySelector('.pointer')
+
+            //Заполнение данных: количество оставшихся дней до мероприятия и оформление даты
+            let daysBefore = block.querySelector('.days-before-start')
+            let month = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
+            let date = block.querySelector('.event_block_date')
+            let dateText = date.textContent
+            let date_arr = dateText.split(/[.,/-]+/)
+            let date_text = `${parseInt(date_arr[2])} ${month[parseInt(date_arr[1]) - 1]} ${date_arr[0]} г.`
+            date.textContent = date_text
+            let oneDay = 1000 * 60 * 60 * 24
+            {#daysBefore.textContent = Math.ceil(((new Date(dateText) - new Date()) / oneDay))#}
+            if (daysBefore.textContent < 0) {
+                block.remove()
+            }
+
+            //Укорачивание названия
+            let title = block.querySelector('h1')
+            title.data = title.textContent
+            title.textContent = title.textContent.length > 20 ? title.textContent.substring(0, 20) + '...' : title.data
+
+            //Настройка цветов
+            let freePlace = block.querySelector('.free-places')
+            let maxPlace = block.querySelector('.max-count')
+
+            if (daysBefore.textContent <= 3) {
+                daysBefore.classList.add('red-text')
+            } else {
+                daysBefore.classList.add('green-text')
+            }
+
+            if (freePlace.textContent / maxPlace.textContent < 0.2) {
+                freePlace.classList.add('red-text')
+            } else {
+                freePlace.classList.add('green-text')
+            }
+
+            //Раскрытие блока
+            pointer.onclick = function () {
+                if (block.classList.contains('no-show')) {
+                    block.classList.add('show')
+                    block.classList.remove('no-show')
+                    pointer.style.transform = 'rotate(270deg)'
+                    title.textContent = title.data
+                } else {
+                    block.classList.add('no-show')
+                    block.classList.remove('show')
+                    pointer.style.transform = 'rotate(90deg)'
+                    title.textContent = title.textContent.length > 20 ? title.textContent.substring(0, 20) + '...' : title.data
+                }
+            }
+
+            let subBtn = block.querySelector('.event-sub')
+
+            let showCount = block.querySelector('.show-count')
+            let showList = block.querySelector('.show-list')
+            if (showList.classList.contains('false')) {
+                showList.remove()
+            }
+            if (showCount.classList.contains('false')) {
+                showCount.remove()
+            }
+
+            //Обработка кнопки мероприятия
+            subBtn.onclick = function () {
+                if (subBtn.classList.contains('green-btn') && parseInt(freePlace.innerHTML) > 0) {
+                    //Добавление в мероприятие
+                    $.ajax({
+                        url: '/join_event/?event_id=' + subBtn.id,
+                        type: "GET",
+                        success: function (data) {
+                            console.log(data)
+                            subBtn.textContent = 'Отменить заявку'
+                            subBtn.classList.remove('green-btn')
+                            subBtn.classList.add('red-btn')
+                            freePlace.textContent--
+                        },
+                        error: function (error) {
+                            console.log(error);
+                        }
+                    });
+                } else {
+                    $.ajax({
+                        url: '/unjoin_event/?event_id=' + subBtn.id,
+                        type: "GET",
+                        success: function (data) {
+                            console.log(data)
+                            subBtn.textContent = 'Подать заявку'
+                            subBtn.classList.remove('red-btn')
+                            subBtn.classList.add('green-btn')
+                            freePlace.textContent++
+                        },
+                        error: function (error) {
+                            console.log(error);
+                        }
+                    });
+                }
+            }
+        }
+    }
+</script>
+</body>
+</html>

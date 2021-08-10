@@ -22,4 +22,4 @@ class DeviceDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Device
         fields = ['id', 'name', 'owner_name', 'owner_id', 'time_of_taked', 'owner_telegram', 'owner_slack',
-                  'owner_phone']
+                  'owner_phone', 'description']

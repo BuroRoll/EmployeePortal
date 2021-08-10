@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>SKB_LAB | Карта путешествий</title>
+    <link rel="stylesheet" href={% static "style/style.css" %}>
+    <link rel="stylesheet" href={% static "style/map.css" %}>
+    <link rel="stylesheet" href={% static "style/adaptive-style.css" %}>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel='stylesheet' href='/static/icons/font/css/open-iconic.css'>
+    <link rel="shortcut icon" type="image/png" href="{% static 'img/favicon.ico' %}"/>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+          integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+          crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+            integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+            crossorigin=""></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital@0;1&display=swap" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            padding-top: 100px; /* Location of the box */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgb(0, 0, 0); /* Fallback color */
+            background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+        }
+
+        /* Modal Content */
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+        }
+
+        /* The Close Button */
+        .close {
+            color: #aaaaaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body class="grey">
+<header>
+    <div class="header-container">
+        <a href="/">
+            <img class="logo" src={% static  "img/logo.png" %} alt="Логотип">
+        </a>
+        <div class="right-header">
+            <h1>Личный кабинет</h1>
+            <div class="delta-header">
+                <img class="profile-header" src=/media/{{ request.user.photo }} alt="Аватарка">
+                <h2 class="nickname-header">{{ request.user.login }}</h2>
+                <a href="/logout" style="height: 28px"><img src={% static "img/out.png" %} alt="Выход" width="28px"
+                                                            height="28px"></a>
+            </div>
+        </div>
+    </div>
+</header>
+<div class="content-container">
+    <div class="left-menu">
+        <ul>
+            <a href="/account">
+                <li class="left-menu-element"><span class="oi" data-glyph="person" aria-hidden="true"></span></span>
+                    <span class="left-menu-text">Профиль</span></li>
+            </a>
+            <a href="/vacations/">
+                <li class="left-menu-element"><span class="oi" data-glyph="calendar" aria-hidden="true"></span><span
+                        class="left-menu-text">График отпусков</span></li>
+            </a>
+            <a href="/get_access/">
+                <li class="left-menu-element"><span class="oi" data-glyph="wrench" aria-hidden="true"></span><span
+                        class="left-menu-text">Доступы к системам</span></li>
+            </a>
+            <a href="/get_all_employees">
+                <li class="left-menu-element"><span class="oi" data-glyph="people" aria-hidden="true"></span>
+                    <span
+                            class="left-menu-text">Сотрудники</span></li>
+            </a>
+            {% if request.user.position.access_to_candidates %}
+                <a href="/get_all_candidates">
+                    <li class="left-menu-element"><span class="oi" data-glyph="spreadsheet" aria-hidden="true"></span>
+                        <span
+                                class="left-menu-text">Кандидаты</span></li>
+                </a>
+            {% endif %}
+            {% if request.user.position.access_to_vacation_list %}
+                <a href="/download_vacations">
+                    <li class="left-menu-element"><span class="oi" data-glyph="folder" aria-hidden="true"></span>
+                        <span
+                                class="left-menu-text">Список отпусков</span></li>
+                </a>
+            {% endif %}
+            <a href="/events">
+                <li class="left-menu-element"><span class="oi" data-glyph="bullhorn" aria-hidden="true"></span>
+                    <span
+                            class="left-menu-text">Мероприятия</span></li>
+            </a>
+            <a href="/devices">
+                <li class="left-menu-element"><span class="oi" data-glyph="monitor" aria-hidden="true"></span>
+                    <span
+                            class="left-menu-text">Тестовые девайсы</span></li>
+            </a>
+            <a href="/map">
+                <li class="left-menu-element"><span class="oi" data-glyph="globe" aria-hidden="true"></span>
+                    <span
+                            class="left-menu-text">Карта путешествий</span></li>
+            </a>
+        </ul>
+    </div>
+
+    <div id="mapid"></div>
+    <div id="myModal" class="modal">
+        <div class="red-block map-block" style="width: 30%;">
+            <form class="map-container">
+                <div class="top-margin">
+                    <label class="log-label" for="location">Место</label><br>
+                    <input id="location" name="location" class="reg-input new-input" type="text" placeholder="Москва"
+                           style="box-sizing: border-box; width: 100%">
+                </div>
+                <div class="top-margin">
+                    <label class="log-label" for="date">Дата поездки</label><br>
+                    <input id="date" name="date" class="reg-input new-input" type="date"
+                           style="box-sizing: border-box;width: 100%;padding-right: 20px;">
+                </div>
+                <div class="top-margin">
+                    <label class="log-label" for="post">Ссылка на соц.сеть</label><br>
+                    <input id="post" name="post" class="reg-input new-input" type="text" placeholder="https://"
+                           style="box-sizing: border-box; width: 100%">
+                </div>
+                <div class="top-margin">
+                    <label class="log-label" for="description">Описание</label><br>
+                    <textarea name="description" id="description" class="description-input"></textarea>
+                </div>
+                <div class="log-label" id="error" style="color: red; float: none; display: none;">Не заполненная форма
+                </div>
+                <div class="marker-sub">
+                    Отправить
+                </div>
+            </form>
+        </div>
+
+    </div>
+
+
+</div>
+<script>
+    let markers = []
+    const csrftoken = getCookie('csrftoken')
+    let mymap = L.map('mapid').setView([40, 20], 2);
+    L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+        maxZoom: 18,
+        attribution: '',
+        id: 'mapbox/streets-v11',
+        tileSize: 512,
+        zoomOffset: -1
+    }).addTo(mymap);
+
+    let defaultIcon = L.icon({
+        iconUrl: '{% static 'img/orange_pin.png' %}',
+
+        iconSize:     [25, 25], // size of the icon
+        iconAnchor:   [12, 12], // point of the icon which will correspond to marker's location
+        shadowAnchor: [4, 62],  // the same for the shadow
+        popupAnchor:  [0, -12] // point from which the popup should open relative to the iconAnchor
+    });
+
+    let myIcon = L.icon({
+        iconUrl: '{% static 'img/green_pin.png' %}',
+
+        iconSize:     [25, 25], // size of the icon
+        iconAnchor:   [12, 12], // point of the icon which will correspond to marker's location
+        shadowAnchor: [4, 62],  // the same for the shadow
+        popupAnchor:  [0, -12] // point from which the popup should open relative to the iconAnchor
+    });
+
+    let skbIcon = L.icon({
+        iconUrl: '{% static 'img/skb_pin.png' %}',
+
+        iconSize:     [35, 35], // size of the icon
+        iconAnchor:   [17, 17], // point of the icon which will correspond to marker's location
+        shadowAnchor: [4, 62],  // the same for the shadow
+        popupAnchor:  [0, -12] // point from which the popup should open relative to the iconAnchor
+    });
+
+    L.marker([56.81696223358197, 60.631745452992625], {icon: skbIcon}).addTo(mymap)
+
+    $.ajax({
+        url: '/get_markers/?format=json',
+        type: "GET",
+        headers: {
+            "X-CSRFToken": csrftoken
+        },
+        processData: false,
+        contentType: false,
+        success: function (data) {
+            for (let marker of data) {
+                setMarker(marker['place'], marker['date'], marker['href'], marker['description'], marker['name'], marker['coordinates'], marker['id'], marker['myMarker'])
+            }
+        },
+        error: function (error) {
+            console.log(error);
+        }
+    });
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    var popup = L.popup();
+    let deltaMarker = 0;
+
+    //Добавление маркера на карту
+    function onMapClick(e) {
+        openModal()
+        deltaMarker = {'coordinates': e.latlng}
+    }
+
+    let subBtn = document.querySelector('.marker-sub')
+    subBtn.onclick = function () {
+
+        let location = document.querySelector('input[name=location]').value
+        let date = document.querySelector('input[name=date]').value
+        let post = document.querySelector('input[name=post]').value
+        let description = document.querySelector('textarea[name=description]').value
+
+        if (location === '' || date === '') {
+            error.style.display = 'block'
+            return
+        }
+
+        let user_name = '{{ request.user.name }}'
+
+        addMarker(location, date, post, description, user_name, deltaMarker['coordinates'], true)
+        closeModal()
+    }
+
+    function addMarker(location, date, href, description, name, coordinates) {
+        //Здесь отправляешь запрос на создание маркера на сервер, забираешь его айдишник и устанавливаешь его на index_db
+        let data = {
+            place: location,
+            date: date,
+            href: href,
+            name: name,
+            description: description,
+            x_coordinate: coordinates['lat'].toString(),
+            y_coordinate: coordinates['lng'].toString()
+        }
+        $.ajax({
+            url: '/create_marker/',
+            type: "POST",
+            headers: {
+                "X-CSRFToken": csrftoken
+            },
+            data: data,
+            success: function (data) {
+                setMarker(location, date, href, description, name, coordinates, data['index_db'], true)
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        })
+    }
+
+    function setMarker(location, date, href, description, name, coordinates, index_db, myMarker) {
+        let icon = myMarker ? myIcon : defaultIcon
+        href = href !== '' ? `<a target="_blank" href="${href}">Пост в соц.сетях</a>` : ''
+        let descriptionTag = description !== '' ? `<div><b>Описание: </b>${description}</div>` : ''
+        let newMarker = L.marker(coordinates, {icon: icon}).addTo(mymap)
+        {#let newMarker = L.marker(coordinates).addTo(mymap)#}
+
+        let dateText = dateToText(date)
+        markers.push(newMarker)
+        let index = markers.length - 1
+        let deleteTag = myMarker ? `<div onclick="deleteMarker(${index}, ${index_db})" style="cursor: pointer; color: red">Удалить</div>` : ''
+        newMarker.bindPopup(`<div><b>Место</b>: ${location}</div>
+                              <div><b>Дата</b>: ${dateText}</div>
+                               ${href}
+                               ${descriptionTag}
+                                <div><i>${name}</i></div>
+                                ${deleteTag}`)
+    }
+
+    function dateToText(date) {
+        let month = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
+        let date_arr = date.split('-')
+        return `${parseInt(date_arr[2])} ${month[parseInt(date_arr[1]) - 1]} ${date_arr[0]} г.`
+    }
+
+    mymap.on('click', onMapClick);
+
+    L.DomUtil
+
+    function deleteMarker(id, id_db) {
+        $.ajax({
+            url: '/delete_marker/?marker_id=' + id_db,
+            method: 'GET',
+            headers: {
+                "X-CSRFToken": csrftoken
+            },
+            success: function (data) {
+                markers[id].remove()
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        })
+        //Запрос на сервер на удаление маркера по id_db
+    }
+</script>
+
+<script>
+    let blockMap = document.getElementById('mapid')
+    // Get the modal
+    let modal = document.getElementById("myModal");
+
+    // Get the button that opens the modal
+    let btn = document.getElementById("myBtn");
+
+    // Get the <span> element that closes the modal
+    let span = document.getElementsByClassName("candidate-submit")[0];
+
+    let error = document.getElementById('error')
+
+    window.onclick = function (event) {
+        if (event.target === modal) {
+            modal.style.display = "none";
+            error.style.display = 'none'
+        }
+    }
+
+    function openModal() {
+        blockMap.style.position = 'sticky'
+        modal.style.display = 'block'
+    }
+
+    function closeModal() {
+        let form = document.querySelector('.map-container')
+        modal.style.display = 'none'
+        error.style.display = 'none'
+        form.reset()
+    }
+</script>
+</body>
+</html>

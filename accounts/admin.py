@@ -14,7 +14,7 @@ class AccountAdmin(BaseUserAdmin):
 
     fieldsets = (
         (None, {'fields': ('login', 'password')}),
-        ('Personal info', {'fields': ('name', 'phone', 'vacation', 'position', 'vacation_days')}),
+        ('Personal info', {'fields': ('name', 'phone', 'vacation', 'position', 'vacation_days', )}),
     )
     add_fieldsets = (
         (None, {'fields': ('login', 'password1', 'password2')}),

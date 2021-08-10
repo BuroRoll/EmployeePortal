@@ -98,11 +98,12 @@ textarea {
 }
 
 .sub-log {
+    text-transform: uppercase;
     width: 227px;
     height: 50px;
-    background: #6C63FF;
+    background: #00A826;
     border-radius: 8px;
-    font-size: 18px;
+    font-size: 15px;
     border: none;
     margin-top: 35px;
     color: white;
@@ -113,7 +114,7 @@ textarea {
 }
 
 .sub-log:hover {
-    background: #7770f9;
+    background: #00A826;
 }
 
 .pred_sub {
@@ -180,7 +181,7 @@ textarea {
     width: 70px;
     height: 70px;
     border-radius: 100px;
-
+    object-fit: cover;
 }
 
 .nickname-header {
@@ -255,7 +256,7 @@ textarea {
     width: 183px;
     height: 35px;
     color: white;
-    background: #7241FF;
+    background: #00A826;
     border-radius: 16px;
     padding: 10px;
     text-transform: uppercase;
@@ -278,8 +279,8 @@ textarea {
 
     outline: none;
     background: #FFFFFF;
-    border: 1px solid #7241FF;
-    color: #7241FF;
+    border: 1px solid #00A826;
+    color: #00A826;
     cursor: pointer;
     box-sizing: border-box;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
@@ -345,7 +346,7 @@ textarea {
     width: 560px;
     height: 366px;
     margin-top: 130px;
-    margin-left: 70px;
+    /*margin-left: 70px;*/
 }
 
 .h-sys {
@@ -418,10 +419,11 @@ textarea {
 }
 
 .candidate-submit {
+    text-transform: uppercase;
     width: 155px;
     height: 39px;
     border: none;
-    background: #7241FF;
+    background: #00A826;
     border-radius: 16px;
     color: white;
     margin-top: 50px;
@@ -547,7 +549,9 @@ nav-li {
 }
 
 .text-opisanie {
-    padding-left: 20px;
+    margin-left: 20px;
+    resize: none;
+    /*padding-left: 20px;*/
     width: 250px;
     color: #757a81;
     margin-top: 5px;
@@ -616,7 +620,10 @@ nav-li {
 
 
 .reg-img {
+    display: none;
     width: 88px;
+    object-fit: cover;
+    height: 88px;
     border-radius: 100px;
 }
 
@@ -777,3 +784,31 @@ nav-li {
     }
 }
 
+/*.login-input:valid{*/
+/*    border: 0;*/
+/*}*/
+
+/*.login-input:invalid {*/
+/*    border: 2px dashed red;*/
+/*}*/
+
+.login-error{
+    text-align: left;
+    color: red;
+    font-size: 15px;
+    display: none;
+}
+
+.event-member{
+    width: 705px;
+    height: 564px;
+    height: auto;
+    width: 1140px;
+    height: 620px;
+    border-radius: 16px;
+    box-shadow: 0px 0px 40px 0px rgba(0, 0, 0, 0.15);
+    margin: auto;
+    margin-top: 72px;
+    background-color: white;
+    border: 1px solid #ACACAC;
+}

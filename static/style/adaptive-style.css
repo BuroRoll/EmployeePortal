@@ -2,13 +2,23 @@
     .header-container {
         max-width: 1440px;
     }
+
     .content-container {
         max-width: 1440px;
     }
+
+
 }
 
 
 @media (max-width: 1550px) {
+
+    .login-error {
+        text-align: left;
+        color: red;
+        font-size: 13px;
+    }
+
     .header-container {
         max-width: 1240px;
     }
@@ -50,7 +60,7 @@
         height: 26.25px;
         cursor: pointer;
         color: white;
-        background: #7241FF;
+        background: #00A826;
         border-radius: 16px;
         padding: 7.5px;
         text-transform: uppercase;
@@ -80,10 +90,6 @@
         width: 600px;
     }
 
-    .text-opisanie {
-        width: 187.5px;
-    }
-
     .candidate-block {
         width: 530.25px;
         height: 348px;
@@ -100,7 +106,7 @@
         width: 116.25px;
         height: 29.25px;
         border: none;
-        background: #7241FF;
+        background: #00A826;
         border-radius: 16px;
         color: white;
         margin-top: 37.5px;
@@ -156,9 +162,9 @@
     .sub-log {
         width: 170px;
         height: 37px;
-        background: #6C63FF;
+        background: #00A826;
         border-radius: 8px;
-        font-size: 13px;
+        font-size: 12px;
         border: none;
         margin-top: 26px;
         color: white;
@@ -207,6 +213,7 @@
         width: 52.5px;
         height: 52.5px;
     }
+
     .left-menu-img {
         height: 21px;
     }
@@ -218,6 +225,7 @@
     .new-input {
         width: 253px;
     }
+
     .download-block {
         width: 637.5px;
         height: 169.5px;
@@ -260,4 +268,18 @@
     .p-top {
         max-width: 290px;
     }
+
+    .check {
+        font-size: 13px;
+    }
+
+
 }
+
+/*.login-input:valxid{*/
+/*    border: 0;*/
+/*}*/
+
+/*.login-input:valid {*/
+/*    border: 2px dashed #ff0000;*/
+/*}*/

@@ -2,7 +2,6 @@
 {% load static %}
 <html lang="en">
 <head>
-    <link rel="shortcut icon" type="image/png" href="{% static 'img/ico.ico' %}"/>
     <meta charset="UTF-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width">
@@ -23,12 +22,12 @@
 </header>
 <div class="reg-block auto-height">
     <h1 class="reg-h">Вход</h1>
-    {% for error in form.errors %}
+    {% if form.errors %}
         <div class="danger-block-login">
             <b>Не удается войти.</b> <br>
             <span> Пожалуйста, проверьте правильность написания <b>логина</b> и <b>пароля</b>.</span>
         </div>
-    {% endfor %}
+    {% endif %}
     <form method="post" enctype="multipart/form-data" name="reg" class="form-reg">
         {% csrf_token %}
 

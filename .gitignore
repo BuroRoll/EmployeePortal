@@ -20,3 +20,5 @@ tests/report/
 /devices/migrations/
 /venv/
 .env
+/events/migrations/
+/map/migrations/

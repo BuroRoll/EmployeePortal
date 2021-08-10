@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+{% load static %}
+<link rel="shortcut icon" type="image/png" href="{% static 'img/favicon.ico' %}"/>
+<html lang="en">
+<body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>SKB_LAB | Список участников</title>
+    <link rel="shortcut icon" type="image/png" href="{% static 'img/favicon.ico' %}"/>
+    <link rel="stylesheet" href={% static 'style/style.css' %}>
+    <link rel="stylesheet" href={% static 'style/table.css' %}>
+    <link rel="stylesheet" href={% static 'style/adaptive-style.css' %}>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital@0;1&display=swap" rel="stylesheet">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript" charset="utf8"
+            src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>
+    <link rel='stylesheet' href='/static/icons/font/css/open-iconic.css'>
+</head>
+<body class="grey">
+<header>
+    <div class="header-container">
+        <a href="/">
+            <img class="logo" src={% static  "img/logo.png" %} alt="Логотип">
+        </a>
+        <div class="right-header">
+            <h1>Личный кабинет</h1>
+            <div class="delta-header">
+                <img class="profile-header" src=/media/{{ request.user.photo }} alt="Аватарка">
+                <h2 class="nickname-header">{{ request.user.login }}</h2>
+                <a href="/logout" style="height: 28px"><img src={% static "img/out.png" %} alt="Выход" width="28px"
+                                                            height="28px"></a>
+            </div>
+        </div>
+    </div>
+</header>
+<div class="content-container">
+    <div class="left-menu">
+        <ul>
+            <a href="/account">
+                <li class="left-menu-element"><span class="oi" data-glyph="person" aria-hidden="true"></span></span>
+                    <span class="left-menu-text">Профиль</span></li>
+            </a>
+            <a href="/vacations/">
+                <li class="left-menu-element"><span class="oi" data-glyph="calendar" aria-hidden="true"></span><span
+                        class="left-menu-text">График отпусков</span></li>
+            </a>
+            <a href="/get_access/">
+                <li class="left-menu-element"><span class="oi" data-glyph="wrench" aria-hidden="true"></span><span
+                        class="left-menu-text">Доступы к системам</span></li>
+            </a>
+            <a href="/get_all_employees">
+                <li class="left-menu-element"><span class="oi" data-glyph="people" aria-hidden="true"></span>
+                    <span
+                            class="left-menu-text">Сотрудники</span></li>
+            </a>
+            {% if request.user.position.access_to_candidates %}
+                <a href="/get_all_candidates">
+                    <li class="left-menu-element"><span class="oi" data-glyph="spreadsheet" aria-hidden="true"></span>
+                        <span
+                                class="left-menu-text">Кандидаты</span></li>
+                </a>
+            {% endif %}
+            {% if request.user.position.access_to_vacation_list %}
+                <a href="/download_vacations">
+                    <li class="left-menu-element"><span class="oi" data-glyph="folder" aria-hidden="true"></span>
+                        <span
+                                class="left-menu-text">Список отпусков</span></li>
+                </a>
+            {% endif %}
+            <a href="/events">
+                <li class="left-menu-element"><span class="oi" data-glyph="bullhorn" aria-hidden="true"></span>
+                    <span
+                            class="left-menu-text">Мероприятия</span></li>
+            </a>
+            <a href="/devices">
+                <li class="left-menu-element"><span class="oi" data-glyph="monitor" aria-hidden="true"></span>
+                    <span
+                            class="left-menu-text">Тестовые девайсы</span></li>
+            </a>
+            <a href="/map">
+                <li class="left-menu-element"><span class="oi" data-glyph="globe" aria-hidden="true"></span>
+                    <span
+                            class="left-menu-text">Карта путешествий</span></li>
+            </a>
+        </ul>
+    </div>
+    <div class="right-container">
+        <h1 class="h-list">Список участников {{ event_name }}</h1>
+        <table class="candidate-table" id="paged">
+            <thead>
+            <tr class="candidate-list-block">
+                <th>ФИО ️<img style='width: 13px' src= {% static 'img/updown.ico' %}></th>
+{#                <th>Имя️ <img style='width: 13px' src= {% static 'img/updown.ico' %}></th>#}
+{#                <th>Отчество <img style='width: 13px' src= {% static 'img/updown.ico' %}></th>#}
+            </tr>
+            </thead>
+            <tbody id="tbody">
+            </tbody>
+        </table>
+
+        <div class="page-panel" style="display: none;">
+            <div class="prev">
+                <img src={% static  "img/pointer.png" %} alt="" class="prev-img">
+                Предыдущий
+            </div>
+
+            <div class="next">
+                Следующий
+                <img src={% static  "img/pointer.png" %} alt="" class="next-img">
+            </div>
+        </div>
+    </div>
+
+</div>
+<script defer>
+    {#console.log({{ members }})#}
+    let event_members = JSON.parse(('{{ members | safe }}'));
+
+    for (let i = 0; i < event_members.length; i++) {
+        {#let fio = event_members[i].fields.name.split(' ');#}
+        let tr = document.createElement('tr');
+        tr.classList.add('candidate-list-block');
+        let td1 = tr.appendChild(document.createElement('td'));
+        {#td1.innerHTML = fio[0]#}
+        td1.innerHTML = event_members[i].fields.name
+        {#let td2 = tr.appendChild(document.createElement('td'))#}
+        {#td2.innerHTML = fio[1]#}
+        {#let td3 = tr.appendChild(document.createElement('td'))#}
+        {#td3.innerHTML = fio[2]#}
+        document.getElementById('tbody').appendChild(tr);
+    }
+</script>
+
+
+<script defer>
+    let table = $(document).ready(function () {
+        $('#paged').DataTable({
+            "language": {
+                paginate: {
+                    first: '«',
+                    previous: '‹',
+                    next: '›',
+                    last: '»'
+                },
+                aria: {
+                    paginate: {
+                        first: 'First',
+                        previous: 'Previous',
+                        next: 'Next',
+                        last: 'Last'
+                    }
+                },
+                searchPlaceholder: 'Поиск'
+            },
+        });
+    });
+    $(document).ready(function () {
+        $("div.dataTables_filter input").focus();
+    })
+</script>
+</body>
+</html>
+</body>
+</html>

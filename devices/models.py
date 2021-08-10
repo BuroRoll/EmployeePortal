@@ -18,6 +18,7 @@ class Device(models.Model):
     device_type = models.ForeignKey(TypeOfDevice, on_delete=models.CASCADE, default=1)
     owner = models.ForeignKey(Account, on_delete=models.CASCADE, null=True)
     time_of_taking = models.DateTimeField(null=True, blank=True)
+    description = models.TextField(default='', null=True, blank=True)
 
     def __str__(self):
         return self.name

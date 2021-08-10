@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 {% load static %}
+<link rel="shortcut icon" type="image/png" href="{% static 'img/favicon.ico' %}"/>
 <html lang="en">
 <body>
 <!DOCTYPE html>
@@ -8,7 +9,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width">
-    <title>SKB_LAB | Список тестовых устройст</title>
+    <title>SKB_LAB | Список тестовых устройств</title>
+    <link rel="shortcut icon" type="image/png" href="{% static 'img/favicon.ico' %}"/>
     <link rel="stylesheet" href={% static 'style/style.css' %}>
     <link rel="stylesheet" href={% static 'style/table.css' %}>
     <link rel="stylesheet" href={% static 'style/adaptive-style.css' %}>
@@ -19,6 +21,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script type="text/javascript" charset="utf8"
             src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>
+    <link rel='stylesheet' href='/static/icons/font/css/open-iconic.css'>
 
 </head>
 <body class="grey">
@@ -41,40 +44,52 @@
 <div class="content-container">
     <div class="left-menu">
         <ul>
-            <a href="/">
-                <li class="left-menu-element"><img class="left-menu-img" src={% static 'img/profile.png' %} alt=""><span
-                        class="left-menu-text">Профиль</span></li>
+            <a href="/account">
+                <li class="left-menu-element"><span class="oi" data-glyph="person" aria-hidden="true"></span></span>
+                    <span class="left-menu-text">Профиль</span></li>
             </a>
             <a href="/vacations/">
-                <li class="left-menu-element"><img class="left-menu-img" src={% static 'img/calen.png' %} alt=""><span
+                <li class="left-menu-element"><span class="oi" data-glyph="calendar" aria-hidden="true"></span><span
                         class="left-menu-text">График отпусков</span></li>
             </a>
             <a href="/get_access/">
-                <li class="left-menu-element"><img class="left-menu-img" src={% static 'img/set.png' %} alt=""><span
+                <li class="left-menu-element"><span class="oi" data-glyph="wrench" aria-hidden="true"></span><span
                         class="left-menu-text">Доступы к системам</span></li>
             </a>
             <a href="/get_all_employees">
-                <li class="left-menu-element"><img class="left-menu-img" src={% static 'img/sotrud.png' %} alt=""><span
-                        class="left-menu-text">Список сотрудников</span></li>
-            </a>
-            <a href="/devices">
-                <li class="left-menu-element"><img class="left-menu-img" src={% static 'img/sotrud.png' %} alt=""><span
-                        class="left-menu-text">Тестовые девайсы</span></li>
+                <li class="left-menu-element"><span class="oi" data-glyph="people" aria-hidden="true"></span>
+                    <span
+                            class="left-menu-text">Сотрудники</span></li>
             </a>
             {% if request.user.position.access_to_candidates %}
                 <a href="/get_all_candidates">
-                    <li class="left-menu-element"><img class="left-menu-img"
-                                                       src={% static "img/sotrud.png" %} alt=""><span
-                            class="left-menu-text">Список кандидатов</span></li>
+                    <li class="left-menu-element"><span class="oi" data-glyph="spreadsheet" aria-hidden="true"></span>
+                        <span
+                                class="left-menu-text">Кандидаты</span></li>
                 </a>
             {% endif %}
             {% if request.user.position.access_to_vacation_list %}
                 <a href="/download_vacations">
-                    <li class="left-menu-element"><img class="left-menu-img"
-                                                       src={% static "img/calen_list.png" %} alt=""><span
-                            class="left-menu-text">Список отпусков</span></li>
+                    <li class="left-menu-element"><span class="oi" data-glyph="folder" aria-hidden="true"></span>
+                        <span
+                                class="left-menu-text">Список отпусков</span></li>
                 </a>
             {% endif %}
+            <a href="/events">
+                <li class="left-menu-element"><span class="oi" data-glyph="bullhorn" aria-hidden="true"></span>
+                    <span
+                            class="left-menu-text">Мероприятия</span></li>
+            </a>
+            <a href="/devices">
+                <li class="left-menu-element"><span class="oi" data-glyph="monitor" aria-hidden="true"></span>
+                    <span
+                            class="left-menu-text">Тестовые девайсы</span></li>
+            </a>
+            <a href="/map">
+                <li class="left-menu-element"><span class="oi" data-glyph="globe" aria-hidden="true"></span>
+                    <span
+                            class="left-menu-text">Карта путешествий</span></li>
+            </a>
         </ul>
     </div>
     <div class="right-container">
@@ -84,7 +99,7 @@
             <tr class="candidate-list-block">
                 <th>Тип ️<img style='width: 13px' src= {% static 'img/updown.ico' %}></th>
                 <th>Название <img style='width: 13px' src= {% static 'img/updown.ico' %}></th>
-                <th>Наличие <img style='width: 13px' src= {% static 'img/updown.ico' %}></th>
+                <th>Статус устройства <img style='width: 13px' src= {% static 'img/updown.ico' %}></th>
             </tr>
             </thead>
             <tbody id="tbody">
@@ -98,7 +113,7 @@
 <div id="myModal" class="modal">
     <!-- Modal content -->
     <div class="device_info-container">
-        <h2 style="text-align: center">Основная информация</h2>
+        <h2 style="text-align: center">Информация</h2>
         <div class="device_info-content">
             <div class="device_info-content-left">
                 <div class="device-content-block">
@@ -134,6 +149,30 @@
 
     </div>
 
+
+</div>
+
+<div id="myModal2" class="modal">
+    <div class="device_info-container" style="height: auto">
+        <h2 style="text-align: center">Основная информация</h2>
+        <div class="device_info-content">
+            <div class="device_info-content-left">
+                <div class="device-content-block">
+                    <div class="grey-text">Название девайса</div>
+                    <div class="name" id="free_device-name"></div>
+                </div>
+            </div>
+            <div class="device_info-content-left">
+                <div class="device-content-block" style="border-bottom: 0">
+                    <div class="grey-text">Описание:</div>
+                    <div class="device-opisanie" id="free_device_description"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="get-device" id="get_free_device" style="margin-bottom: 20px">Взять</div>
+
+    </div>
 </div>
 
 <script>
@@ -143,26 +182,38 @@
     }).then(response => response.json())
         .then(response => {
             let devices = response
+            let user_id = {{ user.id }};
             for (let i = 0; i < devices.length; i++) {
                 let tr = document.createElement('tr');
                 tr.classList.add('candidate-list-block');
                 tr.classList.add('hoverBtn');
                 tr.setAttribute('id', devices[i].id)
-                tr.addEventListener('click', getDeviceData.bind(null, devices[i].id));
+                tr.onclick = function () {
+                    getDeviceData(devices[i].id, devices[i].owner)
+                }
                 let td1 = tr.appendChild(document.createElement('td'));
                 td1.innerHTML = devices[i].type
                 let td2 = tr.appendChild(document.createElement('td'))
                 td2.innerHTML = devices[i].name
                 let td3 = tr.appendChild(document.createElement('td'))
-                if (devices[i].owner != null)
-                    td3.innerHTML = '-'
-                else
-                    td3.innerHTML = '✓'
+                if (devices[i].owner === null) {
+                    td3.setAttribute('data-order', '2');
+                    td3.innerHTML = 'Свободно';
+                } else if (devices[i].owner === user_id) {
+                    td3.setAttribute('data-order', '1');
+                    td3.innerHTML = 'Используется Вами'
+                    td3.style.color = "#00A826";
+                } else {
+                    td3.setAttribute('data-order', '3');
+                    td3.innerHTML = 'Используется'
+                    td3.style.color = "#FF7601";
+                }
                 document.getElementById('tbody').appendChild(tr);
             }
         }).then(() => {
             $(document).ready(function () {
                 $('#paged').DataTable({
+                    "order": [[2, "asc"]],
                     "language": {
                         paginate: {
                             first: '«',
@@ -187,8 +238,53 @@
             })
         })
     let modal = document.getElementById("myModal");
+    let modal2 = document.getElementById("myModal2");
 
-    function getDeviceData(id) {
+    function getDeviceData(id, owner) {
+        if (owner === null) {
+            set_data_for_free_device(id)
+        } else if (owner != null) {
+            set_data_for_busy_device(id)
+        }
+    }
+
+    function set_data_for_free_device(id) {
+        modal2.style.display = "block";
+        window.onclick = function (event) {
+            if (event.target === modal2) {
+                modal2.style.display = "none";
+            }
+        }
+        fetch('/devices_details/' + id, {
+            method: 'GET'
+        }).then(response => response.json())
+            .then(data => {
+                document.getElementById("free_device-name").innerHTML = data['name']
+                document.getElementById('free_device_description').innerHTML = data['description']
+                let get_device = document.getElementById("get_free_device")
+                get_device.innerHTML = 'Взять'
+                get_device.style.background = "#00A826";
+                get_device.style.pointerEvents = 'auto'
+                get_device.onclick = function () {
+                    fetch('/set_owner/?device_id=' + data['id'], {
+                        method: 'GET'
+                    }).then(response => {
+                        if (response.ok) {
+                            modal2.style.display = "none";
+                            let td = document.getElementById(data['id']).lastChild
+                            td.innerHTML = 'Используется Вами'
+                            td.setAttribute('data-order', '1');
+                            td.style.color = "#00A826";
+                            document.getElementById(id.toString()).onclick = function () {
+                                getDeviceData(id, {{ user.id }})
+                            }
+                        }
+                    })
+                }
+            })
+    }
+
+    function set_data_for_busy_device(id) {
         modal.style.display = "block";
         window.onclick = function (event) {
             if (event.target === modal) {
@@ -200,13 +296,11 @@
         }).then(response => response.json())
             .then(data => {
                 let time_of_taking = ''
-                if (data['time_of_taked'] != null) {
-                    let date = new Date(data['time_of_taked'])
-                    let currentTzOffset = -date.getTimezoneOffset() / 60
-                    date.setHours(date.getHours() + currentTzOffset);
-                    time_of_taking =
-                        `${date.toLocaleDateString()} ${date.toLocaleTimeString().slice(0, -3)}`
-                }
+                let date = new Date(data['time_of_taked'])
+                let currentTzOffset = -date.getTimezoneOffset() / 60
+                date.setHours(date.getHours() + currentTzOffset);
+                time_of_taking =
+                    `${date.toLocaleDateString()} ${date.toLocaleTimeString().slice(0, -3)}`
                 document.getElementById("device-name").innerHTML = data['name'];
                 document.getElementById("device-owner-name").innerHTML = data['owner_name'];
                 document.getElementById("device-owner-name").setAttribute('owner_id', data['owner_id']);
@@ -217,22 +311,7 @@
                 let get_device = document.getElementsByClassName("get-device")[0]
                 let user_id = {{ user.id }};
                 user_id = user_id.toString();
-
-                if (document.getElementById("device-owner-name").getAttribute('owner_id') === 'null') {
-                    get_device.innerHTML = 'Взять'
-                    get_device.style.background = "#00A826";
-                    get_device.style.pointerEvents = 'auto'
-                    get_device.onclick = function () {
-                        fetch('/set_owner/?device_id=' + data['id'], {
-                            method: 'GET'
-                        }).then(response => {
-                            if (response.ok) {
-                                modal.style.display = "none";
-                                document.getElementById(data['id']).lastChild.innerHTML = '-'
-                            }
-                        })
-                    }
-                } else if (document.getElementById("device-owner-name").getAttribute('owner_id') === user_id) {
+                if (document.getElementById("device-owner-name").getAttribute('owner_id') === user_id) {
                     get_device.innerHTML = 'Отдать'
                     get_device.style.background = "#00A826";
                     get_device.style.pointerEvents = 'auto'
@@ -242,19 +321,23 @@
                         }).then(response => {
                             if (response.ok) {
                                 modal.style.display = "none";
-                                document.getElementById(data['id']).lastChild.innerHTML = '✓'
+                                let td = document.getElementById(data['id']).lastChild
+                                td.setAttribute('data-order', '2');
+                                td.innerHTML = 'Свободно';
+                                td.style.color = 'black'
+                                document.getElementById(id.toString()).onclick = function () {
+                                    getDeviceData(id, null)
+                                }
                             }
                         })
                     }
                 } else {
                     get_device.innerHTML = 'Устройство занято'
-                    get_device.style.background = "#ff9d9d";
+                    get_device.style.background = "#FF0000";
                     get_device.style.pointerEvents = 'none'
                 }
             })
     }
-
-
 </script>
 </html>
 </body>

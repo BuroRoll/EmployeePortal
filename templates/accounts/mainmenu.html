@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>SKB_LAB | Главная</title>
+    <link rel="shortcut icon" type="image/png" href="{% static 'img/favicon.ico' %}"/>
+    <link rel="stylesheet" href={% static 'style/style.css' %}>
+    <link rel="stylesheet" href={% static 'style/adaptive-style.css' %}>
+    <link rel="stylesheet" href={% static 'style/style-menu.css' %}>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital@0;1&display=swap" rel="stylesheet">
+    <link rel='stylesheet' href='/static/icons/font/css/open-iconic.css'>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body class="grey">
+<header>
+    <div class="header-container">
+        <a href="/">
+            <img class="logo" src={% static 'img/logo.png' %} alt="Логотип">
+        </a>
+        <div class="right-header">
+            <h1>Личный кабинет</h1>
+            <div class="delta-header">
+              <img class="profile-header" alt="Аватар" src=/media/{{ request.user.photo }} >
+              <h2 class="nickname-header">{{ request.user.login }}</h2>
+              <a href="/logout" style="height: 28px"><img src={% static 'img/out.png' %} alt="Выход" width="28px"
+                                                          height="28px"></a>
+          </div>
+            </div>
+        </div>
+    </div>
+</header>
+<div class="content-container">
+  <!-- partial:index.partial.html -->
+    <div class="left-menu-element  radial-menu">
+      <ul class="radial-menu__menu-list">
+
+        <!-- Мероприятия -->
+        <li class="radial-menu__menu-item">
+          <div class="radial-menu__menu-link-bg"></div>
+          <div class="radial-menu__menu-icon">
+            <span class="oi" data-glyph="bullhorn" title="Bold" aria-hidden="true"></span>
+          </div>
+          <div class="radial-menu__menu-content">
+            <div class="radial-menu__menu-content-wrapper">
+              <h6 class="radial-menu__menu-content-title">
+              Мероприятия
+              </h6>
+              <p class="radial-menu__menu-content-description">
+              Мероприятия
+              </p>
+            </div>
+          </div>
+          <a href="events/" class="radial-menu__menu-link"></a>
+        </li>
+
+        <!-- Список отпусков -->
+        {% if request.user.position.access_to_vacation_list %}
+        <li class="radial-menu__menu-item">
+          <div class="radial-menu__menu-link-bg"></div>
+          <div class="radial-menu__menu-icon">
+            <span class="oi" data-glyph="folder" aria-hidden="true"></span>
+          </div>
+          <div class="radial-menu__menu-content">
+            <div class="radial-menu__menu-content-wrapper">
+              <h6 class="radial-menu__menu-content-title">
+                Список отпусков
+              </h6>
+              <p class="radial-menu__menu-content-description">
+                Список отпусков
+              </p>
+            </div>
+          </div>
+          <a href="download_vacations/" class="radial-menu__menu-link"></a>
+        </li>
+        {% endif %}
+
+        <!-- Кандидаты -->
+        {% if request.user.position.access_to_candidates %}
+        <li class="radial-menu__menu-item">
+          <div class="radial-menu__menu-link-bg"></div>
+          <div class="radial-menu__menu-icon">
+            <span class="oi" data-glyph="spreadsheet" title="Underline" aria-hidden="true"></span>
+          </div>
+          <div class="radial-menu__menu-content">
+            <div class="radial-menu__menu-content-wrapper">
+              <h6 class="radial-menu__menu-content-title">
+                Кандидаты
+              </h6>
+              <p class="radial-menu__menu-content-description">
+                Список кандидатов
+              </p>
+            </div>
+          </div>
+          <a href="get_all_candidates/" class="radial-menu__menu-link"></a>
+        </li>
+        {% endif %}
+
+        <!-- Сотрудники -->
+        <li class="radial-menu__menu-item">
+          <div class="radial-menu__menu-link-bg"></div>
+          <div class="radial-menu__menu-icon">
+            <span class="oi" data-glyph="people" title="Align left" aria-hidden="true"></span>
+          </div>
+          <div class="radial-menu__menu-content">
+            <div class="radial-menu__menu-content-wrapper">
+              <h6 class="radial-menu__menu-content-title">
+                Cотрудники
+              </h6>
+              <p class="radial-menu__menu-content-description">
+                Список сотрудников
+              </p>
+            </div>
+          </div>
+          <a href="get_all_employees/" class="radial-menu__menu-link"></a>
+        </li>
+
+        <!-- Доступы к системам -->
+        <li class="radial-menu__menu-item">
+          <div class="radial-menu__menu-link-bg"></div>
+          <div class="radial-menu__menu-icon">
+            <span class="oi" data-glyph="wrench" title="Bulleted List" aria-hidden="true"></span>
+          </div>
+          <div class="radial-menu__menu-content">
+            <div class="radial-menu__menu-content-wrapper">
+              <h6 class="radial-menu__menu-content-title">
+                Доступы к системам
+              </h6>
+              <p class="radial-menu__menu-content-description">
+                Доступы к системам
+              </p>
+            </div>
+          </div>
+          <a href="get_access/" class="radial-menu__menu-link"></a>
+        </li>
+
+        <!-- График отпусков -->
+        <li class="radial-menu__menu-item">
+          <div class="radial-menu__menu-link-bg"></div>
+          <div class="radial-menu__menu-icon">
+            <span class="oi" data-glyph="calendar" title="" aria-hidden="true"></span>
+          </div>
+          <div class="radial-menu__menu-content">
+            <div class="radial-menu__menu-content-wrapper">
+              <h6 class="radial-menu__menu-content-title">
+                График отпусков
+              </h6>
+              <p class="radial-menu__menu-content-description">
+                График отпусков
+              </p>
+            </div>
+          </div>
+          <a href="vacations/" class="radial-menu__menu-link"></a>
+        </li>
+
+        <!-- Профиль -->
+        <li class="radial-menu__menu-item">
+          <div class="radial-menu__menu-link-bg"></div>
+          <div class="radial-menu__menu-icon">
+            <span class="oi" data-glyph="person" title="Underline" aria-hidden="true"></span>
+          </div>
+          <div class="radial-menu__menu-content">
+            <div class="radial-menu__menu-content-wrapper">
+              <h6 class="radial-menu__menu-content-title">
+                Профиль
+              </h6>
+              <p class="radial-menu__menu-content-description">
+                Профиль
+              </p>
+            </div>
+          </div>
+          <a href="account/" class="radial-menu__menu-link"></a>
+        </li>
+
+        <!-- Карта -->
+        <li class="radial-menu__menu-item">
+            <div class="radial-menu__menu-link-bg"></div>
+            <div class="radial-menu__menu-icon">
+              <span class="oi" data-glyph="globe" title="Hyperlink" aria-hidden="true"></span>
+            </div>
+            <div class="radial-menu__menu-content">
+              <div class="radial-menu__menu-content-wrapper">
+                <h6 class="radial-menu__menu-content-title">
+                  Карта путешествий
+                </h6>
+                <p class="radial-menu__menu-content-description">
+                  Карта путешествий
+                </p>
+              </div>
+            </div>
+            <a href="map/" class="radial-menu__menu-link"></a>
+        </li>
+
+        <!-- Тестовые девайсы -->
+        <li class="radial-menu__menu-item">
+            <div class="radial-menu__menu-link-bg"></div>
+            <div class="radial-menu__menu-icon">
+              <span class="oi" data-glyph="monitor" title="Image" aria-hidden="true"></span>
+            </div>
+            <div class="radial-menu__menu-content">
+              <div class="radial-menu__menu-content-wrapper">
+                <h6 class="radial-menu__menu-content-title">
+                  Тестовые девайсы
+                </h6>
+                <p class="radial-menu__menu-content-description">
+                  Тестовые девайсы
+                </p>
+              </div>
+            </div>
+            <a href="devices/" class="radial-menu__menu-link"></a>
+        </li>
+      </ul>
+    <div class="radial-menu__label">
+      SKB LAB
+    </div>
+  </div>
+  <div class="right-container-image">
+    <img class="img-mainmenu" src= {% static 'img/people.png' %} >
+  </div>
+
+  <!-- partial -->
+    <script  src= {% static 'js/menuscript.js' %}></script>
+</div>
+</body>
+</html>

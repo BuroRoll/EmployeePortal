@@ -1,0 +1,376 @@
+.events-container {
+    width: 70%;
+    margin: auto;
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.event-block {
+    width: 45%;
+    background: #FFFFFF;
+    border: 1px solid #ACACAC;
+    box-sizing: border-box;
+    border-radius: 16px;
+    transition: 200ms;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.event-content {
+    width: 85%;
+    margin: auto;
+}
+
+.event-panel {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.green-text {
+    color: green;
+}
+
+.red-text {
+    color: red;
+}
+
+
+.pointer {
+    width: 20px;
+    height: 18.46px;
+    transform: rotate(90deg);
+    cursor: pointer;
+    transition: 200ms;
+}
+
+.event-count {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 30px;
+    border-bottom: 1px solid #AFAFAF;
+}
+
+.event-opisanie {
+    height: 60px;
+}
+
+.party {
+    color: grey;
+    display: flex;
+    justify-content: space-between;
+}
+
+.event-img {
+    width: 100%;
+    height: 280px;
+    object-fit: cover;
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+    border-bottom: 1px solid #AFAFAF;
+}
+
+.event-info-block {
+    display: flex;
+    justify-content: space-between;
+}
+
+.date-info {
+    line-height: 30px;
+}
+
+.event-info-block-left {
+    width: 45%;
+}
+
+.event-info-block-right {
+    width: 55%;
+}
+
+.title-event {
+    color: #FF7601;
+}
+
+.event-place {
+    /*color: #8E8E8E;*/
+}
+
+.event-anons {
+    width: 350px;
+}
+
+.no-show {
+    max-height: 410px;
+}
+
+.show {
+    max-height: 1010px;
+}
+
+.event-sub {
+    padding: 11px 0 11px 0;
+    width: 100%;
+    text-align: center;
+    border-radius: 16px;
+    color: white;
+    cursor: pointer;
+    margin: 25px 0 25px 0;
+    text-transform: uppercase;
+    transition: 200ms;
+    user-select: none;
+}
+
+.green-btn {
+    background: #00A826;
+}
+
+.red-btn {
+    background: #FF0000;
+}
+
+.new_event {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.event-red-block {
+    width: 40%;
+    margin-left: 70px;
+}
+
+.event-new-img {
+    width: 110px;
+    height: 110px;
+    border: 1px solid #AFAFAF;
+}
+
+.event-red-style {
+    margin-left: 0; text-align: center; padding: 25px
+}
+
+.event-label {
+    color: #AFAFAF;
+    margin-bottom: 5px;
+}
+
+.event-input {
+    background: #FFFFFF;
+    border: 1px solid #AFAFAF;
+    box-sizing: border-box;
+    border-radius: 8px;
+    padding: 12px;
+    width: 100%;
+}
+
+.event-red-info {
+    text-align: left;
+}
+
+.download-event-btn {
+    width: 134px;
+    background: #00A826;
+    border-radius: 16px;
+    color: white;
+    margin: auto;
+    padding: 10px;
+    cursor: pointer;
+    margin-top: 15px;
+}
+.red-event-block {
+    margin-top: 20px;
+}
+
+.event-red-img {
+    /*background-size: 100% 280px;*/
+    background-size: cover;
+    width: 100%;
+    height: 280px;
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+    border-bottom: 1px solid #AFAFAF;
+}
+
+.event-delete {
+    background: #FFFFFF;
+    border: 1px solid #000000;
+    box-sizing: border-box;
+    border-radius: 16px;
+    text-align: center;
+    width: fit-content;
+    padding: 5px;
+    margin-left: auto;
+    cursor: pointer;
+    margin-right: 15px;
+    user-select: none;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.event-delete-double {
+    background: red;
+    color: white;
+}
+
+.event-input-date {
+    width: 150px;
+    border: 1px solid #AFAFAF;
+    border-radius: 8px;
+}
+
+.event-red-textarea {
+    width: 200px;
+    height: 50px;
+    resize: none;
+    border-radius: 8px;
+    border: 1px solid #AFAFAF;
+    outline: none;
+}
+
+.section-buttons {
+    display: flex;
+    width: 90%;
+    margin: auto;
+}
+
+.section-button {
+    font-size: 30px;
+    color: #AFAFAF;
+    border-bottom: 1px solid #AFAFAF;
+    text-align: center;
+    margin-top: 50px;
+    transition: 200ms;
+    width: 50%;
+    cursor: pointer;
+    user-select: none;
+}
+.active-btn {
+    color: #00AA13;
+    border-bottom: 1px solid #00AA13;
+}
+
+.section-button:hover {
+    color: #00AA13;
+    border-bottom: 1px solid #00AA13;
+}
+
+#create-new-event, #my_events {
+    overflow: hidden;
+    max-height: 0;
+    transition: 1000ms;
+}
+
+.open {
+
+}
+
+#create-event {
+    margin-top: 50px;
+    margin-bottom: 0;
+}
+
+.event-manager-btn {
+    width: 22.5%;
+    margin-left: auto;
+    font-size: 13px;
+    color: white;
+    background-color: #FF7601;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 16px;
+    padding: 12px 0 12px 0;
+    margin-top: 50px;
+}
+
+@media (max-width: 1550px) {
+    .event-img {
+        height: 210px;
+    }
+
+    .no-show {
+        max-height: 307.5px;
+    }
+
+    .event-anons {
+        width: auto;
+    }
+
+    .event-new-img {
+        width: 82.5px;
+        height: 82.5px;
+    }
+
+    .download-event-btn {
+        width: 100.5px;
+        background: #00A826;
+        border-radius: 16px;
+        color: white;
+        margin: auto;
+        padding: 7.5px;
+        cursor: pointer;
+        margin-top: 11.25px;
+        font-size: 12px;
+    }
+
+    .event-label {
+        color: #AFAFAF;
+        margin-bottom: 3.75px;
+        font-size: 12px;
+    }
+
+    .event-input {
+        background: #FFFFFF;
+        border: 1px solid #AFAFAF;
+        box-sizing: border-box;
+        border-radius: 8px;
+        padding: 9px;
+        width: 100%;
+        font-size: 12px;
+    }
+
+    label[for=list],label[for=count] {
+        font-size: 12px;
+    }
+
+    .event-sub, .info-block, .event-count, .event-input-date, .event-red-textarea, .event-delete {
+        font-size: 12px;
+    }
+
+    .red-event-block {
+        margin-top: 15px;
+    }
+
+    .event-input-date {
+        width: 120px;
+    }
+
+    .event-red-textarea {
+        width: 150px;
+        height: 37.5px;
+    }
+
+    #create-event {
+        margin-top: 37.5px;
+    }
+
+    .event-red-img {
+        height: 210px;
+    }
+
+    .section-button {
+        font-size: 22.5px;
+    }
+
+    .event-manager-btn {
+    width: 22.5%;
+    margin-left: auto;
+    font-size: 13.5px;
+    color: white;
+    background-color: #FF7601;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 16px;
+    padding: 9px 0 9px 0;
+    /*margin-top: 37.5px;*/
+    }
+}
