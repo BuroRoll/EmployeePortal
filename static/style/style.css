@@ -98,11 +98,12 @@ textarea {
 }
 
 .sub-log {
+    text-transform: uppercase;
     width: 227px;
     height: 50px;
     background: #00A826;
     border-radius: 8px;
-    font-size: 18px;
+    font-size: 15px;
     border: none;
     margin-top: 35px;
     color: white;
@@ -796,4 +797,18 @@ nav-li {
     color: red;
     font-size: 15px;
     display: none;
+}
+
+.event-member{
+    width: 705px;
+    height: 564px;
+    height: auto;
+    width: 1140px;
+    height: 620px;
+    border-radius: 16px;
+    box-shadow: 0px 0px 40px 0px rgba(0, 0, 0, 0.15);
+    margin: auto;
+    margin-top: 72px;
+    background-color: white;
+    border: 1px solid #ACACAC;
 }

@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width">
-    <title>Карта</title>
+    <title>SKB_LAB | Карта путешествий</title>
     <link rel="stylesheet" href={% static "style/style.css" %}>
     <link rel="stylesheet" href={% static "style/map.css" %}>
     <link rel="stylesheet" href={% static "style/adaptive-style.css" %}>
@@ -295,7 +295,7 @@
 
     function setMarker(location, date, href, description, name, coordinates, index_db, myMarker) {
         let icon = myMarker ? myIcon : defaultIcon
-        href = href !== '' ? `<a href="${href}">Пост в соц.сетях</a>` : ''
+        href = href !== '' ? `<a target="_blank" href="${href}">Пост в соц.сетях</a>` : ''
         let descriptionTag = description !== '' ? `<div><b>Описание: </b>${description}</div>` : ''
         let newMarker = L.marker(coordinates, {icon: icon}).addTo(mymap)
         {#let newMarker = L.marker(coordinates).addTo(mymap)#}

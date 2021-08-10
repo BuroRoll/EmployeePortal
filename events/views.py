@@ -1,5 +1,8 @@
 from django.contrib.auth.decorators import login_required
+from django.core import serializers
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.serializers import serialize
+from django.http import JsonResponse
 from django.shortcuts import render
 from rest_framework import generics
 from rest_framework.decorators import permission_classes, api_view
@@ -107,6 +110,15 @@ def event_manager(request):
     return render(request, 'events/event-manager.html', {'events': user_events})
 
 
+@login_required
+def event_members(request):
+    event_id = request.GET.get('event_id')
+    event = Event.objects.filter(id=event_id)
+    event_members = event.values('members')
+    qs_json = serializers.serialize('json', event_members)
+    return JsonResponse(qs_json, safe=False)
+
+
 @permission_classes([IsAuthenticated])
 class EventsMembers(generics.RetrieveAPIView):
     queryset = Event.objects.all()
@@ -117,3 +129,12 @@ class EventsMembers(generics.RetrieveAPIView):
 class EventDetails(generics.RetrieveAPIView):
     queryset = Event.objects.all()
     serializer_class = EventDetailsSerializer
+
+
+def event_members_page(request):
+    event_id = request.GET.get('event_id')
+    event_name = Event.objects.get(pk=event_id).title
+    event_members = Event.objects.get(pk=event_id).members.all()#.values('name')
+    e = serialize('json', event_members, fields='name')
+    print(e)
+    return render(request, 'events/event_members_page.html', {'members': e, 'event_name': event_name})

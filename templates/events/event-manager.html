@@ -325,9 +325,11 @@
                 snackbar.className = "show";
                 setTimeout(function () {
                     snackbar.className = snackbar.className.replace("show", "");
-                }, 3000);
+                    location.reload()
+                }, 2000);
+
                 {#get_event(data['event_id'])#}
-                cleanForm()
+                {#cleanForm()#}
             },
             error: function (error) {
                 console.log(error);
@@ -336,8 +338,8 @@
     }
 
     function cleanForm() {
-        $('#imgInp').attr('src', '/static/img/event-orange_pin.png');
-        $('#min_imgInp').attr('src', '/static/img/event-orange_pin.png')
+        $('#imgInp').attr('src', '/static/img/event-img.png');
+        $('#min_imgInp').attr('src', '/static/img/event-img.png')
         document.querySelector('input[name=name]').value = ''
         document.querySelector('input[name=event-count]').value = ''
         document.querySelectorAll('input[type=date]').value = ''
@@ -377,6 +379,8 @@
 
     function add_event_in_list(event_data) {
         console.log(event_data)
+        let free_count = Math.round((new Date(event_data.event_date) - new Date())/(1000*60*60*24));
+        console.log(free_count)
         let div = document.createElement('div')
         let event_list = document.getElementById('my_events')
         div.setAttribute('id', 'block_' + event_data.id)
@@ -384,7 +388,7 @@
         div.innerHTML = `
                     <div class="event-red-img" style="background-image: url(${event_data.picture});">
                         <div style="height: 15px"></div>
-                        <div id="${event_data.id}" class="event-delete">Удалить</div>
+                        <div id="${event_data.id}" onclick="delete_event(${event_data.id})" class="event-delete">Удалить</div>
                     </div>
                     <div class="event-content">
                         <div class="event-panel"><h1>${event_data.title}</h1> <img class="pointer"
@@ -392,8 +396,8 @@
                                                                                  alt=""></div>
                         <div class="event-count">
                             <div class="free-place">Свободных мест: <span
-                                    class="free-places">${event_data.free_count}</span></div>
-                            <div class="day-event">Дней до начала: <span class="days-before-start"></span></div>
+                                    class="free-places"></span></div>
+                            <div class="day-event">Дней до начала: ${free_count}<span class="days-before-start"></span></div>
                         </div>
                         <div class="info-block">
                             <div class="event-info-block">
@@ -436,7 +440,6 @@
         `
         event_list.appendChild(div)
         set_settings()
-        delete_ev()
     }
 
     function noBorder(block) {
@@ -454,7 +457,6 @@
                 block.style.maxHeight = 0 + 'px'
                 setTimeout(noBorder, 1000, block)
                 block.remove
-
             },
             error: function (error) {
                 console.log(error);

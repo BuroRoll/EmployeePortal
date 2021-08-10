@@ -11,13 +11,69 @@
     <link rel="stylesheet" href={% static "style/events.css" %}>
     <link rel="stylesheet" href={% static "style/adaptive-style.css" %}>
     <link rel="stylesheet" href={% static "style/events.css" %}>
-
+    <link rel="shortcut icon" type="image/png" href="{% static 'img/favicon.ico' %}"/>
+    <link rel="stylesheet" href={% static 'style/style.css' %}>
+    <link rel="stylesheet" href={% static 'style/adaptive-style.css' %}>
+    <link rel="stylesheet" href={% static 'style/table.css' %}>
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital@0;1&display=swap" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <script type="text/javascript" charset="utf8"
+            src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>
     <link rel='stylesheet' href='/static/icons/font/css/open-iconic.css'>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    {#    <link rel="preconnect" href="https://fonts.gstatic.com">#}
+    {#    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital@0;1&display=swap" rel="stylesheet">#}
+    {#    <link rel='stylesheet' href='/static/icons/font/css/open-iconic.css'>#}
+    {#    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>#}
+    {#    <script type="text/javascript" charset="utf8"#}
+    {#            src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>#}
+    {##}
+    {#    <script type="text/javascript" charset="utf8"#}
+    {#            src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>#}
+    {##}
+    {#    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>#}
 </head>
+<style>
+    .modal {
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 1; /* Sit on top */
+        padding-top: 100px; /* Location of the box */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgb(0, 0, 0); /* Fallback color */
+        background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+    }
+
+    /* Modal Content */
+    .modal-content {
+        background-color: #fefefe;
+        margin: auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+    }
+
+    /* The Close Button */
+    .close {
+        color: #aaaaaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+    .close:hover,
+    .close:focus {
+        color: #000;
+        text-decoration: none;
+        cursor: pointer;
+    }
+</style>
 <body class="grey" onload="set_events()">
 <header>
     <div class="header-container">
@@ -86,15 +142,47 @@
             </a>
         </ul>
     </div>
-    <div style="width: 70%; margin-left: auto; margin-right: auto">
-        <a href="/event_manager/">
-            <div class="event-manager-btn">+ Мои мероприятия</div>
-        </a>
+
+    <div style="width: 70%; margin-left: auto; margin-right: auto;">
+        {% if request.user.position.change_events %}
+            <a href="/event_manager/">
+                <div class="event-manager-btn">+ Мои мероприятия</div>
+            </a>
+        {% endif %}
         <div class="events-container" id="events_container" style="width: 100%">
         </div>
     </div>
 
+
 </div>
+
+
+{#<div class="red-block candidate-block" style="width: fit-content; height: auto">#}
+{#    <table class="candidate-table" id="paged">#}
+{#        <thead>#}
+{#        <tr class="candidate-list-block">#}
+{#            <th>ФИО ️<img style='width: 13px' src= {% static 'img/updown.ico' %}></th>#}
+{#        </tr>#}
+{#        </thead>#}
+{#        <tbody id="tbody">#}
+{#        </tbody>#}
+{#    </table>#}
+{#</div>#}
+
+{#<div id="myModal" class="modal">#}
+{#    <!-- Modal content -->#}
+{#    <div class=" red-block candidate-block">#}
+{#        <table class="candidate-table" id="paged">#}
+{#            <thead>#}
+{#            <tr class="candidate-list-block">#}
+{#                <th>ФИО ️<img style='width: 13px' src= {% static 'img/updown.ico' %}></th>#}
+{#            </tr>#}
+{#            </thead>#}
+{#            <tbody id="tbody">#}
+{#            </tbody>#}
+{#        </table>#}
+{#    </div>#}
+{#</div>#}
 <script src={% static "js/events-animation.js" %}></script>
 <script>
     async function set_events() {
@@ -104,7 +192,7 @@
             .then(response => {
                 set_data(response)
             }).then(() => {
-            f()
+            events_blocks()
         });
     }
 
@@ -128,7 +216,6 @@
         const div = document.createElement('div')
         div.setAttribute('class', 'event-block  no-show')
         div.innerHTML = `
-
                     <img class="event-img" src=${event_data.picture} alt="">
                     <div class="event-content">
                         <div class="event-panel"><h1>${event_data.title}</h1> <img class="pointer" src={% static "img/strelka.png"%} alt=""></div>
@@ -155,7 +242,7 @@
 
                             <div class="party">
                                 <div class="show-count ${event_data.show_members_count}">Всего мест: <span class="max-count">${event_data.members_count}</span></div>
-                                <a class="show-list ${event_data.show_members}" href="" style="color: grey; text-decoration: underline">Список участников</a>
+                                <a class="show-list ${event_data.show_members}" href="/event_members_page?event_id=${event_data.id}" style="color: grey; text-decoration: underline">Список участников</a>
                             </div>
 
                             <div class="event-sub green-btn" id='${event_data.id}'>
@@ -182,7 +269,70 @@
         return div
     }
 
-    function f() {
+    let modal = document.getElementById("myModal");
+    {#let member_table = $('#paged').DataTable({#}
+    {#    "language": {#}
+    {#        paginate: {#}
+    {#            first: '«',#}
+    {#            previous: '‹',#}
+    {#            next: '›',#}
+    {#            last: '»'#}
+    {#        },#}
+    {#        searchPlaceholder: 'Поиск'#}
+    {#    },#}
+    //});
+    $('#paged').DataTable({
+        serverSide: true,
+        ajax: {
+            url: '/event_members/71/',
+            dataFilter: function (data) {
+                {#console.log(data)#}
+                var json = jQuery.parseJSON(data);
+                console.log(json)
+                json.recordsTotal = json.data.length;
+                json.draw = 1
+                return JSON.stringify(json); // return JSON string
+            }
+        }
+    });
+
+    function getMembers(id) {
+        {#modal.style.display = "block"#}
+
+
+        window.onclick = function (event) {
+            if (event.target === modal) {
+                modal.style.display = "none";
+                {#document.getElementById('tbody').innerHTML = ''#}
+            }
+        }
+        $.ajax({
+                url: '/event_members/' + id + '/',
+                type: 'GET',
+                success: function (data) {
+
+                },
+                {#modal.style.display = "block";#}
+                {#for (const member of data['data']) {#}
+                {#    let tr = document.createElement('tr');#}
+                {#    let td1 = tr.appendChild(document.createElement('td'));#}
+                {#    td1.innerHTML = member#}
+                {#    tr.classList.add('candidate-list-block');#}
+                {#    document.getElementById('tbody').appendChild(tr);#}
+
+                {#$(document).ready(function () {#}
+                {#    $("div.dataTables_filter input").focus();#}
+                //
+
+                error: function (data) {
+                    console.log(data)
+                }
+            }
+        )
+    }
+
+
+    function events_blocks() {
         let event_blocks = document.querySelectorAll('.event-block')
 
         for (let block of event_blocks) {
@@ -251,7 +401,7 @@
 
             //Обработка кнопки мероприятия
             subBtn.onclick = function () {
-                if (subBtn.classList.contains('green-btn') && parseInt(freePlace.textContent) > 0) {
+                if (subBtn.classList.contains('green-btn') && parseInt(freePlace.innerHTML) > 0) {
                     //Добавление в мероприятие
                     $.ajax({
                         url: '/join_event/?event_id=' + subBtn.id,

@@ -43,6 +43,7 @@ class Position(models.Model):
     position_name = models.CharField(max_length=100)
     access_to_candidates = models.BooleanField(default=False)
     access_to_vacation_list = models.BooleanField(default=False)
+    change_events = models.BooleanField(default=False)
 
     def __str__(self):
         return self.position_name

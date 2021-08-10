@@ -11,14 +11,14 @@ class EventsSerializer(serializers.ModelSerializer):
 
 
 class EventMembersSerializer(serializers.ModelSerializer):
-    members_names = serializers.SerializerMethodField('get_members_name')
+    data = serializers.SerializerMethodField('get_members_name')
 
     def get_members_name(self, obj):
         return obj.members.values_list('name', flat=True)
 
     class Meta:
         model = Event
-        fields = ['members_names']
+        fields = ['data']
 
 
 class EventDetailsSerializer(serializers.ModelSerializer):

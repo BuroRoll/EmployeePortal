@@ -5,7 +5,7 @@ from accounts.models import Account
 
 class Event(models.Model):
     title = models.CharField(max_length=300)
-    picture = models.ImageField(upload_to='events/%Y/%m/%d', blank=True, default='events/default_event_pic.png')
+    picture = models.ImageField(upload_to='events/%Y/%m/%d', blank=True, default='events/default_event_picture.png')
     event_date = models.CharField(max_length=300)
     event_time = models.CharField(max_length=300)
     event_place = models.CharField(max_length=300)

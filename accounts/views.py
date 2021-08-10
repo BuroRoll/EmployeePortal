@@ -26,7 +26,7 @@ def user_login(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
-            form.errors['Неверный логин или пароль'] = form.error_class(['Ошибка'])
+            # form.errors['Неверный логин или пароль'] = form.error_class(['Ошибка'])
             cd = form.cleaned_data
             user = authenticate(login=cd['login'], password=cd['password'])
             if user is not None:
