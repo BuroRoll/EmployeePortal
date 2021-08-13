@@ -19,6 +19,6 @@ tests/report/
 /services/migrations/
 /devices/migrations/
 /venv/
-.env
+setenv.sh
 /events/migrations/
 /map/migrations/

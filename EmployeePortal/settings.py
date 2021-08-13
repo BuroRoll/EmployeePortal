@@ -24,12 +24,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = '@g_zwf1xr8f+$b29o317*7++4v79cw&gaiz0jl=2x8)%-atw7s'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['128f346957ab.ngrok.io', '*']
+ALLOWED_HOSTS = ['localhost', '*']
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -81,20 +80,12 @@ WSGI_APPLICATION = 'EmployeePortal.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'e',
-        'USER': 'danilkonkov',
-        'PASSWORD': '',
-        'HOST': 'localhost',
-        'PORT': '',
+        'NAME': os.getenv('DB_NAME'),
+        'USER': os.getenv('DB_USER'),
+        'PASSWORD': os.getenv('DB_PASSWORD'),
+        'HOST': os.getenv('DB_HOST'),
+        'PORT': os.getenv('DB_PORT'),
     }
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    #     'NAME': 'employee_project',
-    #     'USER': 'buroroll',
-    #     'PASSWORD': '220120',
-    #     'HOST': '188.225.42.201',
-    #     'PORT': '5432',
-    # }
 }
 
 # Password validation
@@ -114,12 +105,6 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
-# REST_FRAMEWORK = {
-#     'DEFAULT_PERMISSION_CLASSES': [
-#         'rest_framework.permissions.IsAuthenticated',
-#     ]
-# }
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/

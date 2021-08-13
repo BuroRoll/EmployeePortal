@@ -495,8 +495,6 @@
 </script>
 <script>
     set_settings()
-    {#delete_ev()#}
-
     function set_settings() {
         let events_red_block = document.querySelectorAll('.my-red-block')
         for (let block of events_red_block) {
@@ -540,23 +538,6 @@
             }
         }
     }
-
-    {#function delete_ev() {#}
-    {#    let del_btns = document.querySelectorAll('.event-delete')#}
-    {#    for (let del_btn of del_btns) {#}
-    {#        del_btn.onclick = function () {#}
-    {#            if (del_btn.classList.contains('event-delete-double')) {#}
-    {#                delete_event(del_btn.id)#}
-    {#            } else {#}
-    {#                setDefault()#}
-    {#                del_btn.classList.add('event-delete-double')#}
-    {#            }#}
-    {#        }#}
-    {#    }#}
-    {#{#}
-
-
-
 </script>
 </body>
 </html>

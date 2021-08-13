@@ -4,11 +4,11 @@ from django.contrib import admin
 from django.urls import path, include
 from django.views.decorators.csrf import csrf_exempt
 
-from services.views import TGBotView
+from services.telegramBot import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('webhooks/telegram/', csrf_exempt(TGBotView.as_view())),
+    path('webhooks/telegram/', csrf_exempt(TelegramBot.as_view())),
     path('', include('accounts.urls')),
     path('', include('services.urls')),
     path('', include('devices.urls')),
