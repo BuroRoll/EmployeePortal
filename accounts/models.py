@@ -31,11 +31,6 @@ class AccountManager(BaseUserManager):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
 
-        if extra_fields.get('is_staff') is not True:
-            raise ValueError('Superuser must have is_staff=True.')
-        if extra_fields.get('is_superuser') is not True:
-            raise ValueError('Superuser must have is_superuser=True.')
-
         return self._create_user(login, name, password, **extra_fields)
 
 
@@ -47,6 +42,9 @@ class Position(models.Model):
 
     def __str__(self):
         return self.position_name
+
+    def special_position(self):
+        return self.access_to_candidates or self.access_to_vacation_list or self.change_events
 
 
 class Account(AbstractBaseUser, PermissionsMixin):

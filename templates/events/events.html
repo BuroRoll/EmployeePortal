@@ -157,6 +157,13 @@
 
     async function set_data(data) {
         let container = document.getElementById('events_container')
+        data.sort(function (a, b) {
+            if (a.event_date > b.event_date)
+                return 1
+            if (a.event_date < b.event_date)
+                return -1
+            return 0
+        })
         for (const event of data) {
             let event_html = create_event(event)
             if (event_html == null)
@@ -235,8 +242,7 @@
         ajax: {
             url: '/event_members/71/',
             dataFilter: function (data) {
-                {#console.log(data)#}
-                var json = jQuery.parseJSON(data);
+                let json = jQuery.parseJSON(data);
                 console.log(json)
                 json.recordsTotal = json.data.length;
                 json.draw = 1
@@ -258,7 +264,6 @@
                 success: function (data) {
 
                 },
-
                 error: function (data) {
                     console.log(data)
                 }
@@ -285,7 +290,6 @@
             if (daysBefore.textContent < 0) {
                 block.remove()
             }
-
             //Укорачивание названия
             let title = block.querySelector('h1')
             title.data = title.textContent

@@ -15,7 +15,7 @@ from rest_framework.permissions import IsAuthenticated
 
 from services import slackBot
 from services.models import Conversation, Messenger, System
-from services.views import TGBotView
+from services.telegramBot import TelegramBot
 from .forms import *
 from .forms import RegistrationForm
 from .models import Account, Position, Candidate
@@ -26,46 +26,47 @@ def user_login(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
-            # form.errors['Неверный логин или пароль'] = form.error_class(['Ошибка'])
-            cd = form.cleaned_data
-            user = authenticate(login=cd['login'], password=cd['password'])
+            cleaned_data = form.cleaned_data
+            user = authenticate(login=cleaned_data['login'], password=cleaned_data['password'])
             if user is not None:
                 if user.is_active:
                     login(request, user)
-                    print('logined')
+                    if user.is_superuser:
+                        return redirect('/admin')
                     return redirect('/')
-
     else:
         form = LoginForm()
     return render(request, 'accounts/login1.html', {'form': form})
 
 
 @login_required
-def mainmenu(request):
-    return render(request, 'accounts/mainmenu.html')
-
-
-@login_required
 def account(request):
     if request.method == 'POST':
-        position = Position.objects.get(id=request.user.position.id)
-        if position.access_to_candidates or position.access_to_vacation_list:
-            user_form = SpecialAccessEmployeeForm(instance=request.user, data=request.POST, files=request.FILES)
-        else:
-            user_form = UserChangeForm(instance=request.user, data=request.POST, files=request.FILES)
-        print(user_form)
-        if user_form.is_valid():
-            user_form.save()
+        edit_profile(request)
+        if request.user.is_superuser:
+            return redirect('/admin')
         return redirect('/account')
+
+    position = Position.objects.get(id=request.user.position.id)
+    if position.special_position():
+        user_form = SpecialAccessEmployeeForm(instance=request.user)
     else:
-        position = Position.objects.get(id=request.user.position.id)
-        if position.access_to_candidates or position.access_to_vacation_list:
-            user_form = SpecialAccessEmployeeForm(instance=request.user)
-        else:
-            user_form = UserChangeForm(instance=request.user)
-        return render(request,
-                      'accounts/account1.html',
-                      {'user_form': user_form})
+        user_form = UserChangeForm(instance=request.user)
+    if request.user.is_superuser:
+        return redirect('/admin')
+    return render(request,
+                  'accounts/account1.html',
+                  {'user_form': user_form})
+
+
+def edit_profile(request):
+    position = Position.objects.get(id=request.user.position.id)
+    if position.special_position():
+        user_form = SpecialAccessEmployeeForm(instance=request.user, data=request.POST, files=request.FILES)
+    else:
+        user_form = UserChangeForm(instance=request.user, data=request.POST, files=request.FILES)
+    if user_form.is_valid():
+        user_form.save()
 
 
 @login_required
@@ -92,25 +93,11 @@ def register(request):
             new_user.set_password(user_form.cleaned_data['password'])
             new_user.save()
             login(request, new_user)
-            selected_conversations = request.POST.getlist('system')
-            if user_form.cleaned_data['is_new_employee']:
-                slackBot.post_message_to_slack(user_form)
-                TGBotView.send_to_all(user_form)
-            if len(selected_conversations) > 0:
-                telegram_messenger_id = Messenger.objects.filter(messenger_name='Telegram')[0].id
-                slack_messenger_id = Messenger.objects.filter(messenger_name='Slack')[0].id
-                for conversations_for_accesses in Conversation.objects.filter(conversation_for_accesses=True):
-                    if conversations_for_accesses.messenger_id == telegram_messenger_id:
-                        TGBotView.send_to_access(user_form.cleaned_data['name'],
-                                                 user_form.cleaned_data['telegram_login'],
-                                                 selected_conversations, conversations_for_accesses)
-                    elif conversations_for_accesses.messenger_id == slack_messenger_id:
-                        slackBot.send_msg_to_access(user_form.cleaned_data['name'],
-                                                    user_form.cleaned_data['slack_login'],
-                                                    selected_conversations, conversations_for_accesses)
+            if Messenger.objects.all().count() != 0:
+                send_new_employee_info(request, user_form)
+                send_new_employee_accesses(request, user_form)
             return redirect('/')
-        else:
-            return render(request, 'accounts/register1.html', {'invalid': True, 'form': user_form})
+        return render(request, 'accounts/register1.html', {'invalid': True, 'form': user_form})
     user_form = RegistrationForm()
     conversations = Conversation.objects.all()
     systems = System.objects.all()
@@ -118,9 +105,55 @@ def register(request):
                   {'user_form': user_form, 'conversations': conversations, 'systems': systems})
 
 
-# Метод для получения списка сотрудников
+# Метод для отправки запросов к системам при регистрации
+def send_new_employee_accesses(request, user_form):
+    selected_conversations = request.POST.getlist('system')
+    if len(selected_conversations) > 0:
+        telegram_messenger_id = Messenger.objects.filter(messenger_name='Telegram')[0].id
+        slack_messenger_id = Messenger.objects.filter(messenger_name='Slack')[0].id
+        for conversations_for_accesses in Conversation.objects.filter(conversation_for_accesses=True):
+            if conversations_for_accesses.messenger_id == telegram_messenger_id:
+                TelegramBot.send_to_access(user_form.cleaned_data['name'],
+                                           user_form.cleaned_data['telegram_login'],
+                                           selected_conversations, conversations_for_accesses)
+            elif conversations_for_accesses.messenger_id == slack_messenger_id:
+                slackBot.send_msg_to_access(user_form.cleaned_data['name'],
+                                            user_form.cleaned_data['slack_login'],
+                                            selected_conversations, conversations_for_accesses)
+
+
+# Метод для отправки информации о новом сотруднике
+def send_new_employee_info(request, user_form):
+    if user_form.cleaned_data['is_new_employee']:
+        slackBot.post_message_to_slack(user_form)
+        TelegramBot.send_to_all(user_form)
+
+
 @login_required
-def get_all_employees(request):
+def main_menu(request):
+    if request.user.is_superuser:
+        return redirect('/admin')
+    return render(request, 'accounts/mainmenu.html')
+
+
+@login_required
+def vacations_table(request):
+    if request.user.is_superuser:
+        return redirect('/admin')
+    return render(request, 'accounts/vacations.html')
+
+
+@login_required
+def download_vacations_page(request):
+    if request.user.is_superuser:
+        return redirect('/admin')
+    return render(request, 'accounts/download_vacations.html')
+
+
+@login_required
+def get_all_employees_page(request):
+    if request.user.is_superuser:
+        return redirect('/admin')
     employee = Account.objects.filter(is_superuser=False)
     positions = Position.objects.all()
     employee = serialize('json', employee, fields=['name', 'position'])
@@ -137,21 +170,16 @@ def get_all_candidates(request):
             new_candidate = form.save()
             return JsonResponse(
                 {"name": new_candidate.name, "position": new_candidate.position_id, "id": new_candidate.id})
-        else:
-            return JsonResponse({"msg": "Invalid data"})
+        return JsonResponse({"msg": "Invalid data"})
     candidates = Candidate.objects.all()
     positions = Position.objects.all()
     candidates = serialize('json', candidates, fields=['name', 'position'])
     positions = serialize('json', positions, fields=['position_name'])
     candidates_form = CandidateForm()
+    if request.user.is_superuser:
+        return redirect('/admin')
     return render(request, 'accounts/candidates_table.html',
                   {'candidates': candidates, 'positions': positions, 'candidate_form': candidates_form})
-
-
-@login_required
-def candidate_form(request):
-    form = CandidateForm()
-    return render(request, 'accounts/candidates_table.html', {"form": form})
 
 
 @login_required
@@ -160,16 +188,6 @@ def delete_candidate(request):
     candidate = Candidate.objects.get(id=candidate_id)
     candidate.delete()
     return HttpResponse('Deleted')
-
-
-@login_required
-def vacations_table(request):
-    return render(request, 'accounts/vacations.html')
-
-
-@login_required
-def download_vacations_page(request):
-    return render(request, 'accounts/download_vacations.html')
 
 
 @login_required

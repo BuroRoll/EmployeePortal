@@ -327,14 +327,12 @@
                     snackbar.className = snackbar.className.replace("show", "");
                     location.reload()
                 }, 2000);
-
             },
             error: function (error) {
                 console.log(error);
             }
         });
     }
-
 
     function noBorder(block) {
         block.remove()
@@ -389,7 +387,6 @@
 </script>
 <script>
     set_settings()
-
     function set_settings() {
         let events_red_block = document.querySelectorAll('.my-red-block')
         for (let block of events_red_block) {

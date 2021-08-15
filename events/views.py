@@ -1,8 +1,6 @@
 from django.contrib.auth.decorators import login_required
-from django.core import serializers
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.serializers import serialize
-from django.http import JsonResponse
 from django.shortcuts import render
 from rest_framework import generics
 from rest_framework.decorators import permission_classes, api_view
@@ -29,10 +27,7 @@ def events(request):
 def join_in_event(request):
     event_id = request.GET.get('event_id')
     event = Event.objects.get(pk=event_id)
-    print(event.members.count())
-    print(event.members_count)
     if event.members.count() >= event.members_count:
-        print('много людей')
         return Response({'success': 'error'})
     event.members.add(request.user)
     return Response({'success': 'ok'})
@@ -66,13 +61,10 @@ def delete_event(request):
 def update_event(request):
     data = request.data
     Event.objects.filter(pk=data['event_id']).update(
-        # title=data['title'],
         event_date=data['event_date'],
         event_time=data['event_time'],
         event_place=data['event_place'],
         description=data['description'],
-        # show_members=data['show_members'],
-        # show_members_count=data['show_members_count'],
         members_count=data['members_count'],
     )
     return Response({'success': 'ok'})
@@ -81,7 +73,6 @@ def update_event(request):
 @api_view(['POST'])
 @login_required
 def create_event(request):
-    print(request.data)
     data = request.data
     files = request.FILES
     event = Event()
@@ -110,15 +101,6 @@ def event_manager(request):
     return render(request, 'events/event-manager.html', {'events': user_events})
 
 
-@login_required
-def event_members(request):
-    event_id = request.GET.get('event_id')
-    event = Event.objects.filter(id=event_id)
-    event_members = event.values('members')
-    qs_json = serializers.serialize('json', event_members)
-    return JsonResponse(qs_json, safe=False)
-
-
 @permission_classes([IsAuthenticated])
 class EventsMembers(generics.RetrieveAPIView):
     queryset = Event.objects.all()
@@ -133,8 +115,7 @@ class EventDetails(generics.RetrieveAPIView):
 
 def event_members_page(request):
     event_id = request.GET.get('event_id')
-    event_name = Event.objects.get(pk=event_id).title
-    event_members = Event.objects.get(pk=event_id).members.all()#.values('name')
-    e = serialize('json', event_members, fields='name')
-    print(e)
-    return render(request, 'events/event_members_page.html', {'members': e, 'event_name': event_name})
+    event = Event.objects.get(pk=event_id)
+    event_name = event.title
+    event_members_json = serialize('json', event.members.all(), fields='name')
+    return render(request, 'events/event_members_page.html', {'members': event_members_json, 'event_name': event_name})

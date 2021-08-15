@@ -19,7 +19,6 @@ def get_map_page(request):
 def create_marker(request):
     marker = Marker()
     data = request.data
-    print(data)
     marker.place = data['place']
     marker.href = data['href']
     marker.date = data['date']

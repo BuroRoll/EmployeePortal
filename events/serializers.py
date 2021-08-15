@@ -13,7 +13,8 @@ class EventsSerializer(serializers.ModelSerializer):
 class EventMembersSerializer(serializers.ModelSerializer):
     data = serializers.SerializerMethodField('get_members_name')
 
-    def get_members_name(self, obj):
+    @staticmethod
+    def get_members_name(obj):
         return obj.members.values_list('name', flat=True)
 
     class Meta:

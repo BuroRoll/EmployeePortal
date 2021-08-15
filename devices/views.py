@@ -9,6 +9,11 @@ from .models import Device
 from .serializers import DevicesSerializer, DeviceDetailsSerializer
 
 
+@login_required
+def devices(request):
+    return render(request, 'devices/devices.html')
+
+
 @api_view(['GET'])
 def set_owner(request):
     device_id = request.GET.get('device_id')
@@ -40,8 +45,3 @@ class DevicesList(generics.ListAPIView):
 class DevicesDetails(generics.RetrieveAPIView):
     queryset = Device.objects.all()
     serializer_class = DeviceDetailsSerializer
-
-
-@login_required
-def devices(request):
-    return render(request, 'devices/devices.html')

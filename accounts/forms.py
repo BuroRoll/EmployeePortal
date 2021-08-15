@@ -4,6 +4,7 @@ from django.db.models import Q
 from .models import Account, Candidate, Position
 
 
+# Форма для регистрации обычных польщователей
 class RegistrationForm(forms.ModelForm):
     password = forms.CharField(label='Password', widget=forms.PasswordInput)
 
@@ -24,6 +25,7 @@ class RegistrationForm(forms.ModelForm):
         return user
 
 
+# Форма для регистрации пользователя через панель администратора
 class UserRegisterForm(forms.ModelForm):
     password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
     password2 = forms.CharField(label='Password confirmation', widget=forms.PasswordInput)
@@ -47,18 +49,21 @@ class UserRegisterForm(forms.ModelForm):
         return user
 
 
+# Форма редактирования профиля для обычных пользователей
 class UserChangeForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(UserChangeForm, self).__init__(*args, **kwargs)
         self.fields['position'].empty_label = None
         self.fields['position'].queryset = Position.objects.filter(~Q(access_to_candidates=True))
         self.fields['position'].queryset = Position.objects.filter(~Q(access_to_vacation_list=True))
+        self.fields['position'].queryset = Position.objects.filter(~Q(change_events=True))
 
     class Meta:
         model = Account
         fields = ('name', 'photo', 'phone', 'slack_login', 'telegram_login', 'position', 'info')
 
 
+# Форма редактирования профиля для пользователей с доступами к специальным разделам
 class SpecialAccessEmployeeForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(SpecialAccessEmployeeForm, self).__init__(*args, **kwargs)
@@ -69,6 +74,7 @@ class SpecialAccessEmployeeForm(forms.ModelForm):
         fields = ('name', 'photo', 'phone', 'slack_login', 'telegram_login', 'position', 'info')
 
 
+# Форма для редактирования пользователей через панель администратора
 class AdminUserChangeForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(AdminUserChangeForm, self).__init__(*args, **kwargs)

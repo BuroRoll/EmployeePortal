@@ -45,7 +45,6 @@ function MakeCalendarBlock(m, y) {
         "<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>" +
         "<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>" +
         "<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>";
-
     let deltaDate = new Date((m + 1) + '/01/' + y)
     let curMonth = deltaDate.getMonth();
 
