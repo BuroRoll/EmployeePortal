@@ -1,7 +1,3 @@
-//
-//  BASIC SETUP
-//–––––––––––––––––––––––––––––––––––––
-
 var container = document.querySelector('.radial-menu');
 
 var menuDimensions = container.offsetWidth;
@@ -9,11 +5,6 @@ var menuDimensions = container.offsetWidth;
 var menuItems = container.querySelectorAll('.radial-menu__menu-item');
 
 var menuItemsCount = countMenuItems( menuItems );
-
-
-//
-//  COUNT MENU ITEMS
-//–––––––––––––––––––––––––––––––––––––
 
 function countMenuItems( elems ) {
 

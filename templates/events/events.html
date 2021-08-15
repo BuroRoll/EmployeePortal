@@ -143,7 +143,6 @@
 
 
 </div>
-<script src={% static "js/events-animation.js" %}></script>
 <script>
     async function set_events() {
         fetch('/events_list/', {
@@ -237,17 +236,7 @@
     }
 
     let modal = document.getElementById("myModal");
-    {#let member_table = $('#paged').DataTable({#}
-    {#    "language": {#}
-    {#        paginate: {#}
-    {#            first: '«',#}
-    {#            previous: '‹',#}
-    {#            next: '›',#}
-    {#            last: '»'#}
-    {#        },#}
-    {#        searchPlaceholder: 'Поиск'#}
-    {#    },#}
-    //});
+
     $('#paged').DataTable({
         serverSide: true,
         ajax: {
@@ -263,13 +252,10 @@
     });
 
     function getMembers(id) {
-        {#modal.style.display = "block"#}
-
 
         window.onclick = function (event) {
             if (event.target === modal) {
                 modal.style.display = "none";
-                {#document.getElementById('tbody').innerHTML = ''#}
             }
         }
         $.ajax({

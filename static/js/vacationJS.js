@@ -49,7 +49,6 @@ function MakeCalendarBlock(m, y) {
     let curMonth = deltaDate.getMonth();
 
 
-    let first = true;
     let tds = tbody.querySelectorAll('td')
 
 
@@ -117,7 +116,6 @@ subBtn.onclick = function () {
         let sub = arrToStr(flagList)
         if (checkIntervalDate(sub)) {
             let countDate = (document.querySelector('.calendar-count')).textContent
-            /*ЗДЕСЬ ОТПРАВЛЯТЬ ДАННЫЕ НА СЕРВЕР (тупо замени alert на функцию, которая отправляет данные на сервер)*/
             /*normalizeData(sub) - это дата в формате строки, а countDate - количество дней, которые остались*/
             const csrftoken = getCookie('csrftoken')
 
