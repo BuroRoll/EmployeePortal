@@ -31,6 +31,8 @@ def user_login(request):
             if user is not None:
                 if user.is_active:
                     login(request, user)
+                    if user.is_superuser:
+                        return redirect('/admin')
                     return redirect('/')
     else:
         form = LoginForm()
@@ -41,6 +43,8 @@ def user_login(request):
 def account(request):
     if request.method == 'POST':
         edit_profile(request)
+        if request.user.is_superuser:
+            return redirect('/admin')
         return redirect('/account')
 
     position = Position.objects.get(id=request.user.position.id)
@@ -48,6 +52,8 @@ def account(request):
         user_form = SpecialAccessEmployeeForm(instance=request.user)
     else:
         user_form = UserChangeForm(instance=request.user)
+    if request.user.is_superuser:
+        return redirect('/admin')
     return render(request,
                   'accounts/account1.html',
                   {'user_form': user_form})
@@ -87,8 +93,9 @@ def register(request):
             new_user.set_password(user_form.cleaned_data['password'])
             new_user.save()
             login(request, new_user)
-            send_new_employee_info(request, user_form)
-            send_new_employee_accesses(request, user_form)
+            if Messenger.objects.all().count() != 0:
+                send_new_employee_info(request, user_form)
+                send_new_employee_accesses(request, user_form)
             return redirect('/')
         return render(request, 'accounts/register1.html', {'invalid': True, 'form': user_form})
     user_form = RegistrationForm()
@@ -124,21 +131,29 @@ def send_new_employee_info(request, user_form):
 
 @login_required
 def main_menu(request):
+    if request.user.is_superuser:
+        return redirect('/admin')
     return render(request, 'accounts/mainmenu.html')
 
 
 @login_required
 def vacations_table(request):
+    if request.user.is_superuser:
+        return redirect('/admin')
     return render(request, 'accounts/vacations.html')
 
 
 @login_required
 def download_vacations_page(request):
+    if request.user.is_superuser:
+        return redirect('/admin')
     return render(request, 'accounts/download_vacations.html')
 
 
 @login_required
 def get_all_employees_page(request):
+    if request.user.is_superuser:
+        return redirect('/admin')
     employee = Account.objects.filter(is_superuser=False)
     positions = Position.objects.all()
     employee = serialize('json', employee, fields=['name', 'position'])
@@ -161,6 +176,8 @@ def get_all_candidates(request):
     candidates = serialize('json', candidates, fields=['name', 'position'])
     positions = serialize('json', positions, fields=['position_name'])
     candidates_form = CandidateForm()
+    if request.user.is_superuser:
+        return redirect('/admin')
     return render(request, 'accounts/candidates_table.html',
                   {'candidates': candidates, 'positions': positions, 'candidate_form': candidates_form})
 

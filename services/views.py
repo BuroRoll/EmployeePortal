@@ -38,6 +38,8 @@ def get_systems(request):
 @api_view(['POST'])
 @login_required
 def send_request_for_access(request):
+    if Messenger.objects.all().count() == 0:
+        return Response({'success': 'fail'})
     if request.data['type'] == 'System':
         selected = System.objects.get(id=request.data['id']).system_name
     elif request.data['type'] == 'Conversation':

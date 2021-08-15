@@ -22,18 +22,6 @@
     <script type="text/javascript" charset="utf8"
             src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>
     <link rel='stylesheet' href='/static/icons/font/css/open-iconic.css'>
-
-    {#    <link rel="preconnect" href="https://fonts.gstatic.com">#}
-    {#    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital@0;1&display=swap" rel="stylesheet">#}
-    {#    <link rel='stylesheet' href='/static/icons/font/css/open-iconic.css'>#}
-    {#    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>#}
-    {#    <script type="text/javascript" charset="utf8"#}
-    {#            src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>#}
-    {##}
-    {#    <script type="text/javascript" charset="utf8"#}
-    {#            src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>#}
-    {##}
-    {#    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>#}
 </head>
 <style>
     .modal {
@@ -155,34 +143,6 @@
 
 
 </div>
-
-
-{#<div class="red-block candidate-block" style="width: fit-content; height: auto">#}
-{#    <table class="candidate-table" id="paged">#}
-{#        <thead>#}
-{#        <tr class="candidate-list-block">#}
-{#            <th>ФИО ️<img style='width: 13px' src= {% static 'img/updown.ico' %}></th>#}
-{#        </tr>#}
-{#        </thead>#}
-{#        <tbody id="tbody">#}
-{#        </tbody>#}
-{#    </table>#}
-{#</div>#}
-
-{#<div id="myModal" class="modal">#}
-{#    <!-- Modal content -->#}
-{#    <div class=" red-block candidate-block">#}
-{#        <table class="candidate-table" id="paged">#}
-{#            <thead>#}
-{#            <tr class="candidate-list-block">#}
-{#                <th>ФИО ️<img style='width: 13px' src= {% static 'img/updown.ico' %}></th>#}
-{#            </tr>#}
-{#            </thead>#}
-{#            <tbody id="tbody">#}
-{#            </tbody>#}
-{#        </table>#}
-{#    </div>#}
-{#</div>#}
 <script src={% static "js/events-animation.js" %}></script>
 <script>
     async function set_events() {
@@ -198,6 +158,13 @@
 
     async function set_data(data) {
         let container = document.getElementById('events_container')
+        data.sort(function (a, b) {
+            if (a.event_date > b.event_date)
+                return 1
+            if (a.event_date < b.event_date)
+                return -1
+            return 0
+        })
         for (const event of data) {
             let event_html = create_event(event)
             if (event_html == null)
@@ -286,8 +253,7 @@
         ajax: {
             url: '/event_members/71/',
             dataFilter: function (data) {
-                {#console.log(data)#}
-                var json = jQuery.parseJSON(data);
+                let json = jQuery.parseJSON(data);
                 console.log(json)
                 json.recordsTotal = json.data.length;
                 json.draw = 1
@@ -312,18 +278,6 @@
                 success: function (data) {
 
                 },
-                {#modal.style.display = "block";#}
-                {#for (const member of data['data']) {#}
-                {#    let tr = document.createElement('tr');#}
-                {#    let td1 = tr.appendChild(document.createElement('td'));#}
-                {#    td1.innerHTML = member#}
-                {#    tr.classList.add('candidate-list-block');#}
-                {#    document.getElementById('tbody').appendChild(tr);#}
-
-                {#$(document).ready(function () {#}
-                {#    $("div.dataTables_filter input").focus();#}
-                //
-
                 error: function (data) {
                     console.log(data)
                 }
@@ -347,11 +301,9 @@
             let date_text = `${parseInt(date_arr[2])} ${month[parseInt(date_arr[1]) - 1]} ${date_arr[0]} г.`
             date.textContent = date_text
             let oneDay = 1000 * 60 * 60 * 24
-            {#daysBefore.textContent = Math.ceil(((new Date(dateText) - new Date()) / oneDay))#}
             if (daysBefore.textContent < 0) {
                 block.remove()
             }
-
             //Укорачивание названия
             let title = block.querySelector('h1')
             title.data = title.textContent
