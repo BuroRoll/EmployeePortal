@@ -25,7 +25,6 @@ for (let i = 0; i < 12; i++) {
 
 function MakeCalendarBlock(m, y) {
     let calendarBlock = document.createElement('div')
-    //calendarBlock.id = m + '-' + y;
     calendarBlock.classList.add('calendar-block')
 
     let calendarHeader = document.createElement('div');
@@ -46,17 +45,11 @@ function MakeCalendarBlock(m, y) {
         "<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>" +
         "<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>" +
         "<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>";
-    /*
-    let trHeader = document.createElement('tr')
-    trHeader.innerHTML = '<th>Пн</th><th>Вт</th><th>Ср</th><th>Чт</th><th>Пт</th><th class="red">Сб</th><th class="red">Вс</th>'
 
-    tbody.appendChild(trHeader)
-*/
     let deltaDate = new Date((m + 1) + '/01/' + y)
     let curMonth = deltaDate.getMonth();
 
 
-    let first = true;
     let tds = tbody.querySelectorAll('td')
 
 
@@ -124,7 +117,6 @@ subBtn.onclick = function () {
         let sub = arrToStr(flagList)
         if (checkIntervalDate(sub)) {
             let countDate = (document.querySelector('.calendar-count')).textContent
-            /*ЗДЕСЬ ОТПРАВЛЯТЬ ДАННЫЕ НА СЕРВЕР (тупо замени alert на функцию, которая отправляет данные на сервер)*/
             /*normalizeData(sub) - это дата в формате строки, а countDate - количество дней, которые остались*/
             const csrftoken = getCookie('csrftoken')
 

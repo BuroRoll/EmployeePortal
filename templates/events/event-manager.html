@@ -283,7 +283,7 @@
                 $('#min_imgInp').attr('src', e.target.result)
             }
 
-            reader.readAsDataURL(input.files[0]); // convert to base64 string
+            reader.readAsDataURL(input.files[0]);
         }
     }
 
@@ -328,8 +328,6 @@
                     location.reload()
                 }, 2000);
 
-                {#get_event(data['event_id'])#}
-                {#cleanForm()#}
             },
             error: function (error) {
                 console.log(error);
@@ -337,110 +335,6 @@
         });
     }
 
-    function cleanForm() {
-        $('#imgInp').attr('src', '/static/img/event-img.png');
-        $('#min_imgInp').attr('src', '/static/img/event-img.png')
-        document.querySelector('input[name=name]').value = ''
-        document.querySelector('input[name=event-count]').value = ''
-        document.querySelectorAll('input[type=date]').value = ''
-        document.querySelector('input[name=date-event]').value = ''
-        document.querySelector('input[name=time-event]').value = ''
-        document.querySelector('input[name=location-event]').value = ''
-        document.querySelector('textarea[name=description]').value = ''
-        let test_block = document.getElementById('test-block')
-        test_block.querySelector('h1').innerHTML = 'Выставка «...»'
-        test_block.querySelector('.free-places').innerHTML = '100'
-        test_block.querySelector('.max-count').innerHTML = '100'
-        test_block.querySelector('.event-date').innerHTML = '18 июля 2021 г.'
-        test_block.querySelector('.event-time').innerHTML = 'с 10:00 до 15:00'
-        test_block.querySelector('.days-before-start').innerHTML = '5'
-        test_block.querySelector('.event-place').innerHTML = 'г.Екатеринбург, ул. Мира, 19, 1 этаж'
-        test_block.querySelector('.event-opisanie').innerHTML = 'Описание мероприятия'
-        test_block.querySelector('.e-count').innerHTML = 'Всего мест: 100'
-    }
-
-    function get_event(event_id) {
-        $.ajax({
-            url: '/event_details/' + event_id + '/',
-            type: "GET",
-            headers: {
-                "X-CSRFToken": csrftoken
-            },
-            processData: false,
-            contentType: false,
-            success: function (data) {
-                add_event_in_list(data)
-            },
-            error: function (error) {
-                console.log(error);
-            }
-        });
-    }
-
-    function add_event_in_list(event_data) {
-        console.log(event_data)
-        let free_count = Math.round((new Date(event_data.event_date) - new Date())/(1000*60*60*24));
-        console.log(free_count)
-        let div = document.createElement('div')
-        let event_list = document.getElementById('my_events')
-        div.setAttribute('id', 'block_' + event_data.id)
-        div.setAttribute('class', 'event-block  no-show my-red-block')
-        div.innerHTML = `
-                    <div class="event-red-img" style="background-image: url(${event_data.picture});">
-                        <div style="height: 15px"></div>
-                        <div id="${event_data.id}" onclick="delete_event(${event_data.id})" class="event-delete">Удалить</div>
-                    </div>
-                    <div class="event-content">
-                        <div class="event-panel"><h1>${event_data.title}</h1> <img class="pointer"
-                                                                                 src="{% static 'img/strelka.png' %}"
-                                                                                 alt=""></div>
-                        <div class="event-count">
-                            <div class="free-place">Свободных мест: <span
-                                    class="free-places"></span></div>
-                            <div class="day-event">Дней до начала: ${free_count}<span class="days-before-start"></span></div>
-                        </div>
-                        <div class="info-block">
-                            <div class="event-info-block">
-                                <div class="event-info-block-left">
-                                    <h4 class="title-event">Время выставки</h4>
-                                    <p class="date-info">
-                                        <input name="new-date" class="event-input-date" type="date"
-                                               value="${event_data.event_date}"><br>
-                                        <input name="new-time" class="event-input-date" type="text"
-                                               value="${event_data.event_time}"></p>
-                                </div>
-                                <div class="event-info-block-right">
-                                    <h4 class="title-event">Место проведения</h4>
-                                    <p class="event-place">
-                                        <textarea name="new-place" id=""
-                                                  class="event-red-textarea">${event_data.event_place}</textarea></p>
-                                </div>
-                            </div>
-
-                            <div class="event-anons">
-                                <h4 class="title-event">Описание</h4>
-                                <p class="event-opisanie"><textarea style="width: 300px" class="event-red-textarea"
-                                                                    name="new-description">${event_data.description} </textarea>
-                                </p>
-                            </div>
-
-                            <div class="party">
-                                <div>Всего мест: <span class="max-count"><input name="new-count"
-                                                                                class="event-input-date" type="number"
-                                                                                value="${event_data.members_count}"
-                                                                                style="width: 50px"></span></div>
-                            </div>
-
-                            <div id="${event_data.id}$" class="event-sub green-btn">
-                                Сохранить изменения
-                            </div>
-                        </div>
-                    </div>
-
-        `
-        event_list.appendChild(div)
-        set_settings()
-    }
 
     function noBorder(block) {
         block.remove()
@@ -495,7 +389,6 @@
 </script>
 <script>
     set_settings()
-    {#delete_ev()#}
 
     function set_settings() {
         let events_red_block = document.querySelectorAll('.my-red-block')
@@ -540,23 +433,6 @@
             }
         }
     }
-
-    {#function delete_ev() {#}
-    {#    let del_btns = document.querySelectorAll('.event-delete')#}
-    {#    for (let del_btn of del_btns) {#}
-    {#        del_btn.onclick = function () {#}
-    {#            if (del_btn.classList.contains('event-delete-double')) {#}
-    {#                delete_event(del_btn.id)#}
-    {#            } else {#}
-    {#                setDefault()#}
-    {#                del_btn.classList.add('event-delete-double')#}
-    {#            }#}
-    {#        }#}
-    {#    }#}
-    {#{#}
-
-
-
 </script>
 </body>
 </html>

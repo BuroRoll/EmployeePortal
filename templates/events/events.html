@@ -22,18 +22,6 @@
     <script type="text/javascript" charset="utf8"
             src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>
     <link rel='stylesheet' href='/static/icons/font/css/open-iconic.css'>
-
-    {#    <link rel="preconnect" href="https://fonts.gstatic.com">#}
-    {#    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital@0;1&display=swap" rel="stylesheet">#}
-    {#    <link rel='stylesheet' href='/static/icons/font/css/open-iconic.css'>#}
-    {#    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>#}
-    {#    <script type="text/javascript" charset="utf8"#}
-    {#            src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>#}
-    {##}
-    {#    <script type="text/javascript" charset="utf8"#}
-    {#            src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>#}
-    {##}
-    {#    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>#}
 </head>
 <style>
     .modal {
@@ -155,35 +143,6 @@
 
 
 </div>
-
-
-{#<div class="red-block candidate-block" style="width: fit-content; height: auto">#}
-{#    <table class="candidate-table" id="paged">#}
-{#        <thead>#}
-{#        <tr class="candidate-list-block">#}
-{#            <th>ФИО ️<img style='width: 13px' src= {% static 'img/updown.ico' %}></th>#}
-{#        </tr>#}
-{#        </thead>#}
-{#        <tbody id="tbody">#}
-{#        </tbody>#}
-{#    </table>#}
-{#</div>#}
-
-{#<div id="myModal" class="modal">#}
-{#    <!-- Modal content -->#}
-{#    <div class=" red-block candidate-block">#}
-{#        <table class="candidate-table" id="paged">#}
-{#            <thead>#}
-{#            <tr class="candidate-list-block">#}
-{#                <th>ФИО ️<img style='width: 13px' src= {% static 'img/updown.ico' %}></th>#}
-{#            </tr>#}
-{#            </thead>#}
-{#            <tbody id="tbody">#}
-{#            </tbody>#}
-{#        </table>#}
-{#    </div>#}
-{#</div>#}
-<script src={% static "js/events-animation.js" %}></script>
 <script>
     async function set_events() {
         fetch('/events_list/', {
@@ -270,17 +229,7 @@
     }
 
     let modal = document.getElementById("myModal");
-    {#let member_table = $('#paged').DataTable({#}
-    {#    "language": {#}
-    {#        paginate: {#}
-    {#            first: '«',#}
-    {#            previous: '‹',#}
-    {#            next: '›',#}
-    {#            last: '»'#}
-    {#        },#}
-    {#        searchPlaceholder: 'Поиск'#}
-    {#    },#}
-    //});
+
     $('#paged').DataTable({
         serverSide: true,
         ajax: {
@@ -297,13 +246,10 @@
     });
 
     function getMembers(id) {
-        {#modal.style.display = "block"#}
-
 
         window.onclick = function (event) {
             if (event.target === modal) {
                 modal.style.display = "none";
-                {#document.getElementById('tbody').innerHTML = ''#}
             }
         }
         $.ajax({
@@ -312,17 +258,6 @@
                 success: function (data) {
 
                 },
-                {#modal.style.display = "block";#}
-                {#for (const member of data['data']) {#}
-                {#    let tr = document.createElement('tr');#}
-                {#    let td1 = tr.appendChild(document.createElement('td'));#}
-                {#    td1.innerHTML = member#}
-                {#    tr.classList.add('candidate-list-block');#}
-                {#    document.getElementById('tbody').appendChild(tr);#}
-
-                {#$(document).ready(function () {#}
-                {#    $("div.dataTables_filter input").focus();#}
-                //
 
                 error: function (data) {
                     console.log(data)
@@ -347,7 +282,6 @@
             let date_text = `${parseInt(date_arr[2])} ${month[parseInt(date_arr[1]) - 1]} ${date_arr[0]} г.`
             date.textContent = date_text
             let oneDay = 1000 * 60 * 60 * 24
-            {#daysBefore.textContent = Math.ceil(((new Date(dateText) - new Date()) / oneDay))#}
             if (daysBefore.textContent < 0) {
                 block.remove()
             }
