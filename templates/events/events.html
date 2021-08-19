@@ -134,7 +134,7 @@
     <div style="width: 70%; margin-left: auto; margin-right: auto;">
         {% if request.user.position.change_events %}
             <a href="/event_manager/">
-                <div class="event-manager-btn">Редактор мероприятий</div>
+                <div class="event-manager-btn">+ Мои мероприятия</div>
             </a>
         {% endif %}
         <div class="events-container" id="events_container" style="width: 100%">
@@ -236,10 +236,40 @@
         return div
     }
 
+    let modal = document.getElementById("myModal");
+    {#let member_table = $('#paged').DataTable({#}
+    {#    "language": {#}
+    {#        paginate: {#}
+    {#            first: '«',#}
+    {#            previous: '‹',#}
+    {#            next: '›',#}
+    {#            last: '»'#}
+    {#        },#}
+    {#        searchPlaceholder: 'Поиск'#}
+    {#    },#}
+    //});
+    $('#paged').DataTable({
+        serverSide: true,
+        ajax: {
+            url: '/event_members/71/',
+            dataFilter: function (data) {
+                let json = jQuery.parseJSON(data);
+                console.log(json)
+                json.recordsTotal = json.data.length;
+                json.draw = 1
+                return JSON.stringify(json); // return JSON string
+            }
+        }
+    });
+
     function getMembers(id) {
+        {#modal.style.display = "block"#}
+
+
         window.onclick = function (event) {
             if (event.target === modal) {
                 modal.style.display = "none";
+                {#document.getElementById('tbody').innerHTML = ''#}
             }
         }
         $.ajax({

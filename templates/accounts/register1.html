@@ -178,8 +178,8 @@
     </form>
 
 </div>
-<script src={% static 'js/ajax-form.js' %}></script>
 <script>
+    //Валидация номера телефона
     let input = document.getElementsByClassName('FIO_input')[0]
     let regExp = /([А-ЯЁ][а-яё]+[\-\s]?){3,}/
     let r_button = document.querySelector('.sub-log')
@@ -194,9 +194,33 @@
             console.log('damn')
         }
     };
+
+    //Выбор нескольких систем без нажатия на ctrl
+    var selections;
+    $("#system").mousedown(function(e) {
+        selections = $(this).val();
+
+    }).click(function() {
+
+        if (selections == null) {
+            var selected = -1;
+            selections = [];
+        } else
+            var selected = selections.indexOf($.isArray($(this).val()) ? $(this).val()[$(this).val().length - 1] : $(this).val());
+
+        if (selected >= 0)
+            selections.splice(selected, 1);
+        else
+            selections.push($(this).val()[0]);
+
+        $('#system option').each(function() {
+            $(this).prop('selected', selections.indexOf($(this).val()) >= 0);
+        });
+    });
 </script>
 
 <script>
+    //Отправка формы
     const csrftoken = getCookie('csrftoken')
 
 
