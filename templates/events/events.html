@@ -134,7 +134,7 @@
     <div style="width: 70%; margin-left: auto; margin-right: auto;">
         {% if request.user.position.change_events %}
             <a href="/event_manager/">
-                <div class="event-manager-btn">+ Мои мероприятия</div>
+                <div class="event-manager-btn">Редактор мероприятий</div>
             </a>
         {% endif %}
         <div class="events-container" id="events_container" style="width: 100%">
@@ -236,7 +236,6 @@
     }
 
     let modal = document.getElementById("myModal");
-
     $('#paged').DataTable({
         serverSide: true,
         ajax: {
@@ -252,10 +251,10 @@
     });
 
     function getMembers(id) {
-
         window.onclick = function (event) {
             if (event.target === modal) {
                 modal.style.display = "none";
+                {#document.getElementById('tbody').innerHTML = ''#}
             }
         }
         $.ajax({
